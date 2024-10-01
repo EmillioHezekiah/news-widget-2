@@ -67,11 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 widget.innerHTML = `
                     <div style="text-align: left;">
-                        <img src="https://github.com/EmillioHezekiah/news-widget-2/blob/18d2e9e6bacf0775095d6e1f8c5a81d051cb4bac/trade2372.png?raw=true" 
-                             alt="PR News Logo" 
-                             class="news-custom-image"
-                             href="https://www.tradepr.work/">
-                        <h2>News from Trade PR</h2>
+                        <h2>News Distribution by Trade PR</h2>
                     </div>
                 `;
 
@@ -109,9 +105,9 @@ document.addEventListener('DOMContentLoaded', function () {
                         newsItem.innerHTML = `
                             ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-image">` : ''}
                             <div class="news-content">
+                               ${formatPostedMetaData(postedDate, postedAuthor)}
                                 <a href="#" class="news-link" data-url="${encodeURIComponent(correctedLink)}">${title}</a>
                                 <p>${description}</p>
-                                ${formatPostedMetaData(postedDate, postedAuthor)}
                             </div>
                         `;
                         newsContent.appendChild(newsItem);
