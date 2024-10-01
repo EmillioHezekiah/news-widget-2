@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const widget = document.getElementById('news-widget');
 
                 widget.innerHTML = `
-                    <div style="text-align: left;">
+                    <div style="text-align: left; margin-bottom: 50px;">
                         <h2>News Distribution by Trade PR</h2>
                     </div>
                 `;
