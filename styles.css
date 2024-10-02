@@ -4,43 +4,19 @@
     font-family: Arial, sans-serif;
 }
 
+/* Updated Styles for the News Heading */
 .news-heading {
-    font-size: 28px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 28px; /* same size as before */
+    color: rgb(116, 2, 30);
     margin-bottom: 20px;
 }
 
-.news-item {
-    display: flex;
-    align-items: flex-start;
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
-    margin-bottom: 10px;
-}
-
-.news-image {
-    width: 240px;
-    height: 120px;
-    margin-right: 20px;
-}
-
-.news-content {
-    flex-grow: 1;
-}
-
-.news-link {
-    font-size: 20px;
-    font-weight: bold;
-    color: #333;
-    text-decoration: none;
-}
-
-.news-link:hover {
-    text-decoration: underline;
-}
-
+/* Updated styles for posted-meta-data */
 .posted-meta-data {
-    font-size: 12px;
-    color: #999;
+    font-family: 'Roboto', sans-serif;
+    font-size: small;
+    color: black;
     margin-bottom: 10px;
 }
 
@@ -51,6 +27,24 @@
     margin-right: 5px;
 }
 
+/* Updated styles for the news link */
+.news-link {
+    font-family: sans-serif;
+    font-size: 24px; /* Extra large text-size */
+    font-weight: bold;
+    color: #840d0d;
+    text-decoration: underline;
+}
+
+/* Style for description paragraph */
+.news-content p {
+    font-family: sans-serif;
+    font-size: medium; /* medium font-size */
+    color: black;
+    font-style: italic;
+}
+
+/* No changes to existing pagination and button styles */
 #pagination {
     text-align: center;
     margin-top: 20px;
@@ -69,6 +63,7 @@
     background-color: #ddd;
 }
 
+/* Full article modal content */
 .full-news-content {
     padding: 20px;
     border: 1px solid #ccc;
