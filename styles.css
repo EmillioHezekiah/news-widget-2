@@ -15,7 +15,7 @@
 /* Updated styles for posted-meta-data */
 .posted-meta-data {
     font-family: 'Roboto', sans-serif;
-    font-size: small;
+    font-size: 14pt;
     color: black;
     margin-bottom: 10px;
 }
@@ -51,8 +51,8 @@
 }
 
 .news-link {
-    font-family: sans-serif;
-    font-size: 24px; /* Extra large text-size */
+    font-family: 'Droid Serif';
+    font-size: 24pt; /* Extra large text-size */
     font-weight: bold;
     color: #840d0d;
     text-decoration: underline;
@@ -60,8 +60,8 @@
 }
 
 .news-content p {
-    font-family: sans-serif;
-    font-size: medium;
+    font-family: 'Droid Serif';
+    font-size: 16pt;
     color: black;
     font-style: italic;
     margin-top: 5px;
