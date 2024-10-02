@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 widget.innerHTML = `
                     <div style="text-align: left; margin-bottom: 50px;">
-                        <h2>News Distribution by Trade PR</h2>
+                        <h2 class="news-heading">News Distribution by Trade PR</h2>
                     </div>
                 `;
 
