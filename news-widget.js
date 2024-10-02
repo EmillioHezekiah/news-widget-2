@@ -136,8 +136,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 const pageNumber = link.textContent.trim();
                 const pageUrl = link.href;
 
-                const pageButton = document.createElement('button');
-                pageButton.innerText = pageNumber;
+                const pageButton = document.createElement('span'); // Changed to span for text style
+                pageButton.innerText = pageNumber === '«' ? 'back' : pageNumber === '»' ? 'next' : pageNumber;
+                pageButton.classList.add('page-number');
+                if (parseInt(pageNumber) === currentPage) {
+                    pageButton.classList.add('current-page'); // Add class to highlight the current page
+                }
                 pageButton.addEventListener('click', function () {
                     const newPage = new URL(pageUrl).searchParams.get('page');
                     currentPage = newPage; // Update current page
@@ -218,18 +222,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Handle back button to return to the news list
                 document.getElementById('back-button').addEventListener('click', function () {
-                    loadNewsList(currentPage); // Load the previous news list
+                    loadNewsList(currentPage); // Load the current page of the news list
                 });
-
-                // Hide pagination buttons while viewing the news content
-                const paginationContainer = document.getElementById('pagination');
-                if (paginationContainer) {
-                    paginationContainer.style.display = 'none';
-                }
             })
-            .catch(error => console.error('Error loading content:', error));
+            .catch(error => console.error('Error loading full news content:', error));
     }
 
-    // Initial load of the first page
-    loadNewsList(currentPage);
+    // Initialize by loading the first page
+    loadNewsList(1);
 });
