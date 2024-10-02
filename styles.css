@@ -67,10 +67,13 @@
     margin-top: 5px;
 }
 
-/* No changes to existing pagination and button styles */
+/* Pagination styles */
 #pagination {
     text-align: center;
     margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #pagination button {
@@ -80,10 +83,31 @@
     border: none;
     background-color: #f0f0f0;
     cursor: pointer;
+    font-weight: bold; /* Make text bold */
+    text-transform: capitalize; /* Capitalize text */
 }
 
 #pagination button:hover {
     background-color: #ddd;
+}
+
+.page-number {
+    padding: 5px 15px;
+    background-color: #f0f0f0;
+    margin: 5px;
+    cursor: pointer;
+    font-weight: bold; /* Make text bold */
+    text-transform: capitalize; /* Capitalize text */
+}
+
+.current-page {
+    background-color: #008cba;
+    color: white;
+    font-weight: bold;
+}
+
+#pagination .page-number:hover {
+    background-color: #ccc;
 }
 
 /* Full article modal content */
@@ -93,6 +117,7 @@
     background-color: #fff;
 }
 
+/* Modal image thumbnail */
 .modal-thumbnail,
 .modal-image {
     display: block;
@@ -102,17 +127,44 @@
     margin-bottom: 20px;
 }
 
+/* Back button styling */
 .back-button {
-    display: block;
-    margin: 20px auto;
+    display: inline-block;
     padding: 10px 20px;
-    font-size: 16px;
-    background-color: #333;
-    color: #fff;
-    border: none;
+    background-color: #008cba;
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
     cursor: pointer;
+    border: none;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
 .back-button:hover {
-    background-color: #555;
+    background-color: #005f7f;
 }
+
+/* Adjustments for larger screens */
+@media screen and (min-width: 768px) {
+    .news-content p {
+        font-size: 18pt;
+    }
+
+    .news-link {
+        font-size: 26pt;
+    }
+}
+
+/* Modal adjustments to prevent background scrolling */
+.modal-open {
+    overflow: hidden;
+}
+
+.modal-content {
+    position: relative;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
