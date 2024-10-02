@@ -7,7 +7,7 @@
 /* Updated Styles for the News Heading */
 .news-heading {
     font-family: 'Roboto', sans-serif;
-    font-size: 28px; /* same size as before */
+    font-size: 28px;
     color: rgb(116, 2, 30);
     margin-bottom: 20px;
 }
@@ -27,21 +27,44 @@
     margin-right: 5px;
 }
 
-/* Updated styles for the news link */
+/* Flexbox layout for news items */
+.news-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+/* Style for the news image thumbnail */
+.news-image {
+    width: 240px;
+    height: 120px;
+    margin-right: 15px; /* Add spacing between image and text */
+    object-fit: cover;
+    border-radius: 5px; /* Optional: to give the thumbnail a rounded corner */
+}
+
+/* Updated styles for the news content */
+.news-content {
+    flex: 1;
+}
+
 .news-link {
     font-family: sans-serif;
     font-size: 24px; /* Extra large text-size */
     font-weight: bold;
     color: #840d0d;
     text-decoration: underline;
+    margin-bottom: 5px;
 }
 
-/* Style for description paragraph */
 .news-content p {
     font-family: sans-serif;
-    font-size: medium; /* medium font-size */
+    font-size: medium;
     color: black;
     font-style: italic;
+    margin-top: 5px;
 }
 
 /* No changes to existing pagination and button styles */
