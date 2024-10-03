@@ -72,6 +72,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 newsContent.id = 'news-content';
                 widget.appendChild(newsContent);
 
+                // Add the news heading back
+                const newsHeading = document.createElement('h2');
+                newsHeading.classList.add('news-heading');
+                newsHeading.textContent = "News Distribution by Trade PR";
+                widget.prepend(newsHeading); // Add heading at the top of the widget
+
                 if (articles.length === 0) {
                     newsContent.innerHTML = '<p>No news items found.</p>';
                 } else {
@@ -170,7 +176,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
 
-                const title = doc.querySelector('h1.bold.h2.nobmargin') ? doc.querySelector('h1.bold.h2.nobmargin').textContent.trim() : 'No Title';
+                const titleElement = doc.querySelector('h1.bold.h2.nobmargin');
+                const title = titleElement ? titleElement.textContent.trim() : 'No Title';
                 const imageElement = doc.querySelector('.img_section img');
                 let image = '';
                 if (imageElement) {
@@ -212,27 +219,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 newsContent.innerHTML = `
                     <div class="full-news-content">
-                        <h1>${title}</h1>
+                        <h1 class="news-title">${title}</h1>
                         ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail">` : ''}
                         ${image ? `<img src="${image}" alt="${title}" class="modal-image">` : ''}
-                        <div>${content}</div>
+                        <div class="news-description">${content}</div>
                         ${postedDate !== 'No Date' && postedAuthor !== 'No Author' ? formatPostedMetaData(postedDate, postedAuthor) : ''}
                         <button id="back-button" class="back-button">Back</button>
                     </div>
                 `;
 
                 const backButton = document.getElementById('back-button');
-                if (backButton) {
-                    backButton.addEventListener('click', function () {
-                        loadNewsList(currentPage); // Reload the news list from the original website
-                    });
-                }
+                backButton.addEventListener('click', function () {
+                    loadNewsList(currentPage); // Return to the list
+                });
 
-                window.scrollTo(0, 0); // Ensure the content starts from the top
+                window.scrollTo(0, 0); // Scroll to top when loading full content
             })
             .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Load the first page of news on initial load
+    // Initial load of the news list
     loadNewsList(currentPage);
 });
