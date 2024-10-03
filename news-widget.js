@@ -137,10 +137,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 const pageUrl = link.href;
 
                 const pageButton = document.createElement('span'); // Changed to span for text style
-                pageButton.innerText = pageNumber === '«' ? 'back' : pageNumber === '»' ? 'next' : pageNumber;
+                pageButton.innerText = pageNumber === '«' ? 'Back' : pageNumber === '»' ? 'Next' : pageNumber;
                 pageButton.classList.add('page-number');
-                if (parseInt(pageNumber) === currentPage) {
-                    pageButton.classList.add('current-page'); // Add class to highlight the current page
+                if (parseInt(pageNumber) === parseInt(currentPage)) {
+                    pageButton.classList.add('current-page'); // Highlight the current page
                 }
                 pageButton.addEventListener('click', function () {
                     const newPage = new URL(pageUrl).searchParams.get('page');
@@ -206,6 +206,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     console.error('News content container not found.');
                     return;
                 }
+
+                // Hide pagination when viewing a full article
+                const pagination = document.getElementById('pagination');
+                if (pagination) {
+                    pagination.style.display = 'none'; // Hide pagination
+                }
+
                 newsContent.innerHTML = `
                     <div class="full-news-content">
                         <h1>${title}</h1>
@@ -217,17 +224,18 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                 `;
 
-                // Scroll to top when viewing content
-                window.scrollTo(0, 0);
-
-                // Handle back button to return to the news list
-                document.getElementById('back-button').addEventListener('click', function () {
-                    loadNewsList(currentPage); // Load the current page of the news list
-                });
+                window.scrollTo(0, 0); // Ensure scroll starts at the top
             })
-            .catch(error => console.error('Error loading full news content:', error));
+            .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Initialize by loading the first page
-    loadNewsList(1);
+    // Handle back button to return to the news list
+    document.addEventListener('click', function (event) {
+        if (event.target.matches('#back-button')) {
+            loadNewsList(currentPage); // Load the current page of news when the back button is clicked
+        }
+    });
+
+    // Initial load of the news list
+    loadNewsList(currentPage);
 });
