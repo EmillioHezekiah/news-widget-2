@@ -212,10 +212,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 newsContent.innerHTML = `
                     <div class="full-news-content">
-                        <h1>${title}</h1>
+                        <h1 class="article-title">${title}</h1>
                         ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail">` : ''}
                         ${image ? `<img src="${image}" alt="${title}" class="modal-image">` : ''}
-                        <div>${content}</div>
+                        <div class="article-content">${content}</div>
                         ${postedDate !== 'No Date' && postedAuthor !== 'No Author' ? formatPostedMetaData(postedDate, postedAuthor) : ''}
                         <button id="back-button" class="back-button">Back</button>
                     </div>
@@ -224,15 +224,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 const backButton = document.getElementById('back-button');
                 if (backButton) {
                     backButton.addEventListener('click', function () {
-                        loadNewsList(currentPage); // Reload the news list from the original website
+                        loadNewsList(currentPage); // Load the previous news list
                     });
                 }
 
-                window.scrollTo(0, 0); // Ensure the content starts from the top
+                window.scrollTo(0, 0); // Scroll to top when viewing content
             })
-            .catch(error => console.error('Error loading news content:', error));
+            .catch(error => console.error('Error loading content:', error));
     }
 
-    // Load the first page of news on initial load
+    // Initialize the first load of the news list
     loadNewsList(currentPage);
 });
