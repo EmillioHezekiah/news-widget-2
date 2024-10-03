@@ -181,16 +181,21 @@ document.addEventListener('DOMContentLoaded', function () {
                     pagination.style.display = 'none'; // Hide pagination
                 }
 
-                // Updated for content page style
+                // Add back button and remove posted metadata section
                 newsContent.innerHTML = `
                     <div class="full-news-content">
+                        <button id="back-button" class="back-button">Back to News List</button>
                         <h1 class="article-title">${title}</h1>
                         ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail">` : ''}
                         ${image ? `<img src="${image}" alt="${title}" class="main-image">` : ''}
                         <div class="content">${content}</div>
-                        ${formatPostedMetaData(postedDate, postedAuthor)}
                     </div>
                 `;
+
+                // Handle back button click
+                document.getElementById('back-button').addEventListener('click', function () {
+                    loadNewsList(currentPage); // Load the current news list page
+                });
 
                 window.scrollTo(0, 0); // Scroll to top when loading the content
             })
