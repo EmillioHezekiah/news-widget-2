@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Load the full article content in a modal-like view
+    // Load the full article content in a regular view below the news list
     function loadNewsContent(url) {
         isViewingContent = true; // User is viewing content
         fetch(url)
@@ -225,14 +225,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 const backButton = document.getElementById('back-button');
                 if (backButton) {
                     backButton.addEventListener('click', function () {
-                        loadNewsList(currentPage); // Load the news list for the current page
+                        loadNewsList(currentPage); // Return to the news list
                     });
                 }
-
-                window.scrollTo(0, 0); // Scroll to top when loading the content
             })
-            .catch(error => console.error('Error loading news content:', error));
+            .catch(error => console.error('Error loading article content:', error));
     }
 
-    loadNewsList(currentPage); // Initial load
+    // Load the first page of the news list
+    loadNewsList(currentPage);
 });
