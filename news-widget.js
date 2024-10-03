@@ -9,9 +9,8 @@ document.addEventListener('DOMContentLoaded', function () {
             return `https://www.tradepr.work${src}`;
         } else if (!src.startsWith('http')) {
             return `https://www.tradepr.work/uploads/news-pictures-thumbnails/${src}`;
-        } else {
-            return src.replace(/https:\/\/emilliohezekiah.github.io/, 'https://www.tradepr.work');
         }
+        return src.replace(/https:\/\/emilliohezekiah.github.io/, 'https://www.tradepr.work');
     }
 
     // Helper function to exclude certain images (e.g., profile pictures)
@@ -38,18 +37,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // Extract posted metadata from the document
     function extractPostedMetaData(element) {
         const postedMetaData = element ? element.textContent.trim() : '';
-        let postedDate = 'No Date';
-        let postedAuthor = 'No Author';
-
         const dateMatch = postedMetaData.match(/Posted\s+(\d{2}\/\d{2}\/\d{4})/);
-        if (dateMatch) {
-            postedDate = dateMatch[1];
-        }
-
         const authorMatch = postedMetaData.match(/by\s+(.+?)(\s+in\s+[\w\s]+)?$/);
-        if (authorMatch) {
-            postedAuthor = authorMatch[1].replace(/<\/?a[^>]*>/g, '').trim();
-        }
+
+        const postedDate = dateMatch ? dateMatch[1] : 'No Date';
+        const postedAuthor = authorMatch ? authorMatch[1].replace(/<\/?a[^>]*>/g, '').trim() : 'No Author';
 
         return { postedDate, postedAuthor };
     }
@@ -66,60 +58,45 @@ document.addEventListener('DOMContentLoaded', function () {
                 const widget = document.getElementById('news-widget');
 
                 // Clear previous content
-                widget.innerHTML = '';
-
-                // Add title
-                const titleElement = document.createElement('h1');
-                titleElement.textContent = "News Distribution by Trade PR";
-                titleElement.classList.add('news-title'); // Added class for styling
-                widget.appendChild(titleElement); // Append title to the widget
-
-                const newsContent = document.createElement('div');
-                newsContent.id = 'news-content';
-                widget.appendChild(newsContent);
+                widget.innerHTML = '<h1 class="news-title">News Distribution by Trade PR</h1><div id="news-content"></div>';
+                const newsContent = widget.querySelector('#news-content');
 
                 if (articles.length === 0) {
                     newsContent.innerHTML = '<p>No news items found.</p>';
-                } else {
-                    articles.forEach(article => {
-                        const titleElement = article.querySelector('.h3.bold.bmargin.center-block');
-                        const title = titleElement ? titleElement.textContent.trim() : 'No title available';
-                        const link = titleElement ? titleElement.closest('a').href : '#';
-                        const descriptionElement = article.querySelector('.xs-nomargin');
-                        let description = descriptionElement ? descriptionElement.textContent.trim() : 'No description available';
-                        description = cleanDescription(description);
-                        const imgElement = article.querySelector('.img_section img');
+                    return;
+                }
 
-                        let imgSrc = '';
-                        if (imgElement) {
-                            imgSrc = correctImageUrl(imgElement.src);
-                            if (shouldExcludeImage(imgSrc)) {
-                                imgSrc = '';
-                            }
-                        }
+                articles.forEach(article => {
+                    const titleElement = article.querySelector('.h3.bold.bmargin.center-block');
+                    const title = titleElement ? titleElement.textContent.trim() : 'No title available';
+                    const link = titleElement ? titleElement.closest('a').href : '#';
+                    const descriptionElement = article.querySelector('.xs-nomargin');
+                    let description = descriptionElement ? cleanDescription(descriptionElement.textContent.trim()) : 'No description available';
+                    const imgElement = article.querySelector('.img_section img');
 
-                        const correctedLink = link.replace(/https:\/\/emilliohezekiah.github.io/, 'https://www.tradepr.work');
+                    let imgSrc = imgElement ? correctImageUrl(imgElement.src) : '';
+                    if (shouldExcludeImage(imgSrc)) imgSrc = '';
 
-                        const postedMetaDataElement = article.querySelector('.posted_meta_data');
-                        const { postedDate, postedAuthor } = extractPostedMetaData(postedMetaDataElement);
+                    const correctedLink = link.replace(/https:\/\/emilliohezekiah.github.io/, 'https://www.tradepr.work');
+                    const postedMetaDataElement = article.querySelector('.posted_meta_data');
+                    const { postedDate, postedAuthor } = extractPostedMetaData(postedMetaDataElement);
 
-                        const newsItem = document.createElement('div');
-                        newsItem.classList.add('news-item');
-                        newsItem.innerHTML = `
-                            ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-image">` : ''}
-                            <div class="news-content">
-                               ${formatPostedMetaData(postedDate, postedAuthor)}
-                                <a href="#" class="news-link" data-url="${encodeURIComponent(correctedLink)}">${title}</a>
-                                <p>${description}</p>
-                            </div>
-                        `;
-                        newsContent.appendChild(newsItem);
-                    });
+                    const newsItem = document.createElement('div');
+                    newsItem.classList.add('news-item');
+                    newsItem.innerHTML = `
+                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-image">` : ''}
+                        <div class="news-content">
+                            ${formatPostedMetaData(postedDate, postedAuthor)}
+                            <a href="#" class="news-link" data-url="${encodeURIComponent(correctedLink)}">${title}</a>
+                            <p>${description}</p>
+                        </div>
+                    `;
+                    newsContent.appendChild(newsItem);
+                });
 
-                    // Add pagination buttons for news list page only
-                    if (!isViewingContent) {
-                        addPagination(doc, page); // Pass the current page for comparison
-                    }
+                // Add pagination buttons for news list page only
+                if (!isViewingContent) {
+                    addPagination(doc, page); // Pass the current page for comparison
                 }
 
                 window.scrollTo(0, 0); // Scroll to top when loading the list
@@ -139,12 +116,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 const pageNumber = link.textContent.trim();
                 const pageUrl = link.href;
 
-                const pageButton = document.createElement('span'); // Changed to span for text style
+                const pageButton = document.createElement('span');
                 pageButton.innerText = pageNumber === '«' ? 'Back' : pageNumber === '»' ? 'Next' : pageNumber;
                 pageButton.classList.add('page-number');
 
                 // Check for the current page and highlight it
-                if (parseInt(pageNumber) === parseInt(currentPage)) {
+                if (parseInt(pageNumber) === currentPage) {
                     pageButton.classList.add('current-page');
                 }
 
@@ -155,8 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 paginationContainer.appendChild(pageButton);
             });
 
-            const widget = document.getElementById('news-widget');
-            widget.appendChild(paginationContainer);
+            document.getElementById('news-widget').appendChild(paginationContainer);
         }
     }
 
@@ -180,31 +156,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const title = doc.querySelector('h1.bold.h2.nobmargin') ? doc.querySelector('h1.bold.h2.nobmargin').textContent.trim() : 'No Title';
                 const imageElement = doc.querySelector('.img_section img');
-                let image = '';
-                if (imageElement) {
-                    image = correctImageUrl(imageElement.src);
-                    if (shouldExcludeImage(image)) {
-                        image = '';
-                    }
-                }
+                let image = imageElement ? correctImageUrl(imageElement.src) : '';
+                if (shouldExcludeImage(image)) image = '';
 
                 const contentContainer = doc.querySelector('.the-post-description');
-                let content = 'No Content Available';
-                if (contentContainer) {
-                    content = contentContainer.innerHTML.trim();
-                }
+                const content = contentContainer ? contentContainer.innerHTML.trim() : 'No Content Available';
 
                 const postedMetaDataElement = doc.querySelector('.posted_meta_data');
                 const { postedDate, postedAuthor } = extractPostedMetaData(postedMetaDataElement);
 
                 const additionalImageElement = doc.querySelector('img.center-block');
-                let additionalImage = '';
-                if (additionalImageElement) {
-                    additionalImage = correctImageUrl(additionalImageElement.src);
-                    if (shouldExcludeImage(additionalImage)) {
-                        additionalImage = '';
-                    }
-                }
+                let additionalImage = additionalImageElement ? correctImageUrl(additionalImageElement.src) : '';
+                if (shouldExcludeImage(additionalImage)) additionalImage = '';
 
                 const newsContent = document.getElementById('news-content');
                 if (!newsContent) {
