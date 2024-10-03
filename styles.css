@@ -74,10 +74,10 @@
 
 /* Pagination styles */
 #pagination {
-    text-align: center;
+    text-align: right; /* Align pagination to the right */
     margin-top: 20px;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end; /* Align pagination to the right */
     align-items: center;
 }
 
