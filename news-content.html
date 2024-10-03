@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Content</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Include your existing styles -->
+</head>
+<body>
+    <div id="news-content" class="full-news-content">
+        <!-- Full news content will be dynamically inserted here -->
+    </div>
+
+    <script>
+        // Get the news URL from the query parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const newsUrl = decodeURIComponent(urlParams.get('url'));
+
+        if (newsUrl) {
+            fetch(newsUrl)
+                .then(response => response.text())
+                .then(data => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(data, 'text/html');
+
+                    const title = doc.querySelector('h1.bold.h2.nobmargin') ? doc.querySelector('h1.bold.h2.nobmargin').textContent.trim() : 'No Title';
+                    const imageElement = doc.querySelector('.img_section img');
+                    let image = '';
+                    if (imageElement) {
+                        image = imageElement.src.startsWith('http') ? imageElement.src : `https://www.tradepr.work${imageElement.src}`;
+                    }
+
+                    const contentContainer = doc.querySelector('.the-post-description');
+                    const content = contentContainer ? contentContainer.innerHTML : 'No Content Available';
+
+                    const postedMetaDataElement = doc.querySelector('.posted_meta_data');
+                    const postedDate = postedMetaDataElement ? postedMetaDataElement.textContent.match(/\d{2}\/\d{2}\/\d{4}/) : 'No Date';
+                    const postedAuthor = postedMetaDataElement ? postedMetaDataElement.textContent.match(/by\s(.+)/)[1] : 'No Author';
+
+                    // Update the content on the page
+                    const newsContent = document.getElementById('news-content');
+                    newsContent.innerHTML = `
+                        <h1>${title}</h1>
+                        ${image ? `<img src="${image}" alt="${title}" class="main-image">` : ''}
+                        <div class="posted-meta">
+                            <span>Posted on ${postedDate} by ${postedAuthor}</span>
+                        </div>
+                        <div class="content">${content}</div>
+                    `;
+                })
+                .catch(error => console.error('Error loading news content:', error));
+        } else {
+            document.getElementById('news-content').innerHTML = '<p>No news content found.</p>';
+        }
+    </script>
+</body>
+</html>
