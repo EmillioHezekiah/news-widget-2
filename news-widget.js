@@ -220,22 +220,22 @@ document.addEventListener('DOMContentLoaded', function () {
                         ${image ? `<img src="${image}" alt="${title}" class="modal-image">` : ''}
                         <div>${content}</div>
                         ${postedDate !== 'No Date' && postedAuthor !== 'No Author' ? formatPostedMetaData(postedDate, postedAuthor) : ''}
-                        <button id="back-button" class="back-button">Back to News List</button>
+                        <button id="back-button" class="back-button">Back</button>
                     </div>
                 `;
 
-                window.scrollTo(0, 0); // Ensure scroll starts at the top
+                const backButton = document.getElementById('back-button');
+                if (backButton) {
+                    backButton.addEventListener('click', function () {
+                        loadNewsList(currentPage); // Reload the news list from the original website
+                    });
+                }
+
+                window.scrollTo(0, 0); // Ensure the content starts from the top
             })
             .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Handle back button to return to the news list
-    document.addEventListener('click', function (event) {
-        if (event.target.matches('#back-button')) {
-            loadNewsList(currentPage); // Load the current page of news when the back button is clicked
-        }
-    });
-
-    // Initial load of the news list
+    // Initial loading of the news list
     loadNewsList(currentPage);
 });
