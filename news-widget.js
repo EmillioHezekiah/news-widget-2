@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     // Add pagination buttons for news list page only
                     if (!isViewingContent) {
-                        addPagination(doc);
+                        addPagination(doc, page); // Pass the current page for comparison
                     }
                 }
 
@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Handle pagination dynamically
-    function addPagination(doc) {
+    function addPagination(doc, currentPage) {
         const paginationLinks = doc.querySelectorAll('.pagination a');
         if (paginationLinks.length > 0) {
             const paginationContainer = document.createElement('div');
@@ -142,13 +142,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 const pageButton = document.createElement('span'); // Changed to span for text style
                 pageButton.innerText = pageNumber === '«' ? 'Back' : pageNumber === '»' ? 'Next' : pageNumber;
                 pageButton.classList.add('page-number');
+
+                // Check for the current page and highlight it
                 if (parseInt(pageNumber) === parseInt(currentPage)) {
-                    pageButton.classList.add('current-page'); // Highlight the current page
+                    pageButton.classList.add('current-page');
                 }
+
                 pageButton.addEventListener('click', function () {
                     const newPage = new URL(pageUrl).searchParams.get('page');
-                    currentPage = newPage; // Update current page
-                    loadNewsList(newPage); // Load the corresponding page from the original website
+                    loadNewsList(newPage); // Load the corresponding page
                 });
                 paginationContainer.appendChild(pageButton);
             });
@@ -221,23 +223,17 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="full-news-content">
                         <h1 class="article-title">${title}</h1>
                         ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail">` : ''}
-                        ${image ? `<img src="${image}" alt="${title}" class="main-image">` : ''}
+                        ${image ? `<img src="${image}" alt="${title}" class="main-image">`}
                         
                         <div class="content">${content}</div>
-                        <button id="back-button" class="back-button">Back</button> <!-- Back button -->
+                        ${formatPostedMetaData(postedDate, postedAuthor)}
                     </div>
                 `;
 
-                // Event listener for the back button to return to the news list
-                document.getElementById('back-button').addEventListener('click', function () {
-                    loadNewsList(currentPage); // Return to the list at the current page
-                });
-
-                window.scrollTo(0, 0); // Scroll to top when loading full content
+                window.scrollTo(0, 0); // Scroll to top when loading the content
             })
             .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Initial load of the news list
-    loadNewsList(currentPage); // Load the first page by default
+    loadNewsList(currentPage); // Load the first page on startup
 });
