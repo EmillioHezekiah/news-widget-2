@@ -70,11 +70,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Add title
                 const titleElement = document.createElement('h1');
-                titleElement.textContent = "News Distributions by Trade PR";
-                titleElement.style.fontFamily = "Roboto Condensed, sans-serif"; // Font family
-                titleElement.style.fontSize = "14pt"; // Font size
-                titleElement.style.color = "#3A0707"; // Font color
-                titleElement.style.textAlign = "center"; // Center align the title
+                titleElement.textContent = "News Distribution by Trade PR";
+                titleElement.classList.add('news-title'); // Added class for styling
                 widget.appendChild(titleElement); // Append title to the widget
 
                 const newsContent = document.createElement('div');
@@ -227,15 +224,19 @@ document.addEventListener('DOMContentLoaded', function () {
                         ${image ? `<img src="${image}" alt="${title}" class="main-image">` : ''}
                         ${formatPostedMetaData(postedDate, postedAuthor)}
                         <div class="content">${content}</div>
+                        <button id="back-button" class="back-button">Back</button> <!-- Back button -->
                     </div>
                 `;
 
-                // Scroll to the full article content
-                window.scrollTo(0, newsContent.offsetTop);
+                // Event listener for the back button
+                document.getElementById('back-button').addEventListener('click', function () {
+                    loadNewsList(currentPage); // Return to the news list
+                });
+
+                window.scrollTo(0, 0); // Scroll to top when loading full content
             })
             .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Load the initial news list
-    loadNewsList(currentPage);
+    loadNewsList(currentPage); // Load the initial news list
 });
