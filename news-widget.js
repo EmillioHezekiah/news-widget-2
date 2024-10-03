@@ -210,6 +210,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     pagination.style.display = 'none'; // Hide pagination
                 }
 
+                // Updated for content page style
                 newsContent.innerHTML = `
                     <div class="full-news-content">
                         <h1 class="article-title">${title}</h1>
@@ -224,15 +225,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 const backButton = document.getElementById('back-button');
                 if (backButton) {
                     backButton.addEventListener('click', function () {
-                        loadNewsList(currentPage); // Load the previous news list
+                        loadNewsList(currentPage); // Load the news list for the current page
                     });
                 }
 
-                window.scrollTo(0, 0); // Scroll to top when viewing content
+                window.scrollTo(0, 0); // Scroll to top when loading the content
             })
-            .catch(error => console.error('Error loading content:', error));
+            .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Initialize the first load of the news list
-    loadNewsList(currentPage);
+    loadNewsList(currentPage); // Initial load
 });
