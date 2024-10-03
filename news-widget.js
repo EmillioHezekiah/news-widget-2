@@ -223,8 +223,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="full-news-content">
                         <h1 class="article-title">${title}</h1>
                         ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail">` : ''}
-                        ${image ? `<img src="${image}" alt="${title}" class="main-image">`}
-                        
+                        ${image ? `<img src="${image}" alt="${title}" class="main-image">` : ''}
                         <div class="content">${content}</div>
                         ${formatPostedMetaData(postedDate, postedAuthor)}
                     </div>
@@ -235,5 +234,5 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Error loading news content:', error));
     }
 
-    loadNewsList(currentPage); // Load the first page on startup
+    loadNewsList(currentPage); // Load the first page on initial load
 });
