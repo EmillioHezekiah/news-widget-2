@@ -184,11 +184,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Add back button and remove posted metadata section
                 newsContent.innerHTML = `
                     <div class="full-news-content">
-                        <button id="back-button" class="back-button">Back to News List</button>
                         <h1 class="article-title">${title}</h1>
                         ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail">` : ''}
                         ${image ? `<img src="${image}" alt="${title}" class="main-image">` : ''}
                         <div class="content">${content}</div>
+                        <button id="back-button" style="color: black; background: none; border: none; cursor: pointer;">Back to News List</button>
                     </div>
                 `;
 
