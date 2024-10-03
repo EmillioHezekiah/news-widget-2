@@ -86,7 +86,7 @@
     margin: 0 5px;
     font-size: 16px;
     border: none;
-    background-color: #f0f0f0;
+    background-color: transparent; /* Remove background block */
     cursor: pointer;
     font-weight: bold; /* Make text bold */
     text-transform: capitalize; /* Capitalize text */
@@ -99,7 +99,7 @@
 
 .page-number {
     padding: 5px 15px;
-    background-color: #f0f0f0;
+    background-color: transparent; /* Remove background block */
     margin: 5px;
     cursor: pointer;
     font-weight: bold; /* Make text bold */
@@ -210,4 +210,9 @@ a {
 .news-image:hover,
 .modal-thumbnail:hover {
     transform: scale(1.05); /* Slight zoom-in effect on hover */
+}
+
+/* Remove the 'X' at the bottom-left of the page */
+#x-element {
+    display: none;
 }
