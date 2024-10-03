@@ -68,6 +68,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Clear previous content
                 widget.innerHTML = '';
 
+                // Add title
+                const titleElement = document.createElement('h1');
+                titleElement.textContent = "News Distributions by Trade PR";
+                titleElement.style.fontFamily = "Roboto Condensed, sans-serif"; // Font family
+                titleElement.style.fontSize = "14pt"; // Font size
+                titleElement.style.color = "#3A0707"; // Font color
+                titleElement.style.textAlign = "center"; // Center align the title
+                widget.appendChild(titleElement); // Append title to the widget
+
                 const newsContent = document.createElement('div');
                 newsContent.id = 'news-content';
                 widget.appendChild(newsContent);
@@ -215,23 +224,18 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="full-news-content">
                         <h1 class="article-title">${title}</h1>
                         ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail">` : ''}
-                        ${image ? `<img src="${image}" alt="${title}" class="modal-image">` : ''}
-                        <div class="article-content">${content}</div>
-                        ${postedDate !== 'No Date' && postedAuthor !== 'No Author' ? formatPostedMetaData(postedDate, postedAuthor) : ''}
-                        <button id="back-button" class="back-button">Back</button>
+                        ${image ? `<img src="${image}" alt="${title}" class="main-image">` : ''}
+                        ${formatPostedMetaData(postedDate, postedAuthor)}
+                        <div class="content">${content}</div>
                     </div>
                 `;
 
-                const backButton = document.getElementById('back-button');
-                if (backButton) {
-                    backButton.addEventListener('click', function () {
-                        loadNewsList(currentPage); // Return to the news list
-                    });
-                }
+                // Scroll to the full article content
+                window.scrollTo(0, newsContent.offsetTop);
             })
-            .catch(error => console.error('Error loading article content:', error));
+            .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Load the first page of the news list
+    // Load the initial news list
     loadNewsList(currentPage);
 });
