@@ -65,11 +65,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 const articles = doc.querySelectorAll('.row-fluid.search_result');
                 const widget = document.getElementById('news-widget');
 
-                widget.innerHTML = `
-                    <div style="text-align: left; margin-bottom: 50px;">
-                        <h2 class="news-heading">News Distribution by Trade PR</h2>
-                    </div>
-                `;
+                // Clear previous content
+                widget.innerHTML = '';
 
                 const newsContent = document.createElement('div');
                 newsContent.id = 'news-content';
@@ -236,6 +233,6 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Initial loading of the news list
+    // Load the first page of news on initial load
     loadNewsList(currentPage);
 });
