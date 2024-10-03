@@ -215,28 +215,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 newsContent.innerHTML = `
                     <div class="full-news-content">
-                        <h1 style="font-family: 'Droid Serif'; font-size: 23pt; color: #840d0d;">${title}</h1>
-                        ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail" style="display: block; margin: 0 auto;">` : ''}
-                        ${image ? `<img src="${image}" alt="${title}" class="modal-image" style="display: block; margin: 0 auto;">` : ''}
-                        <p style="font-family: 'Poppins', sans-serif; font-size: 14pt; text-align: justify;">${content}</p>
+                        <h1>${title}</h1>
+                        ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail">` : ''}
+                        ${image ? `<img src="${image}" alt="${title}" class="modal-image">` : ''}
+                        <div>${content}</div>
                         ${postedDate !== 'No Date' && postedAuthor !== 'No Author' ? formatPostedMetaData(postedDate, postedAuthor) : ''}
-                        <button id="back-button" class="btn btn-secondary">Back to News List</button>
+                        <button id="back-button" class="back-button">Back</button>
                     </div>
                 `;
 
-                // Show the modal with the full news content
-                document.body.classList.add('modal-open');
-                newsContent.scrollIntoView({ behavior: 'smooth' });
-
-                // Back button to return to news list
                 const backButton = document.getElementById('back-button');
-                backButton.addEventListener('click', function () {
-                    loadNewsList(currentPage); // Load the previous list page
-                });
+                if (backButton) {
+                    backButton.addEventListener('click', function () {
+                        loadNewsList(currentPage); // Reload the news list from the original website
+                    });
+                }
+
+                window.scrollTo(0, 0); // Ensure the content starts from the top
             })
-            .catch(error => console.error('Error loading article content:', error));
+            .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Initial load
+    // Initial loading of the news list
     loadNewsList(currentPage);
 });
