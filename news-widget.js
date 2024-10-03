@@ -228,9 +228,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                 `;
 
-                // Event listener for the back button
+                // Event listener for the back button to return to the news list
                 document.getElementById('back-button').addEventListener('click', function () {
-                    loadNewsList(currentPage); // Return to the news list
+                    loadNewsList(currentPage); // Return to the list at the current page
                 });
 
                 window.scrollTo(0, 0); // Scroll to top when loading full content
@@ -238,5 +238,6 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Error loading news content:', error));
     }
 
-    loadNewsList(currentPage); // Load the initial news list
+    // Initial load of the news list
+    loadNewsList(currentPage); // Load the first page by default
 });
