@@ -149,15 +149,15 @@
 }
 
 /* Modal image thumbnail */
-.modal-thumbnail,
-.modal-image {
+.modal-thumbnail {
     display: block;
     margin: 0 auto;
-    max-width: 100%;
+    width: 100%; /* Full width */
+    max-width: 300px; /* Set a max width for the modal thumbnail */
     height: auto;
     margin-bottom: 20px;
     border-radius: 5px;
-    object-fit: cover;
+    object-fit: cover; /* Ensure image covers the area */
 }
 
 /* Adjusted paragraph style for full article */
