@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const baseUrl = 'https://www.tradepr.work/articles/';
     let currentPage = 1;
-    let totalPages = 9; // Adjust this value according to your total pages
+    let totalPages = 9;
     let isViewingContent = false;
 
     function correctImageUrl(src) {
@@ -42,16 +42,48 @@ document.addEventListener('DOMContentLoaded', function () {
         return { postedDate, postedAuthor };
     }
 
+    function setupPagination(page) {
+        const paginationContainer = document.getElementById('pagination');
+        if (!paginationContainer) {
+            console.error('Pagination container not found.');
+            return;
+        }
+
+        paginationContainer.innerHTML = '';
+
+        for (let i = 1; i <= totalPages; i++) {
+            const pageButton = document.createElement('button');
+            pageButton.textContent = i;
+            pageButton.classList.add('pagination-button');
+            if (i === page) {
+                pageButton.classList.add('active');
+            }
+            pageButton.addEventListener('click', () => loadNewsList(i));
+            paginationContainer.appendChild(pageButton);
+        }
+    }
+
     function loadNewsList(page) {
         currentPage = page;
         isViewingContent = false;
+
         fetch(`${baseUrl}?page=${page}`)
-            .then(response => response.text())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
             .then(data => {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
                 const articles = doc.querySelectorAll('.row-fluid.search_result');
                 const widget = document.getElementById('news-widget');
+
+                if (!widget) {
+                    console.error('News widget container not found.');
+                    return;
+                }
 
                 widget.innerHTML = '<h1 class="news-title" style="font-size: 12pt; margin-bottom: 24px;">News Distribution by Trade PR</h1><div id="news-content"></div>';
                 const newsContent = widget.querySelector('#news-content');
@@ -82,64 +114,84 @@ document.addEventListener('DOMContentLoaded', function () {
                         ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-thumbnail">` : ''}
                         <div class="news-content">
                             ${formatPostedMetaData(postedDate, postedAuthor)}
-                            <a href="#" class="news-link" data-url="${correctedLink}" data-description="${description}" data-date="${postedDate}" data-author="${postedAuthor}">
-                                ${title}
-                            </a>
+                            <a href="#" class="news-link" data-url="${encodeURIComponent(correctedLink)}">${title}</a>
                             <p>${description}</p>
                         </div>
                     `;
-
-                    newsItem.querySelector('.news-link').addEventListener('click', function (e) {
-                        e.preventDefault();
-                        openNewsContent(this);
-                    });
-
                     newsContent.appendChild(newsItem);
                 });
 
-                setupPagination();
+                // Call setupPagination only if not viewing content
+                if (!isViewingContent) {
+                    setupPagination(page);
+                }
+
+                window.scrollTo(0, 0);
             })
-            .catch(error => console.error('Error fetching news:', error));
+            .catch(error => console.error('Error loading news:', error));
     }
 
-    function setupPagination() {
-        const paginationContainer = document.getElementById('pagination');
-        paginationContainer.innerHTML = ''; // Clear existing pagination
+    function loadNewsContent(url) {
+        isViewingContent = true;
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(data, 'text/html');
 
-        for (let i = 1; i <= totalPages; i++) {
-            const button = document.createElement('button');
-            button.classList.add('page-number');
-            button.innerText = i;
-            button.classList.toggle('current-page', i === currentPage);
-            button.addEventListener('click', () => loadNewsList(i));
-            paginationContainer.appendChild(button);
-        }
-    }
+                const title = doc.querySelector('h1.bold.h2.nobmargin') ? doc.querySelector('h1.bold.h2.nobmargin').textContent.trim() : 'No Title';
+                const imageElement = doc.querySelector('.img_section img');
+                let image = imageElement ? correctImageUrl(imageElement.src) : '';
+                if (shouldExcludeImage(image)) image = '';
 
-    function openNewsContent(linkElement) {
-        const description = linkElement.getAttribute('data-description');
-        const title = linkElement.textContent;
-        const date = linkElement.getAttribute('data-date');
-        const author = linkElement.getAttribute('data-author');
+                const contentContainer = doc.querySelector('.the-post-description');
+                const content = contentContainer ? contentContainer.innerHTML.trim() : 'No Content Available';
 
-        const modalContent = document.querySelector('.modal-content');
-        modalContent.innerHTML = `
-            <h1>${title}</h1>
-            ${formatPostedMetaData(date, author)}
-            <p>${description}</p>
-            <button class="back-button" onclick="closeModal()">Back</button>
-        `;
+                const postedMetaDataElement = doc.querySelector('.posted_meta_data');
+                const { postedDate, postedAuthor } = extractPostedMetaData(postedMetaDataElement);
 
-        const modal = document.getElementById('modal');
-        modal.style.display = 'block';
+                const additionalImageElement = doc.querySelector('img.center-block');
+                let additionalImage = additionalImageElement ? correctImageUrl(additionalImageElement.src) : '';
+                if (shouldExcludeImage(additionalImage)) additionalImage = '';
 
-        // Scroll to top of the modal content when opened
-        modal.scrollTop = 0;
-    }
+                const newsContent = document.getElementById('news-content');
+                if (!newsContent) {
+                    console.error('News content container not found.');
+                    return;
+                }
 
-    function closeModal() {
-        const modal = document.getElementById('modal');
-        modal.style.display = 'none';
+                // Hide pagination when viewing content
+                const pagination = document.getElementById('pagination');
+                if (pagination) {
+                    pagination.style.display = 'none';
+                }
+
+                newsContent.innerHTML = `
+                    <div class="full-news-content">
+                        <h1 class="article-title">${title}</h1>
+                        ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail">` : ''}
+                        ${image ? `<img src="${image}" alt="${title}" class="main-image">` : ''}
+                        <div class="content">${content}</div>
+                        <button id="back-button" style="font-size: 20px; font-weight: bold; padding: 10px 20px; background-color: #f0f0f0; border: 1px solid #ccc; cursor: pointer; margin-top: 30px;">Back to News</button>
+                    </div>
+                `;
+
+                // Check if the button exists before adding an event listener
+                const backButton = document.getElementById('back-button');
+                if (backButton) {
+                    backButton.addEventListener('click', function () {
+                        loadNewsList(currentPage);
+                    });
+                }
+
+                window.scrollTo(0, 0);
+            })
+            .catch(error => console.error('Error loading full article:', error));
     }
 
     loadNewsList(currentPage);
