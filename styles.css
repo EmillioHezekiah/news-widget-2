@@ -15,8 +15,8 @@
 /* Updated styles for posted-meta-data */
 .posted-meta-data {
     font-family: 'Roboto', sans-serif;
-    font-size: 14px;
-    color: #333;
+    font-size: 14pt;
+    color: black;
     margin-bottom: 10px;
 }
 
@@ -51,8 +51,8 @@
 }
 
 .news-link {
-    font-family: 'Droid Serif', serif;
-    font-size: 18px;
+    font-family: 'Droid Serif';
+    font-size: 18pt;
     font-weight: bold;
     color: #840d0d;
     text-decoration: underline;
@@ -65,9 +65,9 @@
 }
 
 .news-content p {
-    font-family: 'Droid Serif', serif;
-    font-size: 16px;
-    color: #333;
+    font-family: 'Droid Serif';
+    font-size: 16pt;
+    color: black;
     font-style: italic;
     margin-top: 5px;
 }
@@ -117,13 +117,13 @@
     background-color: #ccc;
 }
 
-/* Full article modal content */
+/* Full article modal content - Redesign applied here */
 .full-news-content {
     padding: 30px;
-    background-color: #f9f9f9;
+    background-color: #f9f9f9; /* Softer background for full article */
     border: 2px solid #ccc;
     border-radius: 10px;
-    font-family: 'Georgia', serif;
+    font-family: 'Georgia', serif; /* Different font to distinguish full article */
     font-size: 18px;
     line-height: 1.8;
     color: #333;
@@ -132,7 +132,7 @@
 /* Updated modal content heading */
 .full-news-content h1, .full-news-content h2 {
     font-family: 'Playfair Display', serif;
-    font-size: 32px;
+    font-size: 32px; /* Larger for prominence */
     font-weight: bold;
     color: #600202;
     margin-bottom: 15px;
