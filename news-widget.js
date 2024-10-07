@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Add pagination buttons for news list page only
                 if (!isViewingContent) {
-                    addPagination(doc, page); // Pass the current page for comparison
+                    addPagination(doc); // Update to use the doc for pagination links
                 }
 
                 window.scrollTo(0, 0); // Scroll to top when loading the list
@@ -106,36 +106,34 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Handle pagination dynamically
-    function addPagination(doc, currentPage) {
-        const paginationLinks = doc.querySelectorAll('.pagination a');
-        if (paginationLinks.length > 0) {
-            const paginationContainer = document.createElement('div');
-            paginationContainer.id = 'pagination';
-            paginationContainer.innerHTML = '';
+    function addPagination(doc) {
+        const paginationContainer = document.createElement('div');
+        paginationContainer.id = 'pagination';
+        paginationContainer.innerHTML = '';
 
-            paginationLinks.forEach(link => {
-                const pageNumber = parseInt(link.textContent.trim());
-                const pageUrl = link.href;
-
-                const pageButton = document.createElement('span');
-                pageButton.innerText = pageNumber || (link.textContent.trim() === '«' ? 'Back' : 'Next');
-                pageButton.classList.add('page-number');
-
-                // Check for the current page and highlight it
-                if (pageNumber === currentPage) {
-                    pageButton.classList.add('current-page');
-                }
-
-                pageButton.addEventListener('click', function () {
-                    if (pageNumber) {
-                        loadNewsList(pageNumber); // Load the corresponding page
-                    }
-                });
-                paginationContainer.appendChild(pageButton);
+        // Create Back button
+        const backButton = document.createElement('span');
+        backButton.innerText = 'Back';
+        backButton.classList.add('page-number');
+        if (currentPage > 1) {
+            backButton.addEventListener('click', function () {
+                loadNewsList(currentPage - 1); // Load previous page
             });
-
-            document.getElementById('news-widget').appendChild(paginationContainer);
+        } else {
+            backButton.classList.add('disabled'); // Disable if on first page
         }
+        paginationContainer.appendChild(backButton);
+
+        // Create Next button
+        const nextButton = document.createElement('span');
+        nextButton.innerText = 'Next';
+        nextButton.classList.add('page-number');
+        nextButton.addEventListener('click', function () {
+            loadNewsList(currentPage + 1); // Load next page
+        });
+        paginationContainer.appendChild(nextButton);
+
+        document.getElementById('news-widget').appendChild(paginationContainer);
     }
 
     // Handle clicking on a news link to load the full article
