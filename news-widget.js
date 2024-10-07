@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Add pagination buttons for news list page only
                 if (!isViewingContent) {
-                    addPagination(doc, page); // Pass the current page for comparison
+                    addPagination(page); // Pass the current page for comparison
                 }
 
                 window.scrollTo(0, 0); // Scroll to top when loading the list
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Handle pagination dynamically
-    function addPagination(doc, currentPage) {
+    function addPagination(currentPage) {
         const paginationContainer = document.createElement('div');
         paginationContainer.id = 'pagination';
         paginationContainer.innerHTML = '';
@@ -120,6 +120,20 @@ document.addEventListener('DOMContentLoaded', function () {
             loadNewsList(1); // Go to the first page
         });
         paginationContainer.appendChild(firstPageButton);
+
+        // Add numbered page buttons
+        for (let i = 1; i <= totalPages; i++) {
+            const pageButton = document.createElement('span');
+            pageButton.innerText = i;
+            pageButton.classList.add('page-number');
+            if (i === currentPage) {
+                pageButton.classList.add('current-page'); // Highlight the current page
+            }
+            pageButton.addEventListener('click', function () {
+                loadNewsList(i); // Load the selected page
+            });
+            paginationContainer.appendChild(pageButton);
+        }
 
         // Add ">>" button to go to the last page
         const lastPageButton = document.createElement('span');
@@ -186,20 +200,20 @@ document.addEventListener('DOMContentLoaded', function () {
                         ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail">` : ''}
                         ${image ? `<img src="${image}" alt="${title}" class="main-image">` : ''}
                         <div class="content">${content}</div>
-                        <button id="back-button" style="font-size: 20px; font-weight: bold; padding: 10px 20px; background-color: #f0f0f0; border: 2px solid #ccc; cursor: pointer;">Back to News List</button>
+                        <button id="back-button" style="font-size: 20px; font-weight: bold; padding: 10px 20px; background-color: #f0f0f0; border: 1px solid #ccc; cursor: pointer; margin-top: 30px;">Back to News</button>
                     </div>
                 `;
 
-                // Handle back button click
+                // Add event listener to the back button to return to the news list
                 document.getElementById('back-button').addEventListener('click', function () {
-                    loadNewsList(currentPage); // Load the current news list page
+                    loadNewsList(currentPage); // Return to the same page in the news list
                 });
 
-                window.scrollTo(0, 0); // Scroll to the top when opening content
+                window.scrollTo(0, 0); // Scroll to top when loading full article
             })
-            .catch(error => console.error('Error loading article:', error));
+            .catch(error => console.error('Error loading full article:', error));
     }
 
-    // Initial news list load (page 1)
-    loadNewsList(1);
+    // Load the first page of news when the widget is loaded
+    loadNewsList(currentPage);
 });
