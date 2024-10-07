@@ -36,13 +36,23 @@
     padding-bottom: 10px;
 }
 
-/* Style for the news image thumbnail */
+/* Style for the news image */
 .news-image {
-    width: 240px;
-    height: 120px;
-    margin-right: 15px;
-    object-fit: cover;
-    border-radius: 5px;
+    width: auto; /* Auto width */
+    height: auto; /* Auto height */
+    aspect-ratio: auto; /* Maintain aspect ratio */
+    display: block; /* Centering */
+    margin: 0 auto; /* Center image */
+    max-width: 100%; /* Limit maximum width */
+}
+
+/* Style for the caption below the image */
+.news-image-caption {
+    text-align: center; /* Center caption */
+    font-family: 'Droid Serif', serif; /* Caption font */
+    font-size: 14px; /* Caption font size */
+    color: #555; /* Caption color */
+    margin-top: 5px; /* Spacing above caption */
 }
 
 /* Updated styles for the news content */
