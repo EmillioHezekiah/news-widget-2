@@ -48,6 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Load the news list with pagination
     function loadNewsList(page) {
+        currentPage = page; // Update the current page number
         isViewingContent = false; // User is back to viewing the list
         fetch(`${baseUrl}?page=${page}`)
             .then(response => response.text())
@@ -197,10 +198,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     loadNewsList(currentPage); // Load the current news list page
                 });
 
-                window.scrollTo(0, 0); // Scroll to top when loading the content
+                window.scrollTo(0, 0); // Scroll to top of the content when loaded
             })
             .catch(error => console.error('Error loading news content:', error));
     }
 
-    loadNewsList(currentPage); // Load the first page on initial load
+    // Load the first page on initial page load
+    loadNewsList(1);
 });
