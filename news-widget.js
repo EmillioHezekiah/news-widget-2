@@ -114,21 +114,22 @@ document.addEventListener('DOMContentLoaded', function () {
             paginationContainer.innerHTML = '';
 
             paginationLinks.forEach(link => {
-                const pageNumber = link.textContent.trim();
+                const pageNumber = parseInt(link.textContent.trim());
                 const pageUrl = link.href;
 
                 const pageButton = document.createElement('span');
-                pageButton.innerText = pageNumber === '«' ? 'Back' : pageNumber === '»' ? 'Next' : pageNumber;
+                pageButton.innerText = pageNumber || (link.textContent.trim() === '«' ? 'Back' : 'Next');
                 pageButton.classList.add('page-number');
 
                 // Check for the current page and highlight it
-                if (parseInt(pageNumber) === currentPage) {
+                if (pageNumber === currentPage) {
                     pageButton.classList.add('current-page');
                 }
 
                 pageButton.addEventListener('click', function () {
-                    const newPage = new URL(pageUrl).searchParams.get('page');
-                    loadNewsList(newPage); // Load the corresponding page
+                    if (pageNumber) {
+                        loadNewsList(pageNumber); // Load the corresponding page
+                    }
                 });
                 paginationContainer.appendChild(pageButton);
             });
@@ -204,5 +205,5 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Load the first page on initial page load
-    loadNewsList(1);
+    loadNewsList(currentPage);
 });
