@@ -194,5 +194,15 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Error loading full article:', error));
     }
 
+    // Initial load of news list
     loadNewsList(currentPage);
+
+    // Event delegation for news links to load content
+    document.addEventListener('click', function (event) {
+        if (event.target.classList.contains('news-link')) {
+            event.preventDefault();
+            const url = decodeURIComponent(event.target.dataset.url);
+            loadNewsContent(url);
+        }
+    });
 });
