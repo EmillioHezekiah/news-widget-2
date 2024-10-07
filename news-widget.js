@@ -98,10 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Add pagination buttons for news list page only
                 if (!isViewingContent) {
-                    totalPages = Array.from(doc.querySelectorAll('.pagination a')).reduce((max, link) => {
-                        const pageNum = parseInt(link.textContent, 10);
-                        return Math.max(max, pageNum || 0);
-                    }, 0); // Set total pages based on pagination links
+                    totalPages = doc.querySelectorAll('.pagination a').length; // Set total pages based on pagination links
                     addPagination();
                 }
 
@@ -148,13 +145,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const nextButton = document.createElement('span');
         nextButton.innerText = 'Next';
         nextButton.classList.add('page-number');
-        if (currentPage < totalPages) {
-            nextButton.addEventListener('click', function () {
-                loadNewsList(currentPage + 1); // Load next page
-            });
-        } else {
-            nextButton.classList.add('disabled'); // Disable if on last page
-        }
+        nextButton.addEventListener('click', function () {
+            loadNewsList(currentPage + 1); // Load next page
+        });
         paginationContainer.appendChild(nextButton);
 
         document.getElementById('news-widget').appendChild(paginationContainer);
@@ -207,22 +200,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Add back button and remove posted metadata section
                 newsContent.innerHTML = `
-                    <h2>${title}</h2>
-                    ${image ? `<img src="${image}" alt="${title}" class="full-image">` : ''}
-                    ${additionalImage ? `<img src="${additionalImage}" alt="Additional Content" class="full-image">` : ''}
-                    ${formatPostedMetaData(postedDate, postedAuthor)}
-                    <div>${content}</div>
-                    <button id="back-button">Back to News List</button>
+                    <div class="full-news-content">
+                        <h1 class="article-title">${title}</h1>
+                        ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail">` : ''}
+                        ${image ? `<img src="${image}" alt="${title}" class="main-image">` : ''}
+                        <div class="content">${content}</div>
+                        <button id="back-button" style="color: black; background: none; border: none; cursor: pointer;">Back to News List</button>
+                    </div>
                 `;
-                const backButton = document.getElementById('back-button');
-                backButton.addEventListener('click', function () {
-                    loadNewsList(currentPage); // Load the news list for the current page
-                });
 
-                window.scrollTo(0, 0); // Scroll to top when loading content
+                document.getElementById('back-button').addEventListener('click', function () {
+                    loadNewsList(currentPage); // Return to the news list with the current page
+                });
             })
-            .catch(error => console.error('Error loading article:', error));
+            .catch(error => console.error('Error loading content:', error));
     }
 
-    loadNewsList(currentPage); // Initial load
+    // Initial load of news list
+    loadNewsList(currentPage);
 });
