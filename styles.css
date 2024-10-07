@@ -38,12 +38,11 @@
 
 /* Style for the news image */
 .news-image {
-    width: auto; /* Auto width */
-    height: auto; /* Auto height */
-    aspect-ratio: auto; /* Maintain aspect ratio */
+    width: 80px; /* Set thumbnail size */
+    height: 80px; /* Set thumbnail size */
+    object-fit: cover; /* Maintain aspect ratio */
     display: block; /* Centering */
     margin: 0 auto; /* Center image */
-    max-width: 100%; /* Limit maximum width */
 }
 
 /* Style for the caption below the image */
@@ -140,7 +139,8 @@
 }
 
 /* Updated modal content heading */
-.full-news-content h1, .full-news-content h2 {
+.full-news-content h1,
+.full-news-content h2 {
     font-family: 'Playfair Display', serif;
     font-size: 32px;
     font-weight: bold;
