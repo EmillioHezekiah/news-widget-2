@@ -36,22 +36,13 @@
     padding-bottom: 10px;
 }
 
-/* Style for the news image */
+/* Style for the news image thumbnail */
 .news-image {
-    width: 80px; /* Set thumbnail size */
-    height: 80px; /* Set thumbnail size */
-    object-fit: cover; /* Maintain aspect ratio */
-    display: block; /* Centering */
-    margin: 0 auto; /* Center image */
-}
-
-/* Style for the caption below the image */
-.news-image-caption {
-    text-align: center; /* Center caption */
-    font-family: 'Droid Serif', serif; /* Caption font */
-    font-size: 14px; /* Caption font size */
-    color: #555; /* Caption color */
-    margin-top: 5px; /* Spacing above caption */
+    width: 240px;
+    height: 120px;
+    margin-right: 15px;
+    object-fit: cover;
+    border-radius: 5px;
 }
 
 /* Updated styles for the news content */
@@ -139,8 +130,7 @@
 }
 
 /* Updated modal content heading */
-.full-news-content h1,
-.full-news-content h2 {
+.full-news-content h1, .full-news-content h2 {
     font-family: 'Playfair Display', serif;
     font-size: 32px;
     font-weight: bold;
@@ -149,15 +139,15 @@
 }
 
 /* Modal image thumbnail */
-.modal-thumbnail {
+.modal-thumbnail,
+.modal-image {
     display: block;
     margin: 0 auto;
-    width: 100%; /* Full width */
-    max-width: 300px; /* Set a max width for the modal thumbnail */
+    max-width: 100%;
     height: auto;
     margin-bottom: 20px;
     border-radius: 5px;
-    object-fit: cover; /* Ensure image covers the area */
+    object-fit: cover;
 }
 
 /* Adjusted paragraph style for full article */
