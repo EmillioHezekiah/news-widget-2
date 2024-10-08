@@ -57,10 +57,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
                 const articles = doc.querySelectorAll('.row-fluid.search_result');
-                const newsContent = document.getElementById('news-widget');
+                const widget = document.getElementById('news-widget');
 
                 // Clear previous content
-                newsContent.innerHTML = '';
+                widget.innerHTML = '<h1 class="news-title" style="font-size: 12pt; margin-bottom: 24px;">News Distribution by Trade PR</h1><div id="news-content"></div>';
+                const newsContent = widget.querySelector('#news-content');
 
                 if (articles.length === 0) {
                     newsContent.innerHTML = '<p>No news items found.</p>';
@@ -180,7 +181,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 let additionalImage = additionalImageElement ? correctImageUrl(additionalImageElement.src) : '';
                 if (shouldExcludeImage(additionalImage)) additionalImage = '';
 
-                const newsContent = document.getElementById('news-widget');
+                const newsContent = document.getElementById('news-content');
                 if (!newsContent) {
                     console.error('News content container not found.');
                     return;
@@ -192,25 +193,27 @@ document.addEventListener('DOMContentLoaded', function () {
                     pagination.style.display = 'none'; // Hide pagination
                 }
 
-                // Clear previous content and show the full article
+                // Add back button and remove posted metadata section
                 newsContent.innerHTML = `
-                    <h2>${title}</h2>
-                    ${image ? `<img src="${image}" alt="${title}" class="full-article-image">` : ''}
-                    ${additionalImage ? `<img src="${additionalImage}" alt="Additional Image" class="full-article-image">` : ''}
-                    ${formatPostedMetaData(postedDate, postedAuthor)}
-                    <div class="full-article-content">${content}</div>
-                    <button class="back-button">Back to News List</button>
+                    <div class="full-news-content">
+                        <h1 class="article-title">${title}</h1>
+                        ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail">` : ''}
+                        ${image ? `<img src="${image}" alt="${title}" class="main-image">` : ''}
+                        <div class="content">${content}</div>
+                        <button id="back-button" style="font-size: 16pt; margin-top: 20px;">Go Back</button>
+                    </div>
                 `;
 
-                // Add back button functionality
-                const backButton = newsContent.querySelector('.back-button');
+                const backButton = document.getElementById('back-button');
                 backButton.addEventListener('click', function () {
-                    loadNewsList(currentPage); // Go back to the news list
+                    loadNewsList(currentPage); // Return to the news list
                 });
+
+                window.scrollTo(0, 0); // Scroll to top when viewing full article
             })
             .catch(error => console.error('Error loading article content:', error));
     }
 
-    // Initial load of news list
+    // Initially load the news list
     loadNewsList(currentPage);
 });
