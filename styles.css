@@ -130,7 +130,8 @@
 }
 
 /* Updated modal content heading */
-.full-news-content h1, .full-news-content h2 {
+.full-news-content h1,
+.full-news-content h2 {
     font-family: 'Playfair Display', serif;
     font-size: 32px;
     font-weight: bold;
@@ -138,16 +139,16 @@
     margin-bottom: 15px;
 }
 
-/* Modal image thumbnail */
+/* Modal image styles */
 .modal-thumbnail,
 .modal-image {
     display: block;
     margin: 0 auto;
-    max-width: 100%;
+    max-width: 80%; /* Use a percentage for a more responsive design */
     height: auto;
     margin-bottom: 20px;
     border-radius: 5px;
-    object-fit: cover;
+    object-fit: contain; /* Ensure aspect ratio is maintained */
 }
 
 /* Adjusted paragraph style for full article */
