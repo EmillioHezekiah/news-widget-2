@@ -153,7 +153,7 @@
 
 /* Specific styling for the provided image */
 .modal-image {
-    max-width: 300px; /* Set a max width to limit its size */
+   
     height: auto; /* Maintain aspect ratio */
     display: block; /* Center the image */
     margin: 0 auto; /* Center the image */
