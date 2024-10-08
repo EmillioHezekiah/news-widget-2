@@ -231,3 +231,23 @@
 .posted-meta-data .posted-by-snippet-author {
     margin-right: 5px; /* Spacing between elements */
 }
+
+/* For the news content page */
+.full-news-content .image-caption {
+    text-align: center;
+    font-size: 14px;
+    color: #555;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-style: italic;
+}
+
+/* Ensure image and caption styling does not affect the news list page */
+.news-item img.news-image {
+    display: block;
+    margin-bottom: 0;
+}
+
+.news-item .news-content .image-caption {
+    display: none; /* Hide captions in the news list */
+}
