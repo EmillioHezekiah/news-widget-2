@@ -151,6 +151,15 @@
     object-fit: contain; /* Ensure aspect ratio is maintained */
 }
 
+/* Specific styling for the provided image */
+.modal-image {
+       width: 80%; /* Use a percentage to make it responsive */
+    max-width: 300px; /* Set a max width to limit its size */
+    height: auto; /* Maintain aspect ratio */
+    display: block; /* Center the image */
+    margin: 0 auto; /* Center the image */
+}
+
 /* Adjusted paragraph style for full article */
 .full-news-content p {
     font-family: 'Georgia', serif;
