@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     const baseUrl = 'https://www.tradepr.work/articles/';
-    let currentPage = 1; // Track the current page
-    let totalPages = 9; // Set default total pages (this can be dynamic)
-    let isViewingContent = false; // Track whether the user is viewing a full article
+    let currentPage = 1;
+    let totalPages = 9;
+    let isViewingContent = false;
 
     // Helper function to correct image URLs
     function correctImageUrl(src) {
@@ -49,8 +49,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Load the news list with pagination
     function loadNewsList(page) {
-        currentPage = page; // Update the current page number
-        isViewingContent = false; // User is back to viewing the list
+        currentPage = page;
+        isViewingContent = false;
         fetch(`${baseUrl}?page=${page}`)
             .then(response => response.text())
             .then(data => {
@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     const newsItem = document.createElement('div');
                     newsItem.classList.add('news-item');
                     newsItem.innerHTML = `
-                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-thumbnail">` : ''}  <!-- Thumbnail image class -->
+                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-thumbnail">` : ''}  <!-- News Thumbnail class -->
                         <div class="news-content">
                             ${formatPostedMetaData(postedDate, postedAuthor)}
                             <a href="#" class="news-link" data-url="${encodeURIComponent(correctedLink)}">${title}</a>
@@ -98,10 +98,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Add pagination buttons for news list page only
                 if (!isViewingContent) {
-                    addPagination(page); // Pass the current page for comparison
+                    addPagination(page);
                 }
 
-                window.scrollTo(0, 0); // Scroll to top when loading the list
+                window.scrollTo(0, 0);
             })
             .catch(error => console.error('Error loading news:', error));
     }
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function () {
         firstPageButton.innerText = '<<';
         firstPageButton.classList.add('page-number');
         firstPageButton.addEventListener('click', function () {
-            loadNewsList(1); // Go to the first page
+            loadNewsList(1);
         });
         paginationContainer.appendChild(firstPageButton);
 
@@ -127,10 +127,10 @@ document.addEventListener('DOMContentLoaded', function () {
             pageButton.innerText = i;
             pageButton.classList.add('page-number');
             if (i === currentPage) {
-                pageButton.classList.add('current-page'); // Highlight the current page
+                pageButton.classList.add('current-page');
             }
             pageButton.addEventListener('click', function () {
-                loadNewsList(i); // Load the selected page
+                loadNewsList(i);
             });
             paginationContainer.appendChild(pageButton);
         }
@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', function () {
         lastPageButton.innerText = '>>';
         lastPageButton.classList.add('page-number');
         lastPageButton.addEventListener('click', function () {
-            loadNewsList(totalPages); // Go to the last page
+            loadNewsList(totalPages);
         });
         paginationContainer.appendChild(lastPageButton);
 
@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Load the full article content in a regular view below the news list
     function loadNewsContent(url) {
-        isViewingContent = true; // User is viewing content
+        isViewingContent = true;
         fetch(url)
             .then(response => response.text())
             .then(data => {
@@ -177,10 +177,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 const postedMetaDataElement = doc.querySelector('.posted_meta_data');
                 const { postedDate, postedAuthor } = extractPostedMetaData(postedMetaDataElement);
 
-                const additionalImageElement = doc.querySelector('img.modal-img');  // Added specific class for modal image
-                let additionalImage = additionalImageElement ? correctImageUrl(additionalImageElement.src) : '';
-                if (shouldExcludeImage(additionalImage)) additionalImage = '';
-
                 const newsContent = document.getElementById('news-content');
                 if (!newsContent) {
                     console.error('News content container not found.');
@@ -190,20 +186,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Hide pagination when viewing a full article
                 const pagination = document.getElementById('pagination');
                 if (pagination) {
-                    pagination.style.display = 'none'; // Hide pagination
+                    pagination.style.display = 'none';
                 }
 
-                // Add back button and display both main image and additional image
+                // Display full article content and image in modal style
                 newsContent.innerHTML = `
                     <div class="full-news-content">
                         <h1 class="article-title">${title}</h1>
-                        ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-img">` : ''} <!-- Modal image class -->
+                        ${image ? `<img src="${image}" alt="${title}" class="modal-img">` : ''} <!-- Modal image class -->
                         ${formatPostedMetaData(postedDate, postedAuthor)}
                         <div>${content}</div>
                         <button id="back-to-news-list">Back to News List</button>
                     </div>
                 `;
-                window.scrollTo(0, 0); // Scroll to top when viewing content
+                window.scrollTo(0, 0);
             })
             .catch(error => console.error('Error loading news content:', error));
     }
