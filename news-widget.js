@@ -24,29 +24,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return description.replace(/View More/gi, '').trim();
     }
 
-    // Format the posted metadata for each article
-    function formatPostedMetaData(date, author) {
-        return `
-            <div class="posted-meta-data">
-                <span class="posted-by-snippet-posted">Posted</span>
-                <span class="posted-by-snippet-date">${date}</span>
-                <span class="posted-by-snippet-author">by ${author}</span>
-            </div>
-        `;
-    }
-
-    // Extract posted metadata from the document
-    function extractPostedMetaData(element) {
-        const postedMetaData = element ? element.textContent.trim() : '';
-        const dateMatch = postedMetaData.match(/Posted\s+(\d{2}\/\d{2}\/\d{4})/);
-        const authorMatch = postedMetaData.match(/by\s+(.+?)(\s+in\s+[\w\s]+)?$/);
-
-        const postedDate = dateMatch ? dateMatch[1] : 'No Date';
-        const postedAuthor = authorMatch ? authorMatch[1].replace(/<\/?a[^>]*>/g, '').trim() : 'No Author';
-
-        return { postedDate, postedAuthor };
-    }
-
     // Load the news list with pagination
     function loadNewsList(page) {
         currentPage = page;
@@ -80,15 +57,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (shouldExcludeImage(imgSrc)) imgSrc = '';
 
                     const correctedLink = link.replace(/https:\/\/emilliohezekiah.github.io/, 'https://www.tradepr.work');
-                    const postedMetaDataElement = article.querySelector('.posted_meta_data');
-                    const { postedDate, postedAuthor } = extractPostedMetaData(postedMetaDataElement);
 
                     const newsItem = document.createElement('div');
                     newsItem.classList.add('news-item');
                     newsItem.innerHTML = `
                         ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-thumbnail">` : ''}  <!-- News Thumbnail class -->
                         <div class="news-content">
-                            ${formatPostedMetaData(postedDate, postedAuthor)}
                             <a href="#" class="news-link" data-url="${encodeURIComponent(correctedLink)}">${title}</a>
                             <p>${description}</p>
                         </div>
@@ -174,9 +148,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 const contentContainer = doc.querySelector('.the-post-description');
                 const content = contentContainer ? contentContainer.innerHTML.trim() : 'No Content Available';
 
-                const postedMetaDataElement = doc.querySelector('.posted_meta_data');
-                const { postedDate, postedAuthor } = extractPostedMetaData(postedMetaDataElement);
-
                 const newsContent = document.getElementById('news-content');
                 if (!newsContent) {
                     console.error('News content container not found.');
@@ -194,7 +165,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="full-news-content">
                         <h1 class="article-title">${title}</h1>
                         ${image ? `<img src="${image}" alt="${title}" class="modal-img">` : ''} <!-- Modal image class -->
-                        ${formatPostedMetaData(postedDate, postedAuthor)}
                         <div>${content}</div>
                         <button id="back-to-news-list">Back to News List</button>
                     </div>
