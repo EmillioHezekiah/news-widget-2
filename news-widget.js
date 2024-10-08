@@ -200,21 +200,18 @@ document.addEventListener('DOMContentLoaded', function () {
                         ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail">` : ''}
                         ${image ? `<img src="${image}" alt="${title}" class="main-image">` : ''}
                         <div class="content">${content}</div>
-                        <button id="back-button" style="font-size: 20px; font-weight: bold; padding: 10px; margin-top: 20px;">Back</button>
+                        <button id="back-button" style="font-size: 16pt; margin-top: 20px;">Back to News List</button>
                     </div>
                 `;
 
-                // Scroll to the top when viewing a full article
-                window.scrollTo(0, 0);
-
-                // Handle back button
+                // Add event listener for back button
                 document.getElementById('back-button').addEventListener('click', function () {
-                    loadNewsList(currentPage); // Reload the news list on back
+                    loadNewsList(currentPage); // Return to the news list
                 });
             })
-            .catch(error => console.error('Error loading article content:', error));
+            .catch(error => console.error('Error loading article:', error));
     }
 
-    // Initial load
-    loadNewsList(currentPage);
+    // Initialize loading of the first page
+    loadNewsList(1);
 });
