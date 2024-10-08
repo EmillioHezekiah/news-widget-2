@@ -38,7 +38,7 @@
 
 /* Style for the news image thumbnail */
 .news-image {
-    width: auto; /* Allow width to adjust based on height */
+    width: auto; /* Adjust width automatically */
     height: 120px; /* Fixed height */
     margin-right: 15px;
     object-fit: cover;
@@ -69,7 +69,6 @@
     font-size: 16px;
     color: #333;
     font-style: italic;
-    margin-top: 5px;
 }
 
 /* Pagination styles */
@@ -153,7 +152,6 @@
 
 /* Specific styling for the provided image */
 .modal-image {
-   
     height: auto; /* Maintain aspect ratio */
     display: block; /* Center the image */
     margin: 0 auto; /* Center the image */
