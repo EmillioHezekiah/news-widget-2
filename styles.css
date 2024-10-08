@@ -2,19 +2,14 @@
 #news-widget-container {
     margin: 20px;
     font-family: Arial, sans-serif;
-    max-width: 800px; /* Limiting max width for better layout */
-    background-color: #ffffff; /* White background for contrast */
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
 /* Updated Styles for the News Heading */
 .news-heading {
     font-family: 'Roboto', sans-serif;
-    font-size: 24px; /* Increased font size for visibility */
+    font-size: 18px;
     color: rgb(116, 2, 30);
     margin-bottom: 20px;
-    text-align: center; /* Center align the heading */
 }
 
 /* Updated styles for posted-meta-data */
@@ -44,8 +39,8 @@
 
 /* Style for the news image thumbnail */
 .news-image {
-    width: 120px; /* Fixed width */
-    height: 80px; /* Fixed height */
+    width: 212.43px; /* Fixed width */
+    height: 120px; /* Fixed height */
     margin-right: 15px;
     object-fit: cover; /* Ensure images are cropped evenly */
     border-radius: 5px;
@@ -149,7 +144,7 @@
 .modal-image {
     display: block;
     margin: 0 auto;
-    max-width: 100%; /* Ensure image does not exceed modal width */
+    max-width: 100%; /* Make sure image does not exceed modal width */
     height: auto; /* Maintain aspect ratio */
     margin-bottom: 20px;
     border-radius: 5px;
@@ -264,24 +259,4 @@
     display: block;
     text-align: center;
     margin-top: 5px;
-}
-
-/* Responsive Styles */
-@media (max-width: 768px) {
-    .news-item {
-        flex-direction: column; /* Stack image above content on smaller screens */
-        align-items: center; /* Center align items */
-    }
-
-    .news-image {
-        margin-bottom: 10px; /* Add margin for spacing */
-    }
-
-    .full-news-content {
-        padding: 20px; /* Reduce padding for smaller screens */
-    }
-
-    .back-button {
-        padding: 10px 20px; /* Reduce button size */
-    }
 }
