@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 newsContent.innerHTML = `
                     <div class="full-news-content">
                         <h1 class="article-title">${title}</h1>
-                        ${image ? `<img src="${image}" alt="${title}" class="modal-img">` : ''} <!-- Modal image class -->
+                        ${image ? `<img src="${image}" alt="${title}" class="modal-img" style="max-width: 100%; height: auto;">` : ''} <!-- Modal image class -->
                         ${formatPostedMetaData(postedDate, postedAuthor)}
                         <div>${content}</div>
                         <button id="back-to-news-list">Back to News List</button>
