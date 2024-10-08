@@ -251,3 +251,19 @@
 .news-item .news-content .image-caption {
     display: none; /* Hide captions in the news list */
 }
+.fr-img-caption {
+  display: block;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.fr-img-wrap {
+  display: block;
+  text-align: center;
+}
+
+.fr-inner {
+  display: block;
+  text-align: center;
+  margin-top: 5px; /* Space between image and caption */
+}
