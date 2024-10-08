@@ -201,3 +201,55 @@
 .modal-thumbnail:hover {
     transform: scale(1.05);
 }
+
+/* Style for uniform news thumbnails */
+.news-thumbnail {
+    width: 240px;
+    height: 120px;
+    object-fit: cover;
+    float: left;
+    margin-right: 15px;
+}
+
+/* Style for modal images (separate from news list thumbnails) */
+.modal-img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+/* Style for pagination */
+#pagination {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.page-number {
+    cursor: pointer;
+    padding: 5px 10px;
+    margin: 0 5px;
+    display: inline-block;
+}
+
+.page-number.current-page {
+    font-weight: bold;
+    color: #007bff;
+}
+
+.page-number:hover {
+    text-decoration: underline;
+}
+
+/* Styling the posted metadata */
+.posted-meta-data {
+    font-size: 12px;
+    color: gray;
+    margin-bottom: 10px;
+}
+
+.posted-meta-data .posted-by-snippet-posted,
+.posted-meta-data .posted-by-snippet-date,
+.posted-meta-data .posted-by-snippet-author {
+    margin-right: 5px;
+}
+
