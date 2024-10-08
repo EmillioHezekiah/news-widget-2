@@ -15,8 +15,8 @@
 /* Updated styles for posted-meta-data */
 .posted-meta-data {
     font-family: 'Roboto', sans-serif;
-    font-size: 12px; /* Updated font size */
-    color: gray; /* Updated color */
+    font-size: 12px;
+    color: gray;
     margin-bottom: 10px;
 }
 
@@ -39,10 +39,10 @@
 
 /* Style for the news image thumbnail */
 .news-image {
-    width: auto; /* Adjust width automatically */
+    width: 212.43px; /* Fixed width */
     height: 120px; /* Fixed height */
     margin-right: 15px;
-    object-fit: cover;
+    object-fit: cover; /* Ensure images are cropped evenly */
     border-radius: 5px;
 }
 
@@ -202,15 +202,6 @@
     transform: scale(1.05);
 }
 
-/* Style for uniform news thumbnails */
-.news-thumbnail {
-    width: 240px; /* Adjust to your desired thumbnail size */
-    height: 120px; /* Adjust to your desired thumbnail size */
-    object-fit: cover; /* Maintain aspect ratio */
-    float: left;
-    margin-right: 15px;
-}
-
 /* Style for modal images (separate from news list thumbnails) */
 .modal-img {
     max-width: 100%; /* Prevent overflow */
@@ -220,16 +211,16 @@
 
 /* Styling the posted metadata */
 .posted-meta-data {
-    margin-bottom: 10px; /* Space below posted metadata */
-    font-size: 12px; /* Font size for posted metadata */
-    color: gray; /* Updated color for posted metadata */
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: gray;
 }
 
 /* Individual posted metadata styling */
 .posted-meta-data .posted-by-snippet-posted,
 .posted-meta-data .posted-by-snippet-date,
 .posted-meta-data .posted-by-snippet-author {
-    margin-right: 5px; /* Spacing between elements */
+    margin-right: 5px;
 }
 
 /* For the news content page */
@@ -249,21 +240,23 @@
 }
 
 .news-item .news-content .image-caption {
-    display: none; /* Hide captions in the news list */
+    display: none;
 }
+
+/* Image caption styling */
 .fr-img-caption {
-  display: block;
-  text-align: center;
-  margin: 0 auto;
+    display: block;
+    text-align: center;
+    margin: 0 auto;
 }
 
 .fr-img-wrap {
-  display: block;
-  text-align: center;
+    display: block;
+    text-align: center;
 }
 
 .fr-inner {
-  display: block;
-  text-align: center;
-  margin-top: 5px; /* Space between image and caption */
+    display: block;
+    text-align: center;
+    margin-top: 5px;
 }
