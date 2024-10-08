@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     const newsItem = document.createElement('div');
                     newsItem.classList.add('news-item');
                     newsItem.innerHTML = `
-                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-thumbnail">` : ''}  <!-- Changed class here -->
+                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-thumbnail">` : ''}  <!-- Thumbnail image class -->
                         <div class="news-content">
                             ${formatPostedMetaData(postedDate, postedAuthor)}
                             <a href="#" class="news-link" data-url="${encodeURIComponent(correctedLink)}">${title}</a>
@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const postedMetaDataElement = doc.querySelector('.posted_meta_data');
                 const { postedDate, postedAuthor } = extractPostedMetaData(postedMetaDataElement);
 
-                const additionalImageElement = doc.querySelector('img.center-block');
+                const additionalImageElement = doc.querySelector('img.modal-img');  // Added specific class for modal image
                 let additionalImage = additionalImageElement ? correctImageUrl(additionalImageElement.src) : '';
                 if (shouldExcludeImage(additionalImage)) additionalImage = '';
 
@@ -197,25 +197,24 @@ document.addEventListener('DOMContentLoaded', function () {
                 newsContent.innerHTML = `
                     <div class="full-news-content">
                         <h1 class="article-title">${title}</h1>
-                        ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail">` : ''} <!-- Added separate class for modal content -->
+                        ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-img">` : ''} <!-- Modal image class -->
                         ${formatPostedMetaData(postedDate, postedAuthor)}
                         <div>${content}</div>
                         <button id="back-to-news-list">Back to News List</button>
                     </div>
                 `;
-                window.scrollTo(0, 0); // Scroll to top when loading the content
+                window.scrollTo(0, 0); // Scroll to top when viewing content
             })
             .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Handle clicking the back button to return to the news list
+    // Handle back button click to return to news list
     document.addEventListener('click', function (event) {
-        if (event.target.matches('#back-to-news-list')) {
-            event.preventDefault();
-            loadNewsList(currentPage); // Load the news list again
+        if (event.target.id === 'back-to-news-list') {
+            loadNewsList(currentPage);
         }
     });
 
-    // Initial load
-    loadNewsList(currentPage); // Start from page 1
+    // Initialize the news list when the page loads
+    loadNewsList(currentPage);
 });
