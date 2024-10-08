@@ -143,7 +143,7 @@
 .modal-image {
     display: block;
     margin: 0 auto;
-    max-width: 80%; /* Use a percentage for a more responsive design */
+   width: auto;
     height: auto;
     margin-bottom: 20px;
     border-radius: 5px;
