@@ -143,18 +143,11 @@
 .modal-image {
     display: block;
     margin: 0 auto;
-   width: auto;
+    width: auto;
     height: auto;
     margin-bottom: 20px;
     border-radius: 5px;
     object-fit: contain; /* Ensure aspect ratio is maintained */
-}
-
-/* Specific styling for the provided image */
-.modal-image {
-    height: auto; /* Maintain aspect ratio */
-    display: block; /* Center the image */
-    margin: 0 auto; /* Center the image */
 }
 
 /* Adjusted paragraph style for full article */
@@ -211,9 +204,9 @@
 
 /* Style for uniform news thumbnails */
 .news-thumbnail {
-    width: 240px;
-    height: 120px;
-    object-fit: cover;
+    width: 240px; /* Adjust to your desired thumbnail size */
+    height: 120px; /* Adjust to your desired thumbnail size */
+    object-fit: cover; /* Maintain aspect ratio */
     float: left;
     margin-right: 15px;
 }
@@ -223,28 +216,6 @@
     width: 100%;
     height: auto;
     object-fit: contain;
-}
-
-/* Style for pagination */
-#pagination {
-    text-align: center;
-    margin-top: 20px;
-}
-
-.page-number {
-    cursor: pointer;
-    padding: 5px 10px;
-    margin: 0 5px;
-    display: inline-block;
-}
-
-.page-number.current-page {
-    font-weight: bold;
-    color: #007bff;
-}
-
-.page-number:hover {
-    text-decoration: underline;
 }
 
 /* Styling the posted metadata */
