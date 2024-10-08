@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     const newsItem = document.createElement('div');
                     newsItem.classList.add('news-item');
                     newsItem.innerHTML = `
-                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-thumbnail">` : ''}  <!-- Thumbnail image class -->
+                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-image">` : ''}
                         <div class="news-content">
                             ${formatPostedMetaData(postedDate, postedAuthor)}
                             <a href="#" class="news-link" data-url="${encodeURIComponent(correctedLink)}">${title}</a>
@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const postedMetaDataElement = doc.querySelector('.posted_meta_data');
                 const { postedDate, postedAuthor } = extractPostedMetaData(postedMetaDataElement);
 
-                const additionalImageElement = doc.querySelector('img.modal-img');  // Added specific class for modal image
+                const additionalImageElement = doc.querySelector('img.center-block');
                 let additionalImage = additionalImageElement ? correctImageUrl(additionalImageElement.src) : '';
                 if (shouldExcludeImage(additionalImage)) additionalImage = '';
 
@@ -193,28 +193,27 @@ document.addEventListener('DOMContentLoaded', function () {
                     pagination.style.display = 'none'; // Hide pagination
                 }
 
-                // Add back button and display both main image and additional image
+                // Add back button and remove posted metadata section
                 newsContent.innerHTML = `
                     <div class="full-news-content">
                         <h1 class="article-title">${title}</h1>
-                        ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-img">` : ''} <!-- Modal image class -->
-                        ${formatPostedMetaData(postedDate, postedAuthor)}
-                        <div>${content}</div>
-                        <button id="back-to-news-list">Back to News List</button>
+                        ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail">` : ''}
+                        ${image ? `<img src="${image}" alt="${title}" class="main-image">` : ''}
+                        <div class="content">${content}</div>
+                        <button id="back-button" style="font-size: 20px; font-weight: bold; padding: 10px 20px; background-color: #f0f0f0; border: 1px solid #ccc; cursor: pointer; margin-top: 30px;">Back to News</button>
                     </div>
                 `;
-                window.scrollTo(0, 0); // Scroll to top when viewing content
+
+                // Add event listener to the back button to return to the news list
+                document.getElementById('back-button').addEventListener('click', function () {
+                    loadNewsList(currentPage); // Return to the same page in the news list
+                });
+
+                window.scrollTo(0, 0); // Scroll to top when loading full article
             })
-            .catch(error => console.error('Error loading news content:', error));
+            .catch(error => console.error('Error loading full article:', error));
     }
 
-    // Handle back button click to return to news list
-    document.addEventListener('click', function (event) {
-        if (event.target.id === 'back-to-news-list') {
-            loadNewsList(currentPage);
-        }
-    });
-
-    // Initialize the news list when the page loads
+    // Load the first page of news when the widget is loaded
     loadNewsList(currentPage);
 });
