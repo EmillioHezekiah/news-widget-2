@@ -37,7 +37,7 @@
     padding-bottom: 10px;
 }
 
-/* Style for the news image thumbnail (kept unchanged) */
+/* Style for the news image thumbnail */
 .news-image {
     width: 212.43px; /* Fixed width */
     height: 120px; /* Fixed height */
@@ -139,7 +139,7 @@
     margin-bottom: 15px;
 }
 
-/* Modal image styles (adjusted for modal only) */
+/* Modal image styles */
 .modal-thumbnail,
 .modal-image {
     display: block;
