@@ -263,16 +263,3 @@
 .main-image {
     width: 100% !important; /* or any desired value */
 }
-.modal-content {
-    max-width: 100%; /* Ensure the modal doesn't exceed the screen width */
-    overflow: hidden; /* Avoid scrollbars in case of large content */
-}
-
-/* Ensure the image takes its natural size, adjusting within the modal */
-.modal-content img {
-    max-width: 100%;  /* Makes sure it never exceeds the modal's width */
-    height: auto;     /* Maintains the aspect ratio */
-    width: auto;      /* Allow the image to be as wide as its original dimensions */
-    display: block;   /* Center alignment can be handled using margins */
-    margin: 0 auto;   /* Center the image horizontally */
-}
