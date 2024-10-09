@@ -246,3 +246,52 @@
     text-align: center;
     margin-top: 5px;
 }
+
+/* Full article modal content */
+.full-news-content {
+    padding: 30px;
+    background-color: #f9f9f9;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    font-family: 'Georgia', serif;
+    font-size: 18px;
+    line-height: 1.8;
+    color: #333;
+}
+
+/* Updated modal content heading */
+.full-news-content h1,
+.full-news-content h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: bold;
+    color: #600202;
+    margin-bottom: 15px;
+}
+
+/* Modal image styles */
+.modal-thumbnail,
+.modal-image {
+    display: block;
+    margin: 0 auto;
+    width: 100%; /* Allow the image to take up full width */
+    height: auto; /* Let the height adjust based on the width */
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+/* Removed object-fit and width/height restrictions */
+.modal-img {
+    width: 100%; /* Full width of modal */
+    height: auto; /* Automatically adjust height */
+    border-radius: 5px;
+}
+
+/* Adjusted paragraph style for full article */
+.full-news-content p {
+    font-family: 'Georgia', serif;
+    font-size: 18px;
+    color: #444;
+    margin-bottom: 20px;
+}
+
