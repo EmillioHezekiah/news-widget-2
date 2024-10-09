@@ -79,6 +79,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     let imgSrc = imgElement ? correctImageUrl(imgElement.src) : '';
                     if (shouldExcludeImage(imgSrc)) imgSrc = '';
 
+                    // Remove width and height attributes if present
+                    if (imgElement) {
+                        imgElement.removeAttribute('width');
+                        imgElement.removeAttribute('height');
+                    }
+
                     const correctedLink = link.replace(/https:\/\/emilliohezekiah.github.io/, 'https://www.tradepr.work');
                     const postedMetaDataElement = article.querySelector('.posted_meta_data');
                     const { postedDate, postedAuthor } = extractPostedMetaData(postedMetaDataElement);
@@ -171,6 +177,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 let image = imageElement ? correctImageUrl(imageElement.src) : '';
                 if (shouldExcludeImage(image)) image = '';
 
+                // Remove width and height attributes if present in full content
+                if (imageElement) {
+                    imageElement.removeAttribute('width');
+                    imageElement.removeAttribute('height');
+                }
+
                 const contentContainer = doc.querySelector('.the-post-description');
                 const content = contentContainer ? contentContainer.innerHTML.trim() : 'No Content Available';
 
@@ -197,23 +209,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 newsContent.innerHTML = `
                     <div class="full-news-content">
                         <h1 class="article-title">${title}</h1>
-                        ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail">` : ''}
-                        ${image ? `<img src="${image}" alt="${title}" class="main-image">` : ''}
-                        <div class="content">${content}</div>
-                        <button id="back-button" style="font-size: 16pt; margin-top: 20px;">Go Back</button>
+                        ${image ? `<img src="${image}" alt="${title}" class="article-image">` : ''}
+                        <p>${formatPostedMetaData(postedDate, postedAuthor)}</p>
+                        ${content}
                     </div>
                 `;
 
-                const backButton = document.getElementById('back-button');
-                backButton.addEventListener('click', function () {
-                    loadNewsList(currentPage); // Return to the news list
-                });
-
-                window.scrollTo(0, 0); // Scroll to top when viewing full article
+                // Scroll to top when loading full content
+                window.scrollTo(0, 0);
             })
-            .catch(error => console.error('Error loading article content:', error));
+            .catch(error => console.error('Error loading article:', error));
     }
 
-    // Initially load the news list
+    // Initialize the news widget by loading the first page
     loadNewsList(currentPage);
 });
