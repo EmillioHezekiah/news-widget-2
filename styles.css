@@ -144,7 +144,7 @@
 .modal-image {
     display: block;
     margin: 0 auto;
-    max-width: 100%; /* Make sure image does not exceed modal width */
+    max-width: 100%; /* Ensure images do not exceed modal width */
     height: auto; /* Maintain aspect ratio */
     margin-bottom: 20px;
     border-radius: 5px;
