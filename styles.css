@@ -260,6 +260,6 @@
     text-align: center;
     margin-top: 5px;
 }
-.fr-fic fr-dib{
-    width: auto;
+img.fr-fic.fr-dib {
+    width: 100% !important; /* or any desired value */
 }
