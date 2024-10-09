@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let totalPages = 9;
     let isViewingContent = false;
 
-    // Helper function to correct image URLs
     function correctImageUrl(src) {
         if (src.startsWith('/')) {
             return `https://www.tradepr.work${src}`;
@@ -14,17 +13,14 @@ document.addEventListener('DOMContentLoaded', function () {
         return src.replace(/https:\/\/emilliohezekiah.github.io/, 'https://www.tradepr.work');
     }
 
-    // Helper function to exclude certain images (e.g., profile pictures)
     function shouldExcludeImage(src) {
         return src.includes('/pictures/profile/');
     }
 
-    // Clean up article descriptions
     function cleanDescription(description) {
         return description.replace(/View More/gi, '').trim();
     }
 
-    // Format the posted metadata for each article
     function formatPostedMetaData(date, author) {
         return `
             <div class="posted-meta-data">
@@ -35,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function () {
         `;
     }
 
-    // Extract posted metadata from the document
     function extractPostedMetaData(element) {
         const postedMetaData = element ? element.textContent.trim() : '';
         const dateMatch = postedMetaData.match(/Posted\s+(\d{2}\/\d{2}\/\d{4})/);
@@ -47,7 +42,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return { postedDate, postedAuthor };
     }
 
-    // Load the news list with pagination
     function loadNewsList(page) {
         currentPage = page;
         isViewingContent = false;
@@ -59,7 +53,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 const articles = doc.querySelectorAll('.row-fluid.search_result');
                 const widget = document.getElementById('news-widget');
 
-                // Clear previous content
                 widget.innerHTML = '<h1 class="news-title">News Distribution by Trade PR</h1><div id="news-content"></div>';
                 const newsContent = widget.querySelector('#news-content');
 
@@ -105,7 +98,6 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Error loading news:', error));
     }
 
-    // Handle pagination dynamically
     function addPagination(currentPage) {
         const paginationContainer = document.createElement('div');
         paginationContainer.id = 'pagination';
@@ -142,7 +134,6 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('news-widget').appendChild(paginationContainer);
     }
 
-    // Handle clicking on a news link to load the full article
     document.addEventListener('click', function (event) {
         if (event.target.matches('.news-link')) {
             event.preventDefault();
@@ -151,7 +142,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Load the full article content
     function loadNewsContent(url) {
         isViewingContent = true;
         fetch(url)
