@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 newsContent.innerHTML = `
                     <div class="full-news-content">
                         <h1 class="article-title">${title}</h1>
-                        ${image ? `<img src="${image}" alt="${title}" class="main-image">` : ''}
+                        ${image ? `<img src="${image}" alt="${title}" class="main-image" style="width:auto;">` : ''}
                         <div class="content">${content}</div>
                         <button id="back-button">Go Back</button>
                     </div>
