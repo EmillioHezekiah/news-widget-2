@@ -199,21 +199,22 @@ document.addEventListener('DOMContentLoaded', function () {
                         <h1 class="article-title">${title}</h1>
                         ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail">` : ''}
                         ${image ? `<img src="${image}" alt="${title}" class="main-image">` : ''}
+                        <div class="posted-meta">
+                            ${formatPostedMetaData(postedDate, postedAuthor)}
+                        </div>
                         <div class="content">${content}</div>
-                        <button id="back-button" style="font-size: 16pt; margin-top: 20px;">Go Back</button>
+                        <button id="back-button" class="back-button">Back to News List</button>
                     </div>
                 `;
 
-                const backButton = document.getElementById('back-button');
-                backButton.addEventListener('click', function () {
-                    loadNewsList(currentPage); // Return to the news list
+                // Handle back button to return to the news list
+                document.getElementById('back-button').addEventListener('click', function () {
+                    loadNewsList(currentPage); // Reload the current page
                 });
-
-                window.scrollTo(0, 0); // Scroll to top when viewing full article
             })
             .catch(error => console.error('Error loading article content:', error));
     }
 
-    // Initially load the news list
+    // Initialize the news list
     loadNewsList(currentPage);
 });
