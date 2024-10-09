@@ -12,7 +12,7 @@
     margin-bottom: 20px;
 }
 
-/* Updated styles for posted-meta-data */
+/* Updated styles for posted meta data */
 .posted-meta-data {
     font-family: 'Roboto', sans-serif;
     font-size: 12px;
@@ -144,7 +144,7 @@
 .modal-image {
     display: block;
     margin: 0 auto;
-    max-width: 100%; /* Make sure image does not exceed modal width */
+    max-width: 100%; /* Ensure images do not exceed modal width */
     height: auto; /* Maintain aspect ratio */
     margin-bottom: 20px;
     border-radius: 5px;
@@ -207,20 +207,6 @@
     max-width: 100%; /* Prevent overflow */
     height: auto; /* Maintain aspect ratio */
     object-fit: contain;
-}
-
-/* Styling the posted metadata */
-.posted-meta-data {
-    margin-bottom: 10px;
-    font-size: 12px;
-    color: gray;
-}
-
-/* Individual posted metadata styling */
-.posted-meta-data .posted-by-snippet-posted,
-.posted-meta-data .posted-by-snippet-date,
-.posted-meta-data .posted-by-snippet-author {
-    margin-right: 5px;
 }
 
 /* For the news content page */
