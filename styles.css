@@ -260,54 +260,6 @@
     text-align: center;
     margin-top: 5px;
 }
-
 .main-image {
     width: 100% !important; /* or any desired value */
-}
-
-/* News full content adjustments */
-.full-news-content .article-title {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
-
-.full-news-content .main-image {
-    max-width: 100%;
-    margin-bottom: 20px;
-    border-radius: 5px;
-}
-
-/* Pagination controls */
-#pagination {
-    text-align: center;
-    margin-top: 20px;
-}
-
-.page-number {
-    display: inline-block;
-    margin: 0 5px;
-    padding: 5px 10px;
-    cursor: pointer;
-    color: #666;
-}
-
-.page-number:hover,
-.current-page {
-    color: #840d0d;
-    font-weight: bold;
-}
-
-#back-button {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 5px 10px;
-    background-color: #ddd;
-    border: 1px solid #ccc;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-#back-button:hover {
-    background-color: #ccc;
 }
