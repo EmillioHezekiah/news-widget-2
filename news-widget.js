@@ -79,12 +79,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     let imgSrc = imgElement ? correctImageUrl(imgElement.src) : '';
                     if (shouldExcludeImage(imgSrc)) imgSrc = '';
 
-                    // Remove width and height attributes
-                    if (imgElement) {
-                        imgElement.removeAttribute('width');
-                        imgElement.removeAttribute('height');
-                    }
-
                     const correctedLink = link.replace(/https:\/\/emilliohezekiah.github.io/, 'https://www.tradepr.work');
                     const postedMetaDataElement = article.querySelector('.posted_meta_data');
                     const { postedDate, postedAuthor } = extractPostedMetaData(postedMetaDataElement);
@@ -203,18 +197,23 @@ document.addEventListener('DOMContentLoaded', function () {
                 newsContent.innerHTML = `
                     <div class="full-news-content">
                         <h1 class="article-title">${title}</h1>
-                        ${image ? `<img src="${image}" alt="${title}" class="full-news-image">` : ''}
-                        ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="additional-image">` : ''}
-                        ${formatPostedMetaData(postedDate, postedAuthor)}
-                        <div class="article-body">${content}</div>
+                        ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail">` : ''}
+                        ${image ? `<img src="${image}" alt="${title}" class="main-image">` : ''}
+                        <div class="content">${content}</div>
+                        <button id="back-button" style="font-size: 16pt; margin-top: 20px;">Go Back</button>
                     </div>
                 `;
 
-                window.scrollTo(0, 0); // Scroll to the top of the article
+                const backButton = document.getElementById('back-button');
+                backButton.addEventListener('click', function () {
+                    loadNewsList(currentPage); // Return to the news list
+                });
+
+                window.scrollTo(0, 0); // Scroll to top when viewing full article
             })
-            .catch(error => console.error('Error loading full article:', error));
+            .catch(error => console.error('Error loading article content:', error));
     }
 
-    // Load the initial news list
+    // Initially load the news list
     loadNewsList(currentPage);
 });
