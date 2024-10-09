@@ -209,12 +209,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Handle back button to return to the news list
                 document.getElementById('back-button').addEventListener('click', function () {
-                    loadNewsList(currentPage); // Reload the current page
+                    loadNewsList(currentPage); // Go back to the current news list page
                 });
+
+                window.scrollTo(0, 0); // Scroll to the top when viewing full content
             })
-            .catch(error => console.error('Error loading article content:', error));
+            .catch(error => console.error('Error loading full news content:', error));
     }
 
-    // Initialize the news list
+    // Initial load of the news list
     loadNewsList(currentPage);
 });
