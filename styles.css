@@ -37,13 +37,13 @@
     padding-bottom: 10px;
 }
 
-/* Updated style for the news image thumbnail */
+/* Style for the news image thumbnail */
 .news-image {
-    max-width: 100%; /* Ensure responsive images */
-    height: auto; /* Maintain aspect ratio */
+    width: 212.43px; /* Fixed width */
+    height: 120px; /* Fixed height */
     margin-right: 15px;
-    border-radius: 5px;
     object-fit: cover; /* Ensure images are cropped evenly */
+    border-radius: 5px;
 }
 
 /* Updated styles for the news content */
