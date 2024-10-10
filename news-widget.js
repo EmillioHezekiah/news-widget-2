@@ -199,9 +199,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <h1 class="article-title">${title}</h1>
                         ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail">` : ''}
                         ${image ? `<img src="${image}" alt="${title}" class="main-image">` : ''}
-                        <div class="posted-meta">
-                            ${formatPostedMetaData(postedDate, postedAuthor)}
-                        </div>
+                        
                         <div class="content">${content}</div>
                         <button id="back-button" class="back-button">Back to News List</button>
                     </div>
