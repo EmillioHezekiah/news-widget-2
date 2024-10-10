@@ -209,22 +209,23 @@
 .fr-img-caption,
 .fr-img-wrap,
 .fr-inner {
-    display:grid;
+    display: block;
     text-align: center;
     margin-top: 5px;
 }
 
 .fr-fic.fr-dib {
-    width: auto;
-    height: auto;
+    width: 100%; 
     max-width: 300px;
-    justify-content: space-around;
+    height: auto;
+    margin: 0 auto; /* Centers image */
 }
 
 /* Center Image and Caption */
 .fr-img-wrap {
+    display: block;
     text-align: center; /* Ensures both image and caption are centered */
-    margin: 0 auto;     /* Centers the element horizontally */
+    margin: 0 auto;
 }
 
 .fr-inner {
@@ -236,7 +237,7 @@
 }
 
 .fr-img-wrap img {
-    display:grid;
+    display: block;
     margin: 0 auto;
     max-width: 100%;
     height: auto;
