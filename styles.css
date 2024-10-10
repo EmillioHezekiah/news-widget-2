@@ -222,15 +222,23 @@
 
 /* Center Image and Caption */
 .fr-img-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: block;
+    text-align: center; /* Ensures both image and caption are centered */
+    margin: 0 auto;     /* Centers the element horizontally */
 }
 
 .fr-inner {
+    display: block;
     margin-top: 10px;
     font-size: 14px;
     color: #555;
     font-style: italic;
     text-align: center;
 }
+.fr-img-wrap img {
+    display: inline-block; /* Makes the image respect text-align */
+    max-width: 100%;       /* Ensures image is responsive */
+    height: auto;
+    margin: 0 auto;
+}
+
