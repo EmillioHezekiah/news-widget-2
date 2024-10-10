@@ -47,6 +47,14 @@ document.addEventListener('DOMContentLoaded', function () {
         return { postedDate, postedAuthor };
     }
 
+    // Disable the contenteditable attribute for captions
+    function disableContentEditable() {
+        const captions = document.querySelectorAll('.fr-inner[contenteditable="true"]');
+        captions.forEach(caption => {
+            caption.setAttribute('contenteditable', 'false'); // Disable contenteditable
+        });
+    }
+
     // Load the news list with pagination
     function loadNewsList(page) {
         currentPage = page; // Update the current page number
@@ -198,23 +206,24 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="full-news-content">
                         <h1 class="article-title">${title}</h1>
                         ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail">` : ''}
-                        ${image ? `<img src="${image}" alt="${title}" class="main-image">` : ''}
-                        
+                        <div class="article-metadata">
+                            ${formatPostedMetaData(postedDate, postedAuthor)}
+                        </div>
+                        ${image ? `<img src="${image}" alt="${title}" class="center-block">` : ''}
                         <div class="content">${content}</div>
-                        <button id="back-button" class="back-button">Back to News List</button>
+                        <button id="backButton">Back to News List</button>
                     </div>
                 `;
 
-                // Handle back button to return to the news list
-                document.getElementById('back-button').addEventListener('click', function () {
-                    loadNewsList(currentPage); // Go back to the current news list page
+                document.getElementById('backButton').addEventListener('click', function () {
+                    loadNewsList(currentPage);
                 });
 
-                window.scrollTo(0, 0); // Scroll to the top when viewing full content
+                window.scrollTo(0, 0); // Scroll to top of article
             })
-            .catch(error => console.error('Error loading full news content:', error));
+            .catch(error => console.error('Error loading full article:', error));
     }
 
-    // Initial load of the news list
-    loadNewsList(currentPage);
+    // Initial news load
+    loadNewsList(1);
 });
