@@ -4,7 +4,7 @@
     font-family: Arial, sans-serif;
 }
 
-/* Updated Styles for the News Heading */
+/* News Heading */
 .news-heading {
     font-family: 'Roboto', sans-serif;
     font-size: 18px;
@@ -12,7 +12,7 @@
     margin-bottom: 20px;
 }
 
-/* Updated styles for posted meta data */
+/* Posted Meta Data */
 .posted-meta-data {
     font-family: 'Roboto', sans-serif;
     font-size: 12px;
@@ -20,7 +20,7 @@
     margin-bottom: 10px;
 }
 
-/* Individual posted metadata styling */
+/* Individual posted metadata */
 .posted-by-snippet-posted,
 .posted-by-snippet-date,
 .posted-by-snippet-author {
@@ -37,16 +37,16 @@
     padding-bottom: 10px;
 }
 
-/* Style for the news image thumbnail */
+/* News Image Thumbnail */
 .news-image {
-    width: 212.43px; /* Fixed width */
-    height: 120px; /* Fixed height */
+    width: 212.43px;
+    height: 120px;
     margin-right: 15px;
-    object-fit: cover; /* Ensure images are cropped evenly */
+    object-fit: cover;
     border-radius: 5px;
 }
 
-/* Updated styles for the news content */
+/* News Content */
 .news-content {
     flex: 1;
 }
@@ -72,7 +72,7 @@
     font-style: italic;
 }
 
-/* Pagination styles */
+/* Pagination */
 #pagination {
     text-align: right;
     margin-top: 20px;
@@ -81,30 +81,22 @@
     align-items: center;
 }
 
-#pagination button {
+#pagination button,
+.page-number {
     padding: 8px 16px;
     margin: 0 5px;
     font-size: 16px;
+    font-weight: bold;
+    background-color: transparent;
     border: none;
-    background-color: transparent;
     cursor: pointer;
-    font-weight: bold;
     text-transform: capitalize;
     transition: background-color 0.3s ease;
 }
 
-#pagination button:hover {
+#pagination button:hover,
+#pagination .page-number:hover {
     background-color: #ddd;
-}
-
-.page-number {
-    padding: 5px 15px;
-    background-color: transparent;
-    margin: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    text-transform: capitalize;
-    transition: background-color 0.3s ease;
 }
 
 .current-page {
@@ -113,11 +105,7 @@
     font-weight: bold;
 }
 
-#pagination .page-number:hover {
-    background-color: #ccc;
-}
-
-/* Full article modal content */
+/* Full Article Modal Content */
 .full-news-content {
     padding: 30px;
     background-color: #f9f9f9;
@@ -129,7 +117,6 @@
     color: #333;
 }
 
-/* Updated modal content heading */
 .full-news-content h1,
 .full-news-content h2 {
     font-family: 'Playfair Display', serif;
@@ -139,25 +126,6 @@
     margin-bottom: 15px;
 }
 
-/* Modal image styles */
-.modal-thumbnail,
-.modal-image {
-    display: block;
-    margin: 0 auto;
-    max-width: 100%; /* Ensure images do not exceed modal width */
-    height: auto; /* Maintain aspect ratio */
-    margin-bottom: 20px;
-    border-radius: 5px;
-}
-
-/* Removed fixed width and height */
-.modal-img {
-    max-width: 100%; /* Prevent overflow */
-    height: auto; /* Maintain aspect ratio */
-    object-fit: contain; /* Ensure image is not distorted */
-}
-
-/* Adjusted paragraph style for full article */
 .full-news-content p {
     font-family: 'Georgia', serif;
     font-size: 18px;
@@ -165,7 +133,19 @@
     margin-bottom: 20px;
 }
 
-/* Back button styling */
+/* Modal Image Styles */
+.modal-thumbnail,
+.modal-image,
+.modal-img {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+/* Back Button */
 .back-button {
     display: inline-block;
     padding: 12px 24px;
@@ -176,8 +156,7 @@
     border-radius: 5px;
     cursor: pointer;
     border: none;
-    margin-top: 30px;
-    margin-bottom: 30px;
+    margin: 30px 0;
     text-align: center;
     transition: background-color 0.3s ease;
 }
@@ -186,7 +165,7 @@
     background-color: #004e73;
 }
 
-/* Scrollbar styles for modal */
+/* Scrollbar Styles for Modal */
 .modal-content::-webkit-scrollbar {
     width: 8px;
 }
@@ -200,95 +179,37 @@
     background-color: #888;
 }
 
-/* Smoother transitions and hover effects for images */
-.modal-thumbnail {
-    transition: transform 0.3s ease;
-    max-width: 40%;
-}
-
-/* For the news content page */
+/* Image Caption */
 .full-news-content .image-caption {
     text-align: center;
     font-size: 14px;
     color: #555;
-    margin-top: 10px;
-    margin-bottom: 20px;
+    margin: 10px 0 20px;
     font-style: italic;
 }
 
-/* Ensure image and caption styling does not affect the news list page */
+/* News List Image */
 .news-item img.news-image {
     display: block;
     margin-bottom: 0;
 }
 
+/* Image Caption in News List */
 .news-item .news-content .image-caption {
     display: none;
 }
 
-/* Image caption styling */
-.fr-img-caption {
-    display: block;
-    text-align: center;
-    margin: 0 auto;
+/* Smoother transitions and hover effects for modal images */
+.modal-thumbnail {
+    transition: transform 0.3s ease;
+    max-width: 40%;
 }
 
-.fr-img-wrap {
-    display: block;
-    text-align: center;
-}
-
+/* Froala Editor Image Caption Styles */
+.fr-img-caption,
+.fr-img-wrap,
 .fr-inner {
     display: block;
     text-align: center;
     margin-top: 5px;
 }
-
-/* Full article modal content */
-.full-news-content {
-    padding: 30px;
-    background-color: #f9f9f9;
-    border: 2px solid #ccc;
-    border-radius: 10px;
-    font-family: 'Georgia', serif;
-    font-size: 18px;
-    line-height: 1.8;
-    color: #333;
-}
-
-/* Updated modal content heading */
-.full-news-content h1,
-.full-news-content h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 32px;
-    font-weight: bold;
-    color: #600202;
-    margin-bottom: 15px;
-}
-
-/* Modal image styles */
-.modal-thumbnail,
-.modal-image {
-    display: block;
-    margin: 0 auto;
-    width: 100%; /* Allow the image to take up full width */
-    height: auto; /* Let the height adjust based on the width */
-    margin-bottom: 20px;
-    border-radius: 5px;
-}
-
-/* Removed object-fit and width/height restrictions */
-.modal-img {
-    width: 100%; /* Full width of modal */
-    height: auto; /* Automatically adjust height */
-    border-radius: 5px;
-}
-
-/* Adjusted paragraph style for full article */
-.full-news-content p {
-    font-family: 'Georgia', serif;
-    font-size: 18px;
-    color: #444;
-    margin-bottom: 20px;
-}
-
