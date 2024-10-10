@@ -195,35 +195,30 @@ document.addEventListener('DOMContentLoaded', function () {
                     return;
                 }
 
-                // Hide pagination when viewing a full article
-                const pagination = document.getElementById('pagination');
-                if (pagination) {
-                    pagination.style.display = 'none'; // Hide pagination
-                }
-
-                // Add back button and remove posted metadata section
                 newsContent.innerHTML = `
-                    <div class="full-news-content">
-                        <h1 class="article-title">${title}</h1>
-                        ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail">` : ''}
-                        <div class="article-metadata">
-                            ${formatPostedMetaData(postedDate, postedAuthor)}
-                        </div>
-                        ${image ? `<img src="${image}" alt="${title}" class="center-block">` : ''}
-                        <div class="content">${content}</div>
-                        <button id="backButton">Back to News List</button>
-                    </div>
+                    <h1>${title}</h1>
+                    ${image ? `<img src="${image}" alt="${title}">` : ''}
+                    ${additionalImage ? `<img src="${additionalImage}" alt="${title}">` : ''}
+                    <div class="posted-metadata">${formatPostedMetaData(postedDate, postedAuthor)}</div>
+                    <div>${content}</div>
+                    <button class="back-button">Back to news list</button>
                 `;
 
-                document.getElementById('backButton').addEventListener('click', function () {
-                    loadNewsList(currentPage);
-                });
+                // Disable contenteditable for captions
+                disableContentEditable();
 
-                window.scrollTo(0, 0); // Scroll to top of article
+                window.scrollTo(0, 0); // Scroll to the top when loading full content
             })
-            .catch(error => console.error('Error loading full article:', error));
+            .catch(error => console.error('Error loading content:', error));
     }
 
-    // Initial news load
-    loadNewsList(1);
+    // Handle back button to return to the news list
+    document.addEventListener('click', function (event) {
+        if (event.target.matches('.back-button')) {
+            loadNewsList(currentPage); // Reload the current page of the news list
+        }
+    });
+
+    // Load the first page of news when the page is ready
+    loadNewsList(currentPage);
 });
