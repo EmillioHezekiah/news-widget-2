@@ -12,32 +12,6 @@
     margin-bottom: 20px;
 }
 
-/* Center the entire fr-img-wrap element */
-.fr-img-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-/* Style the Image */
-.fr-fic.fr-dib {
-    width: auto; /* Or any custom width like 100% */
-    height: auto; /* Adjust the height based on width */
-    max-width: 300px; /* Optional: set max width for responsiveness */
-}
-
-/* Style the Text Inside the Span (fr-inner) */
-.fr-inner {
-    text-align: center;
-    margin-top: 5px;
-    font-family: 'Roboto', sans-serif;
-    font-size: 14px;
-    color: #333;
-}
-
 /* Posted Meta Data */
 .posted-meta-data {
     font-family: 'Roboto', sans-serif;
@@ -238,7 +212,25 @@
     display: block;
     text-align: center;
     margin-top: 5px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 40%;
+}
+
+.fr-fic.fr-dib {
+    width: auto; /* Or any custom width like 100% */
+    height: auto; /* Adjust the height based on width */
+    max-width: 300px; /* Optional: set max width for responsiveness */
+}
+
+/* Center Image and Caption */
+.fr-img-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.fr-inner {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #555;
+    font-style: italic;
+    text-align: center;
 }
