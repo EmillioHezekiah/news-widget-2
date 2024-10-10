@@ -213,3 +213,9 @@
     text-align: center;
     margin-top: 5px;
 }
+.fr-fic.fr-dib {
+    width: auto; /* Or any custom width like 100% */
+    height: auto; /* Adjust the height based on width */
+    max-width: 300px; /* Optional: set max width for responsiveness */
+}
+
