@@ -47,6 +47,14 @@ document.addEventListener('DOMContentLoaded', function () {
         return { postedDate, postedAuthor };
     }
 
+    // Disable contenteditable for .fr-inner elements
+    function disableContentEditable() {
+        const editableElements = document.querySelectorAll('.fr-inner[contenteditable="true"]');
+        editableElements.forEach(element => {
+            element.setAttribute('contenteditable', 'false');
+        });
+    }
+
     // Load the news list with pagination
     function loadNewsList(page) {
         currentPage = page; // Update the current page number
@@ -193,28 +201,24 @@ document.addEventListener('DOMContentLoaded', function () {
                     pagination.style.display = 'none'; // Hide pagination
                 }
 
-                // Add back button and remove posted metadata section
                 newsContent.innerHTML = `
-                    <div class="full-news-content">
-                        <h1 class="article-title">${title}</h1>
-                        ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail">` : ''}
-                        ${image ? `<img src="${image}" alt="${title}" class="main-image">` : ''}
-                        
-                        <div class="content">${content}</div>
-                        <button id="back-button" class="back-button">Back to News List</button>
+                    <div class="full-article">
+                        <h1>${title}</h1>
+                        ${formatPostedMetaData(postedDate, postedAuthor)}
+                        ${image ? `<img src="${image}" alt="${title}" class="article-image">` : ''}
+                        ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="article-image">` : ''}
+                        <div class="article-content">${content}</div>
                     </div>
                 `;
 
-                // Handle back button to return to the news list
-                document.getElementById('back-button').addEventListener('click', function () {
-                    loadNewsList(currentPage); // Go back to the current news list page
-                });
+                window.scrollTo(0, 0); // Scroll to top when viewing the content
 
-                window.scrollTo(0, 0); // Scroll to the top when viewing full content
+                // Call disableContentEditable to disable editing after loading the content
+                disableContentEditable();
             })
-            .catch(error => console.error('Error loading full news content:', error));
+            .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Initial load of the news list
-    loadNewsList(currentPage);
+    // Load the first page of news list on page load
+    loadNewsList(1);
 });
