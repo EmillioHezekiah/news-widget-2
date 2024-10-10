@@ -209,7 +209,7 @@
 .fr-img-caption,
 .fr-img-wrap,
 .fr-inner {
-    
+    display:grid;
     text-align: center;
     margin-top: 5px;
 }
@@ -236,7 +236,7 @@
 }
 
 .fr-img-wrap img {
-    
+    display:grid;
     margin: 0 auto;
     max-width: 100%;
     height: auto;
