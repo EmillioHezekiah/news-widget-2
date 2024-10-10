@@ -218,6 +218,7 @@
     width: auto;
     height: auto;
     max-width: 300px;
+    justify-content: space-around;
 }
 
 /* Center Image and Caption */
