@@ -203,10 +203,7 @@
 /* Smoother transitions and hover effects for images */
 .modal-thumbnail {
     transition: transform 0.3s ease;
-}
-
-.modal-thumbnail:hover {
-    transform: scale(1.05);
+    max-width: 40%;
 }
 
 /* For the news content page */
