@@ -110,6 +110,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 window.scrollTo(0, 0); // Scroll to top when loading the list
+                disableContentEditable(); // Ensure contenteditable captions are disabled
             })
             .catch(error => console.error('Error loading news:', error));
     }
@@ -205,23 +206,54 @@ document.addEventListener('DOMContentLoaded', function () {
                 newsContent.innerHTML = `
                     <div class="full-news-content">
                         <h1 class="article-title">${title}</h1>
-                        ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail">` : ''}
-
-                        ${image ? `<img src="${image}" alt="${title}" class="center-block">` : ''}
-                        <div class="content">${content}</div>
-                        <button id="backButton">Back to News List</button>
+                        ${image ? `<img src="${image}" alt="${title}" class="article-image responsive center-block">` : ''}
+                        ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="article-image additional-image responsive center-block">` : ''}
+                        ${formatPostedMetaData(postedDate, postedAuthor)}
+                        <div class="article-text">${content}</div>
+                        <button id="back-button" class="styled-back-button">Back to News</button>
                     </div>
                 `;
 
-                document.getElementById('backButton').addEventListener('click', function () {
-                    loadNewsList(currentPage);
-                });
-
-                window.scrollTo(0, 0); // Scroll to top of article
+                window.scrollTo(0, 0); // Scroll to top when loading the full content
             })
-            .catch(error => console.error('Error loading full article:', error));
+            .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Initial news load
-    loadNewsList(1);
+    // Handle back button click
+    document.addEventListener('click', function (event) {
+        if (event.target && event.target.id === 'back-button') {
+            loadNewsList(currentPage); // Go back to the news list
+        }
+    });
+
+    // Load the first page initially
+    loadNewsList(1); // You can change the initial page here
+
+    // Responsive styling for images
+    const style = document.createElement('style');
+    style.innerHTML = `
+        .news-image, .article-image {
+            width: 100%; /* Ensure full-width responsiveness */
+            max-width: 240px; /* Restrict the max width for images */
+            height: auto;
+            display: block;
+            margin: 0 auto; /* Center the image */
+        }
+        .responsive {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+        .styled-back-button {
+            background-color: #f0f0f0;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .styled-back-button:hover {
+            background-color: #ddd;
+        }
+    `;
+    document.head.appendChild(style);
 });
