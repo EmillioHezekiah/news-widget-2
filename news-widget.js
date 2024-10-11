@@ -110,6 +110,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 window.scrollTo(0, 0); // Scroll to top when loading the list
+                disableContentEditable(); // Ensure contenteditable captions are disabled
             })
             .catch(error => console.error('Error loading news:', error));
     }
@@ -205,23 +206,29 @@ document.addEventListener('DOMContentLoaded', function () {
                 newsContent.innerHTML = `
                     <div class="full-news-content">
                         <h1 class="article-title">${title}</h1>
-                        ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail">` : ''}
-
-                        ${image ? `<img src="${image}" alt="${title}" class="center-block">` : ''}
-                        <div class="content">${content}</div>
-                        <button id="backButton">Back to News List</button>
+                        ${image ? `<img src="${image}" alt="${title}" class="article-image">` : ''}
+                        ${additionalImage ? `<img src="${additionalImage}" class="center-block" alt="Article Image">` : ''}
+                        ${formatPostedMetaData(postedDate, postedAuthor)}
+                        <div class="article-body">${content}</div>
+                        <a href="#" class="back-to-list">Go Back to News List</a>
                     </div>
                 `;
+                window.scrollTo(0, 0); // Scroll to top after loading content
 
-                document.getElementById('backButton').addEventListener('click', function () {
-                    loadNewsList(currentPage);
-                });
-
-                window.scrollTo(0, 0); // Scroll to top of article
+                // Disable contenteditable captions in full article view
+                disableContentEditable();
             })
-            .catch(error => console.error('Error loading full article:', error));
+            .catch(error => console.error('Error loading full news content:', error));
     }
 
-    // Initial news load
-    loadNewsList(1);
+    // Handle the back button click to return to the news list
+    document.addEventListener('click', function (event) {
+        if (event.target.matches('.back-to-list')) {
+            event.preventDefault();
+            loadNewsList(currentPage); // Reload the news list on the current page
+        }
+    });
+
+    // Load the first news list on page load
+    loadNewsList(currentPage);
 });
