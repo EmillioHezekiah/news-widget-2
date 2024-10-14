@@ -207,25 +207,16 @@ document.addEventListener('DOMContentLoaded', function () {
                         <button class="back-to-news-list" onclick="loadNewsList(currentPage)">Back to News List</button>
                         <h1 class="article-title">${title}</h1>
                         ${additionalImage ? `<img src="${additionalImage}" class="news-modal-thumbnail" alt="${title}">` : ''}
+                        ${image ? `<img src="${image}" class="news-modal-image" alt="${title}">` : ''}
                         ${formatPostedMetaData(postedDate, postedAuthor)}
-                        ${image ? `<img src="${image}" alt="${title}" class="article-image">` : ''}
-                        <div class="article-content">${content}</div>
+                        <div class="article-body">${content}</div>
                     </div>
                 `;
-
-                disableContentEditable(); // Disable captions' contenteditable attribute
-
-                window.scrollTo(0, 0); // Scroll to the top when loading content
+                window.scrollTo(0, 0); // Scroll to the top to show the article
             })
-            .catch(error => {
-                console.error('Error loading news content:', error);
-                const newsContent = document.getElementById('news-content');
-                if (newsContent) {
-                    newsContent.innerHTML = '<p>Error loading news content. Please try again later.</p>';
-                }
-            });
+            .catch(error => console.error('Error loading article:', error));
     }
 
-    // Load initial news list
+    // Load the initial news list
     loadNewsList(currentPage);
 });
