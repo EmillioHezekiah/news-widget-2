@@ -52,6 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const captions = document.querySelectorAll('.fr-inner[contenteditable="true"]');
         captions.forEach(caption => {
             caption.setAttribute('contenteditable', 'false'); // Disable contenteditable
+            caption.classList.add('non-editable'); // Add a class for additional styling
         });
     }
 
@@ -205,23 +206,29 @@ document.addEventListener('DOMContentLoaded', function () {
                 newsContent.innerHTML = `
                     <div class="full-news-content">
                         <h1 class="article-title">${title}</h1>
-                        ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail">` : ''}
-
-                        ${image ? `<img src="${image}" alt="${title}" class="center-block">` : ''}
-                        <div class="content">${content}</div>
-                        <button id="backButton">Back to News List</button>
+                        ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="additional-image">` : ''}
+                        <div class="posted-meta">${formatPostedMetaData(postedDate, postedAuthor)}</div>
+                        ${image ? `<img src="${image}" alt="${title}" class="news-image-full">` : ''}
+                        <div class="news-content-full">${content}</div>
+                        <div class="back-button"><button id="back-to-list">Back to News List</button></div>
                     </div>
                 `;
-
-                document.getElementById('backButton').addEventListener('click', function () {
-                    loadNewsList(currentPage);
-                });
-
-                window.scrollTo(0, 0); // Scroll to top of article
+                window.scrollTo(0, 0); // Scroll to top when loading the content
             })
-            .catch(error => console.error('Error loading full article:', error));
+            .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Initial news load
-    loadNewsList(1);
+    // Handle back button click
+    document.addEventListener('click', function (event) {
+        if (event.target.matches('#back-to-list')) {
+            event.preventDefault();
+            loadNewsList(currentPage);
+        }
+    });
+
+    // Call the disableContentEditable function to apply the changes
+    disableContentEditable();
+
+    // Load the initial news list on page load
+    loadNewsList(1); // Start from the first page
 });
