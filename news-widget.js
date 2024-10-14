@@ -196,21 +196,31 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Add back button and posted metadata section
                 newsContent.innerHTML = `
                     <div class="full-news-content">
-                        <button class="back-to-news-list" onclick="loadNewsList(currentPage)">Back to News List</button>
+                        <button class="back-to-news-list" id="backToNewsList">Back to News List</button>
                         <h1 class="article-title">${title}</h1>
                         <div class="news-modal-thumbnail">
-                            ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="thumbnail-image">` : ''}
+                            ${additionalImage ? `<img src="${additionalImage}" alt="${title}">` : ''}
                         </div>
-                        ${image ? `<img src="${image}" class="news-modal-image" alt="${title}">` : ''}
-                        ${formatPostedMetaData(postedDate, postedAuthor)}
-                        <div class="article-body">${content}</div>
+                        <div class="posted-meta-data">
+                            <span class="posted-by-snippet-posted">Posted</span>
+                            <span class="posted-by-snippet-date">${postedDate}</span>
+                            <span class="posted-by-snippet-author">by ${postedAuthor}</span>
+                        </div>
+                        <div class="article-content">${content}</div>
                     </div>
                 `;
-                window.scrollTo(0, 0); // Scroll to the top to show the article
+
+                // Scroll to the full content section
+                window.scrollTo(0, newsContent.offsetTop);
+                
+                // Add event listener for back button
+                document.getElementById('backToNewsList').addEventListener('click', function () {
+                    loadNewsList(currentPage); // Go back to the news list
+                });
             })
-            .catch(error => console.error('Error loading article:', error));
+            .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Load the initial news list
+    // Initial load
     loadNewsList(currentPage);
 });
