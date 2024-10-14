@@ -51,8 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function disableContentEditable() {
         const captions = document.querySelectorAll('.fr-inner[contenteditable="true"]');
         captions.forEach(caption => {
-            caption.setAttribute('contenteditable', 'false'); // Disable contenteditable
-            caption.classList.add('non-editable'); // Add a class for additional styling
+            caption.removeAttribute('contenteditable'); // Disable contenteditable
         });
     }
 
@@ -207,28 +206,16 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="full-news-content">
                         <h1 class="article-title">${title}</h1>
                         ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="additional-image">` : ''}
-                        <div class="posted-meta">${formatPostedMetaData(postedDate, postedAuthor)}</div>
-                        ${image ? `<img src="${image}" alt="${title}" class="news-image-full">` : ''}
-                        <div class="news-content-full">${content}</div>
-                        <div class="back-button"><button id="back-to-list">Back to News List</button></div>
+                        <div class="news-full-content">${content}</div>
                     </div>
                 `;
-                window.scrollTo(0, 0); // Scroll to top when loading the content
+
+                // Optionally disable editable content after loading the full article
+                disableContentEditable();
             })
             .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Handle back button click
-    document.addEventListener('click', function (event) {
-        if (event.target.matches('#back-to-list')) {
-            event.preventDefault();
-            loadNewsList(currentPage);
-        }
-    });
-
-    // Call the disableContentEditable function to apply the changes
-    disableContentEditable();
-
-    // Load the initial news list on page load
-    loadNewsList(1); // Start from the first page
+    // Initialize news list and load page 1 on page load
+    loadNewsList(currentPage);
 });
