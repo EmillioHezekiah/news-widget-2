@@ -47,6 +47,14 @@ document.addEventListener('DOMContentLoaded', function () {
         return { postedDate, postedAuthor };
     }
 
+    // Disable the contenteditable attribute for captions
+    function disableContentEditable() {
+        const captions = document.querySelectorAll('.fr-inner[contenteditable="true"]');
+        captions.forEach(caption => {
+            caption.removeAttribute('contenteditable'); // Disable contenteditable
+        });
+    }
+
     // Load the news list with pagination
     function loadNewsList(page) {
         currentPage = page; // Update the current page number
@@ -193,40 +201,21 @@ document.addEventListener('DOMContentLoaded', function () {
                     pagination.style.display = 'none'; // Hide pagination
                 }
 
-                // Add back button and posted metadata section at the bottom
+                // Add back button and remove posted metadata section
                 newsContent.innerHTML = `
                     <div class="full-news-content">
                         <h1 class="article-title">${title}</h1>
-                        <div class="news-modal-thumbnail">
-                            ${additionalImage ? `<img src="${additionalImage}" alt="${title}">` : ''}
-                        </div>
-                        <div class="posted-meta-data">
-                            <span class="posted-by-snippet-posted">Posted</span>
-                            <span class="posted-by-snippet-date">${postedDate}</span>
-                            <span class="posted-by-snippet-author">by ${postedAuthor}</span>
-                        </div>
-                        <div class="article-content">${content}</div>
-                        <button id="backToNewsList" class="back-button">Back to News List</button>
+                        ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="additional-image">` : ''}
+                        <div class="news-full-content">${content}</div>
                     </div>
                 `;
 
-                // Disable contenteditable for image captions
-                const imageCaptions = newsContent.querySelectorAll('img');
-                imageCaptions.forEach(img => {
-                    img.setAttribute('contenteditable', 'false'); // Disable contenteditable
-                });
-
-                // Scroll to the full content section
-                window.scrollTo(0, newsContent.offsetTop + newsContent.offsetHeight);
-
-                // Add event listener for back button at the bottom left
-                document.getElementById('backToNewsList').addEventListener('click', function () {
-                    loadNewsList(currentPage); // Go back to the news list
-                });
+                // Optionally disable editable content after loading the full article
+                disableContentEditable();
             })
             .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Initial load
+    // Initialize news list and load page 1 on page load
     loadNewsList(currentPage);
 });
