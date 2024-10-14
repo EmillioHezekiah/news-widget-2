@@ -39,8 +39,8 @@
 
 /* News Image Thumbnail */
 .news-image {
-    width: 212.43px;
-    height: 120px;
+    width: 212.43px; /* Adjusted as necessary */
+    height: 120px; /* Fixed height for consistency */
     margin-right: 15px;
     object-fit: cover;
     border-radius: 5px;
@@ -211,7 +211,7 @@
 }
 
 .fr-fic.fr-dib {
-    width: 100%; 
+    width: 100%;
     max-width: 300px;
     height: auto;
     margin: 0 auto; /* Centers image */
@@ -238,7 +238,38 @@
     max-width: 100%;
     height: auto;
 }
+
+/* Non-editable style */
 .non-editable {
     background-color: #f0f0f0; /* Optional: light grey background */
     cursor: not-allowed; /* Show a "not-allowed" cursor */
+}
+
+/* Additional Styles for Modal Thumbnail and Back Button */
+.news-modal-thumbnail {
+    text-align: center; /* Center the thumbnail */
+    margin-bottom: 20px; /* Space below thumbnail */
+}
+
+.thumbnail-image {
+    width: 50%; /* Set to 50% of modal width */
+    height: auto; /* Maintain aspect ratio */
+    display: block; /* Center the image */
+    margin: 0 auto; /* Center the image */
+}
+
+/* Back to News List button */
+.back-to-news-list {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 10px 15px;
+    background-color: #007bff; /* Example background color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.back-to-news-list:hover {
+    background-color: #0056b3; /* Darker shade for hover effect */
 }
