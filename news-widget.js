@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function disableContentEditable() {
         const captions = document.querySelectorAll('.fr-inner[contenteditable="true"]');
         captions.forEach(caption => {
-            caption.removeAttribute('contenteditable'); // Disable contenteditable
+            caption.setAttribute('contenteditable', 'false'); // Disable contenteditable
         });
     }
 
@@ -205,17 +205,23 @@ document.addEventListener('DOMContentLoaded', function () {
                 newsContent.innerHTML = `
                     <div class="full-news-content">
                         <h1 class="article-title">${title}</h1>
-                        ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="additional-image">` : ''}
-                        <div class="news-full-content">${content}</div>
+                        ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail">` : ''}
+
+                        ${image ? `<img src="${image}" alt="${title}" class="center-block">` : ''}
+                        <div class="content">${content}</div>
+                        <button id="backButton">Back to News List</button>
                     </div>
                 `;
 
-                // Optionally disable editable content after loading the full article
-                disableContentEditable();
+                document.getElementById('backButton').addEventListener('click', function () {
+                    loadNewsList(currentPage);
+                });
+
+                window.scrollTo(0, 0); // Scroll to top of article
             })
-            .catch(error => console.error('Error loading news content:', error));
+            .catch(error => console.error('Error loading full article:', error));
     }
 
-    // Initialize news list and load page 1 on page load
-    loadNewsList(currentPage);
+    // Initial news load
+    loadNewsList(1);
 });
