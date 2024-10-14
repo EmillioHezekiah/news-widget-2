@@ -47,14 +47,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return { postedDate, postedAuthor };
     }
 
-    // Disable the contenteditable attribute for captions
-    function disableContentEditable() {
-        const captions = document.querySelectorAll('.fr-inner[contenteditable="true"]');
-        captions.forEach(caption => {
-            caption.removeAttribute('contenteditable'); // Disable contenteditable
-        });
-    }
-
     // Load the news list with pagination
     function loadNewsList(page) {
         currentPage = page; // Update the current page number
@@ -206,7 +198,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="full-news-content">
                         <button class="back-to-news-list" onclick="loadNewsList(currentPage)">Back to News List</button>
                         <h1 class="article-title">${title}</h1>
-                        ${additionalImage ? `<img src="${additionalImage}" class="news-modal-thumbnail" alt="${title}">` : ''}
+                        <div class="news-modal-thumbnail">
+                            ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="thumbnail-image">` : ''}
+                        </div>
                         ${image ? `<img src="${image}" class="news-modal-image" alt="${title}">` : ''}
                         ${formatPostedMetaData(postedDate, postedAuthor)}
                         <div class="article-body">${content}</div>
