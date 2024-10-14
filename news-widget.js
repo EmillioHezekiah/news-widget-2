@@ -193,10 +193,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     pagination.style.display = 'none'; // Hide pagination
                 }
 
-                // Add back button and posted metadata section
+                // Add back button and posted metadata section at the bottom
                 newsContent.innerHTML = `
                     <div class="full-news-content">
-                        <button class="back-to-news-list" id="backToNewsList">Back to News List</button>
                         <h1 class="article-title">${title}</h1>
                         <div class="news-modal-thumbnail">
                             ${additionalImage ? `<img src="${additionalImage}" alt="${title}">` : ''}
@@ -207,13 +206,20 @@ document.addEventListener('DOMContentLoaded', function () {
                             <span class="posted-by-snippet-author">by ${postedAuthor}</span>
                         </div>
                         <div class="article-content">${content}</div>
+                        <button id="backToNewsList" class="back-button">Back to News List</button>
                     </div>
                 `;
 
+                // Disable contenteditable for image captions
+                const imageCaptions = newsContent.querySelectorAll('img');
+                imageCaptions.forEach(img => {
+                    img.setAttribute('contenteditable', 'false'); // Disable contenteditable
+                });
+
                 // Scroll to the full content section
-                window.scrollTo(0, newsContent.offsetTop);
-                
-                // Add event listener for back button
+                window.scrollTo(0, newsContent.offsetTop + newsContent.offsetHeight);
+
+                // Add event listener for back button at the bottom left
                 document.getElementById('backToNewsList').addEventListener('click', function () {
                     loadNewsList(currentPage); // Go back to the news list
                 });
