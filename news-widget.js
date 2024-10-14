@@ -201,21 +201,31 @@ document.addEventListener('DOMContentLoaded', function () {
                     pagination.style.display = 'none'; // Hide pagination
                 }
 
-                // Add back button and remove posted metadata section
+                // Add back button and posted metadata section
                 newsContent.innerHTML = `
                     <div class="full-news-content">
+                        <button class="back-to-news-list" onclick="loadNewsList(currentPage)">Back to News List</button>
                         <h1 class="article-title">${title}</h1>
-                        ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="additional-image">` : ''}
-                        <div class="news-full-content">${content}</div>
+                        ${additionalImage ? `<img src="${additionalImage}" class="news-modal-thumbnail" alt="${title}">` : ''}
+                        ${formatPostedMetaData(postedDate, postedAuthor)}
+                        ${image ? `<img src="${image}" alt="${title}" class="article-image">` : ''}
+                        <div class="article-content">${content}</div>
                     </div>
                 `;
 
-                // Optionally disable editable content after loading the full article
-                disableContentEditable();
+                disableContentEditable(); // Disable captions' contenteditable attribute
+
+                window.scrollTo(0, 0); // Scroll to the top when loading content
             })
-            .catch(error => console.error('Error loading news content:', error));
+            .catch(error => {
+                console.error('Error loading news content:', error);
+                const newsContent = document.getElementById('news-content');
+                if (newsContent) {
+                    newsContent.innerHTML = '<p>Error loading news content. Please try again later.</p>';
+                }
+            });
     }
 
-    // Initialize news list and load page 1 on page load
+    // Load initial news list
     loadNewsList(currentPage);
 });
