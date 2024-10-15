@@ -59,10 +59,6 @@ document.addEventListener('DOMContentLoaded', function () {
     function loadNewsList(page) {
         currentPage = page; // Update the current page number
         isViewingContent = false; // User is back to viewing the list
-        const paginationContainer = document.getElementById('pagination');
-        if (paginationContainer) {
-            paginationContainer.style.display = 'block'; // Show pagination
-        }
         fetch(`${baseUrl}?page=${page}`)
             .then(response => response.text())
             .then(data => {
@@ -186,51 +182,75 @@ document.addEventListener('DOMContentLoaded', function () {
             paginationContainer.appendChild(lastPageButton);
         }
 
-        document.body.appendChild(paginationContainer);
+        // Append pagination to the widget
+        const widget = document.getElementById('news-widget');
+        widget.appendChild(paginationContainer);
     }
 
-    // Open modal and display content
-    function openModal(content) {
-        const modal = document.getElementById('news-modal');
-        const modalContent = document.getElementById('news-modal-content');
-        modalContent.innerHTML = content; // Insert content into modal
-        modal.style.display = 'block'; // Show the modal
-        isViewingContent = true; // Update the viewing status
-        window.scrollTo(0, 0); // Scroll to the top of the page
-    }
-
-    // Close the modal
-    function closeModal() {
-        const modal = document.getElementById('news-modal');
-        modal.style.display = 'none'; // Hide the modal
-        isViewingContent = false; // Update the viewing status
-        loadNewsList(currentPage); // Reload the news list
-    }
-
-    // Add event listeners for modal close button
+    // Handle clicking on a news link to load the full article
     document.addEventListener('click', function (event) {
-        if (event.target.classList.contains('news-link')) {
+        if (event.target.matches('.news-link')) {
             event.preventDefault();
-            const url = event.target.getAttribute('data-url');
-            // Fetch the article content
-            fetch(decodeURIComponent(url))
-                .then(response => response.text())
-                .then(data => {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(data, 'text/html');
-                    const articleContent = doc.querySelector('.your-correct-selector-here'); // Adjust selector as needed
-                    if (articleContent) {
-                        openModal(articleContent.innerHTML);
-                    } else {
-                        console.error('Article content not found'); // Log error if content not found
-                    }
-                })
-                .catch(error => console.error('Error fetching article:', error));
-        } else if (event.target.id === 'news-modal-close' || event.target === document.getElementById('news-modal')) {
-            closeModal();
+            const newsUrl = decodeURIComponent(event.target.getAttribute('data-url'));
+            loadNewsContent(newsUrl);
         }
     });
 
-    // Load the first page of news
+    // Load the full article content in a modal
+    function loadNewsContent(url) {
+        isViewingContent = true; // User is viewing content
+        fetch(url)
+            .then(response => response.text())
+            .then(data => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(data, 'text/html');
+
+                const title = doc.querySelector('h1.bold.h2.nobmargin') ? doc.querySelector('h1.bold.h2.nobmargin').textContent.trim() : 'No Title';
+                const imageElement = doc.querySelector('.img_section img');
+                let image = imageElement ? correctImageUrl(imageElement.src) : '';
+                if (shouldExcludeImage(image)) image = '';
+
+                const contentContainer = doc.querySelector('.the-post-description');
+                const content = contentContainer ? contentContainer.innerHTML.trim() : 'No content available';
+
+                // Clear the news content
+                const newsContent = document.getElementById('news-content');
+                newsContent.innerHTML = '';
+
+                // Create the news article view
+                const articleView = document.createElement('div');
+                articleView.classList.add('news-article-view');
+                articleView.innerHTML = `
+                    <h1>${title}</h1>
+                    ${image ? `<img src="${image}" alt="${title}" class="news-article-image">` : ''}
+                    <div class="news-article-content">${content}</div>
+                    <button class="back-button">Back to News List</button>
+                `;
+
+                // Add thumbnail image (if available)
+                const thumbnailImgElement = doc.querySelector('.img_section img');
+                if (thumbnailImgElement) {
+                    const thumbnailSrc = correctImageUrl(thumbnailImgElement.src);
+                    articleView.innerHTML += `
+                        <img src="${thumbnailSrc}" alt="${title}" class="news-thumbnail" width="240" height="120">
+                    `;
+                }
+
+                newsContent.appendChild(articleView);
+
+                // Add the click event for the back button
+                const backButton = articleView.querySelector('.back-button');
+                backButton.addEventListener('click', function () {
+                    loadNewsList(currentPage); // Go back to the news list
+                });
+
+                // Scroll to top
+                window.scrollTo(0, 0);
+            })
+            .catch(error => console.error('Error loading article:', error));
+    }
+
+    // Initial load of the first page of news
     loadNewsList(currentPage);
+    disableContentEditable();
 });
