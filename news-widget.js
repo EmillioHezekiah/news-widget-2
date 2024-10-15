@@ -96,9 +96,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     newsContent.appendChild(newsItem);
                 });
 
-                // Add pagination buttons for news list page only
+                // Add pagination only if not viewing content
                 if (!isViewingContent) {
-                    addPagination(currentPage); // Pass the current page for comparison
+                    addPagination(currentPage);
                 }
 
                 window.scrollTo(0, 0); // Scroll to top when loading the list
@@ -116,65 +116,42 @@ document.addEventListener('DOMContentLoaded', function () {
         const startPage = Math.max(1, currentPage - 1);
         const endPage = Math.min(totalPages, startPage + maxPageNumbers - 1);
 
-        // Add "<< button to go to the first page
-        const firstPageButton = document.createElement('span');
-        firstPageButton.innerText = '<<';
-        firstPageButton.classList.add('page-number');
-        firstPageButton.addEventListener('click', function () {
-            loadNewsList(1); // Go to the first page
-        });
-        paginationContainer.appendChild(firstPageButton);
-
-        // Add "<" button to go to the previous page
         if (currentPage > 1) {
-            const prevPageButton = document.createElement('span');
-            prevPageButton.innerText = '<';
-            prevPageButton.classList.add('page-number');
-            prevPageButton.addEventListener('click', function () {
-                loadNewsList(currentPage - 1); // Go to the previous page
+            const firstPageButton = document.createElement('span');
+            firstPageButton.innerText = '<<';
+            firstPageButton.classList.add('page-number');
+            firstPageButton.addEventListener('click', function () {
+                loadNewsList(1);
             });
-            paginationContainer.appendChild(prevPageButton);
+            paginationContainer.appendChild(firstPageButton);
         }
 
-        // Add numbered page buttons
         for (let i = startPage; i <= endPage; i++) {
             const pageButton = document.createElement('span');
             pageButton.innerText = i;
             pageButton.classList.add('page-number');
             if (i === currentPage) {
-                pageButton.classList.add('current-page'); // Highlight the current page
+                pageButton.classList.add('current-page');
             }
             pageButton.addEventListener('click', function () {
-                loadNewsList(i); // Load the selected page
+                loadNewsList(i);
             });
             paginationContainer.appendChild(pageButton);
         }
 
-        // Add ">" button to go to the next page
         if (currentPage < totalPages) {
-            const nextPageButton = document.createElement('span');
-            nextPageButton.innerText = '>';
-            nextPageButton.classList.add('page-number');
-            nextPageButton.addEventListener('click', function () {
-                loadNewsList(currentPage + 1); // Go to the next page
+            const lastPageButton = document.createElement('span');
+            lastPageButton.innerText = '>>';
+            lastPageButton.classList.add('page-number');
+            lastPageButton.addEventListener('click', function () {
+                loadNewsList(totalPages);
             });
-            paginationContainer.appendChild(nextPageButton);
+            paginationContainer.appendChild(lastPageButton);
         }
 
-        // Add ">>" button to go to the last page
-        const lastPageButton = document.createElement('span');
-        lastPageButton.innerText = '>>';
-        lastPageButton.classList.add('page-number');
-        lastPageButton.addEventListener('click', function () {
-            loadNewsList(totalPages); // Go to the last page
-        });
-        paginationContainer.appendChild(lastPageButton);
-
-        // Append pagination to the widget
         document.getElementById('news-widget').appendChild(paginationContainer);
     }
 
-    // Handle clicking on a news link to load the full article
     document.addEventListener('click', function (event) {
         if (event.target.matches('.news-link')) {
             event.preventDefault();
@@ -183,9 +160,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Load the full article content in a regular view below the news list
     function loadNewsContent(url) {
-        isViewingContent = true; // User is viewing content
+        isViewingContent = true;
         fetch(url)
             .then(response => response.text())
             .then(data => {
@@ -194,31 +170,33 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const title = doc.querySelector('h1.bold.h2.nobmargin') ? doc.querySelector('h1.bold.h2.nobmargin').textContent : 'No title available';
                 const fullArticle = doc.querySelector('.the-post-description') ? doc.querySelector('.the-post-description').innerHTML : 'No content available';
+                const imgElement = doc.querySelector('.center-block');
+
+                let imgSrc = imgElement ? correctImageUrl(imgElement.src) : '';
 
                 const contentDiv = document.createElement('div');
                 contentDiv.classList.add('full-article');
                 contentDiv.innerHTML = `
+                    ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="modal-thumbnail">` : ''}
                     <h2>${title}</h2>
                     <div>${fullArticle}</div>
                     <button id="back-to-news" class="back-to-news">Back to News List</button>
                 `;
 
                 const newsContent = document.getElementById('news-content');
-                newsContent.innerHTML = ''; // Clear current news list
+                newsContent.innerHTML = '';
                 newsContent.appendChild(contentDiv);
 
-                window.scrollTo(0, 0); // Scroll to the top when loading the content
+                window.scrollTo(0, 0);
             })
             .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Handle "Back to News List" button click
     document.addEventListener('click', function (event) {
         if (event.target.matches('#back-to-news')) {
-            loadNewsList(currentPage); // Reload the current news list
+            loadNewsList(currentPage);
         }
     });
 
-    // Initialize with the first page
     loadNewsList(1);
 });
