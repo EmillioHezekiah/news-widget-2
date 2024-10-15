@@ -47,14 +47,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return { postedDate, postedAuthor };
     }
 
-    // Disable the contenteditable attribute for captions
-    function disableContentEditable() {
-        const captions = document.querySelectorAll('.fr-inner[contenteditable="true"]');
-        captions.forEach(caption => {
-            caption.setAttribute('contenteditable', 'false'); // Disable contenteditable
-        });
-    }
-
     // Load the news list with pagination
     function loadNewsList(page) {
         currentPage = page; // Update the current page number
@@ -114,11 +106,15 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Error loading news:', error));
     }
 
-    // Handle pagination dynamically
+    // Handle pagination dynamically with limited page numbers
     function addPagination(currentPage) {
         const paginationContainer = document.createElement('div');
         paginationContainer.id = 'pagination';
         paginationContainer.innerHTML = '';
+
+        const maxPageNumbers = 3;
+        const startPage = Math.max(1, currentPage - 1);
+        const endPage = Math.min(totalPages, startPage + maxPageNumbers - 1);
 
         // Add "<< button to go to the first page
         const firstPageButton = document.createElement('span');
@@ -140,11 +136,7 @@ document.addEventListener('DOMContentLoaded', function () {
             paginationContainer.appendChild(prevPageButton);
         }
 
-        // Add numbered page buttons with dynamic display
-        const displayRange = 2; // How many pages to display around the current page
-        const startPage = Math.max(1, currentPage - displayRange);
-        const endPage = Math.min(totalPages, currentPage + displayRange);
-
+        // Add numbered page buttons
         for (let i = startPage; i <= endPage; i++) {
             const pageButton = document.createElement('span');
             pageButton.innerText = i;
@@ -156,13 +148,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 loadNewsList(i); // Load the selected page
             });
             paginationContainer.appendChild(pageButton);
-        }
-
-        // Add "..." if there are pages before the first displayed page
-        if (startPage > 1) {
-            const ellipsis = document.createElement('span');
-            ellipsis.innerText = '...';
-            paginationContainer.appendChild(ellipsis);
         }
 
         // Add ">" button to go to the next page
@@ -215,15 +200,25 @@ document.addEventListener('DOMContentLoaded', function () {
                 contentDiv.innerHTML = `
                     <h2>${title}</h2>
                     <div>${fullArticle}</div>
+                    <button id="back-to-news" class="back-to-news">Back to News List</button>
                 `;
 
-                const widget = document.getElementById('news-widget');
-                widget.innerHTML = ''; // Clear existing content
-                widget.appendChild(contentDiv);
+                const newsContent = document.getElementById('news-content');
+                newsContent.innerHTML = ''; // Clear current news list
+                newsContent.appendChild(contentDiv);
+
+                window.scrollTo(0, 0); // Scroll to the top when loading the content
             })
             .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Initialize the news list on page load
-    loadNewsList(currentPage);
+    // Handle "Back to News List" button click
+    document.addEventListener('click', function (event) {
+        if (event.target.matches('#back-to-news')) {
+            loadNewsList(currentPage); // Reload the current news list
+        }
+    });
+
+    // Initialize with the first page
+    loadNewsList(1);
 });
