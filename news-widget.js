@@ -210,47 +210,39 @@ document.addEventListener('DOMContentLoaded', function () {
                 let image = imageElement ? correctImageUrl(imageElement.src) : '';
                 if (shouldExcludeImage(image)) image = '';
 
-                const contentContainer = doc.querySelector('.the-post-description');
-                const content = contentContainer ? contentContainer.innerHTML.trim() : 'No content available';
+                const content = doc.querySelector('.the-post-description') ? doc.querySelector('.the-post-description').innerHTML.trim() : 'No Content Available';
+                const postedMetaDataElement = doc.querySelector('.posted_meta_data');
+                const { postedDate, postedAuthor } = extractPostedMetaData(postedMetaDataElement);
 
-                // Clear the news content
-                const newsContent = document.getElementById('news-content');
-                newsContent.innerHTML = '';
-
-                // Create the news article view
-                const articleView = document.createElement('div');
-                articleView.classList.add('news-article-view');
-                articleView.innerHTML = `
+                const modalContent = document.getElementById('modal-content');
+                modalContent.innerHTML = `
                     <h1>${title}</h1>
-                    ${image ? `<img src="${image}" alt="${title}" class="news-article-image">` : ''}
-                    <div class="news-article-content">${content}</div>
-                    <button class="back-button">Back to News List</button>
+                    ${image ? `<img src="${image}" alt="${title}" class="news-image">` : ''}
+                    ${formatPostedMetaData(postedDate, postedAuthor)}
+                    <div>${content}</div>
                 `;
-
-                // Add thumbnail image (if available)
-                const thumbnailImgElement = doc.querySelector('.img_section img');
-                if (thumbnailImgElement) {
-                    const thumbnailSrc = correctImageUrl(thumbnailImgElement.src);
-                    articleView.innerHTML += `
-                        <img src="${thumbnailSrc}" alt="${title}" class="news-thumbnail" width="240" height="120">
-                    `;
-                }
-
-                newsContent.appendChild(articleView);
-
-                // Add the click event for the back button
-                const backButton = articleView.querySelector('.back-button');
-                backButton.addEventListener('click', function () {
-                    loadNewsList(currentPage); // Go back to the news list
-                });
-
-                // Scroll to top
-                window.scrollTo(0, 0);
+                showModal();
             })
             .catch(error => console.error('Error loading article:', error));
     }
 
-    // Initial load of the first page of news
+    // Show the modal for displaying full article content
+    function showModal() {
+        const modal = document.getElementById('modal');
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden'; // Prevent body scrolling
+        disableContentEditable(); // Disable contenteditable on load
+    }
+
+    // Close the modal
+    document.getElementById('modal-close').addEventListener('click', function () {
+        const modal = document.getElementById('modal');
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto'; // Restore body scrolling
+        isViewingContent = false; // User is back to viewing the list
+        loadNewsList(currentPage); // Reload the current page
+    });
+
+    // Load the first page of news on startup
     loadNewsList(currentPage);
-    disableContentEditable();
 });
