@@ -129,8 +129,23 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         paginationContainer.appendChild(firstPageButton);
 
+        // Add "<" button to go to the previous page
+        if (currentPage > 1) {
+            const prevPageButton = document.createElement('span');
+            prevPageButton.innerText = '<';
+            prevPageButton.classList.add('page-number');
+            prevPageButton.addEventListener('click', function () {
+                loadNewsList(currentPage - 1); // Go to the previous page
+            });
+            paginationContainer.appendChild(prevPageButton);
+        }
+
+        // Calculate the range of page numbers to display
+        const startPage = Math.max(1, currentPage - 1);
+        const endPage = Math.min(totalPages, currentPage + 1);
+
         // Add numbered page buttons
-        for (let i = 1; i <= totalPages; i++) {
+        for (let i = startPage; i <= endPage; i++) {
             const pageButton = document.createElement('span');
             pageButton.innerText = i;
             pageButton.classList.add('page-number');
@@ -141,6 +156,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 loadNewsList(i); // Load the selected page
             });
             paginationContainer.appendChild(pageButton);
+        }
+
+        // Add ">" button to go to the next page
+        if (currentPage < totalPages) {
+            const nextPageButton = document.createElement('span');
+            nextPageButton.innerText = '>';
+            nextPageButton.classList.add('page-number');
+            nextPageButton.addEventListener('click', function () {
+                loadNewsList(currentPage + 1); // Go to the next page
+            });
+            paginationContainer.appendChild(nextPageButton);
         }
 
         // Add ">>" button to go to the last page
@@ -180,48 +206,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (shouldExcludeImage(image)) image = '';
 
                 const contentContainer = doc.querySelector('.the-post-description');
-                const content = contentContainer ? contentContainer.innerHTML.trim() : 'No Content Available';
-
-                const postedMetaDataElement = doc.querySelector('.posted_meta_data');
-                const { postedDate, postedAuthor } = extractPostedMetaData(postedMetaDataElement);
-
-                const additionalImageElement = doc.querySelector('img.center-block');
-                let additionalImage = additionalImageElement ? correctImageUrl(additionalImageElement.src) : '';
-                if (shouldExcludeImage(additionalImage)) additionalImage = '';
+                const content = contentContainer ? contentContainer.innerHTML.trim() : '<p>No content available.</p>';
 
                 const newsContent = document.getElementById('news-content');
-                if (!newsContent) {
-                    console.error('News content container not found.');
-                    return;
-                }
-
-                // Hide pagination when viewing a full article
-                const pagination = document.getElementById('pagination');
-                if (pagination) {
-                    pagination.style.display = 'none'; // Hide pagination
-                }
-
-                // Add back button and remove posted metadata section
                 newsContent.innerHTML = `
-                    <div class="full-news-content">
-                        <h1 class="article-title">${title}</h1>
-                        ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail">` : ''}
-
-                        ${image ? `<img src="${image}" alt="${title}" class="center-block">` : ''}
-                        <div class="content">${content}</div>
-                        <button id="backButton">Back to News List</button>
-                    </div>
+                    <h1>${title}</h1>
+                    ${image ? `<img src="${image}" alt="${title}" class="news-full-image">` : ''}
+                    <div>${content}</div>
                 `;
 
-                document.getElementById('backButton').addEventListener('click', function () {
-                    loadNewsList(currentPage);
-                });
-
-                window.scrollTo(0, 0); // Scroll to top of article
+                // Scroll to the loaded content
+                window.scrollTo(0, 0);
             })
-            .catch(error => console.error('Error loading full article:', error));
+            .catch(error => console.error('Error loading article:', error));
     }
 
-    // Initial news load
-    loadNewsList(1);
+    // Initial load of news list
+    loadNewsList(currentPage);
+    disableContentEditable(); // Disable contenteditable for captions
 });
