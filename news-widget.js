@@ -218,11 +218,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(data => {
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(data, 'text/html');
-                    const articleContent = doc.querySelector('.article-content'); // Adjust selector as needed
+                    const articleContent = doc.querySelector('.your-correct-selector-here'); // Adjust selector as needed
                     if (articleContent) {
                         openModal(articleContent.innerHTML);
                     } else {
-                        console.error('Article content not found');
+                        console.error('Article content not found'); // Log error if content not found
                     }
                 })
                 .catch(error => console.error('Error fetching article:', error));
