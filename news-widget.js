@@ -192,7 +192,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Load the full article content in a regular view below the news list
+    // Load the full article content in a modal
     function loadNewsContent(url) {
         isViewingContent = true; // User is viewing content
         fetch(url)
@@ -220,10 +220,18 @@ document.addEventListener('DOMContentLoaded', function () {
                     <h1>${title}</h1>
                     ${image ? `<img src="${image}" alt="${title}" class="news-article-image">` : ''}
                     <div class="news-article-content">${content}</div>
+                    <button class="back-button">Back to News List</button>
                 `;
                 newsContent.appendChild(articleView);
 
-                window.scrollTo(0, 0); // Scroll to top
+                // Add the click event for the back button
+                const backButton = articleView.querySelector('.back-button');
+                backButton.addEventListener('click', function () {
+                    loadNewsList(currentPage); // Go back to the news list
+                });
+
+                // Scroll to top
+                window.scrollTo(0, 0);
             })
             .catch(error => console.error('Error loading article:', error));
     }
