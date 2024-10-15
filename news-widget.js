@@ -202,24 +202,30 @@ document.addEventListener('DOMContentLoaded', function () {
         if (event.target.matches('.news-link')) {
             event.preventDefault();
             const newsUrl = decodeURIComponent(event.target.getAttribute('data-url'));
-            loadNewsContent(newsUrl);
+            loadNewsContent(newsUrl); // Load the full article content
         }
     });
 
-    // Load the full article content in a modal
+    // Load the full article content
     function loadNewsContent(url) {
-        isViewingContent = true; // User is viewing content
-        removePagination(); // Remove pagination
-
+        isViewingContent = true; // Set the flag to indicate viewing content
+        removePagination(); // Remove pagination while viewing content
         fetch(url)
             .then(response => response.text())
             .then(data => {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
-                const articleTitle = doc.querySelector('h1').textContent.trim();
-                const articleContent = doc.querySelector('.article-content'); // Adjust based on the actual structure
-                const articleImage = doc.querySelector('.article-image img'); // Adjust based on the actual structure
-                const articleImageUrl = articleImage ? correctImageUrl(articleImage.src) : '';
+                
+                const articleTitle = doc.querySelector('h1') ? doc.querySelector('h1').textContent.trim() : 'No Title';
+                const articleContentElement = doc.querySelector('.article-content'); // Adjust based on the actual structure
+                const articleImageElement = doc.querySelector('.article-image img'); // Adjust based on the actual structure
+                const articleImageUrl = articleImageElement ? correctImageUrl(articleImageElement.src) : '';
+
+                // Check if article content is found
+                if (!articleContentElement) {
+                    console.error('Article content not found.');
+                    return;
+                }
 
                 // Build modal content
                 const modalContent = document.createElement('div');
@@ -227,7 +233,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 modalContent.innerHTML = `
                     <h1>${articleTitle}</h1>
                     ${articleImageUrl ? `<img src="${articleImageUrl}" alt="${articleTitle}" class="modal-image">` : ''}
-                    <div>${articleContent.innerHTML}</div>
+                    <div>${articleContentElement.innerHTML}</div>
                 `;
 
                 // Show the modal
