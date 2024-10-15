@@ -200,9 +200,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Load the full article content in a modal
+    // Load full news content
     function loadNewsContent(url) {
-        isViewingContent = true; // User is viewing content
+        isViewingContent = true;
         const paginationContainer = document.getElementById('pagination');
         if (paginationContainer) {
             paginationContainer.style.display = 'none'; // Hide pagination
@@ -226,18 +226,27 @@ document.addEventListener('DOMContentLoaded', function () {
                 `;
 
                 // Open the modal and scroll to the top
-                document.getElementById('news-modal').style.display = 'block';
-                modalContent.scrollTop = 0; // Scroll to the top
-                disableContentEditable(); // Disable contenteditable captions
+                const newsModal = document.getElementById('news-modal');
+                if (newsModal) {
+                    newsModal.style.display = 'block';
+                    modalContent.scrollTop = 0; // Scroll to the top
+                    disableContentEditable(); // Disable contenteditable captions
+                }
             })
             .catch(error => console.error('Error loading news content:', error));
     }
 
     // Close the modal when the close button is clicked
-    document.getElementById('news-modal-close').addEventListener('click', function () {
-        document.getElementById('news-modal').style.display = 'none';
-        loadNewsList(currentPage); // Reload the news list on modal close
-    });
+    const closeModalButton = document.getElementById('news-modal-close');
+    if (closeModalButton) {
+        closeModalButton.addEventListener('click', function () {
+            const newsModal = document.getElementById('news-modal');
+            if (newsModal) {
+                newsModal.style.display = 'none';
+            }
+            loadNewsList(currentPage); // Reload the news list on modal close
+        });
+    }
 
     // Load the initial news list
     loadNewsList(currentPage);
