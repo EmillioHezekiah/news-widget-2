@@ -215,6 +215,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 const doc = parser.parseFromString(data, 'text/html');
 
                 const modalContent = document.getElementById('news-modal-content');
+                if (!modalContent) {
+                    console.error('Modal content element not found.');
+                    return; // Exit if the modalContent is not found
+                }
+
                 const newsTitle = doc.querySelector('.col-md-12.tmargin')?.textContent.trim() || 'No Title Available';
                 const newsImage = doc.querySelector('.alert-secondary.btn-block.text-center img')?.src || '';
                 const newsDescription = doc.querySelector('.the-post-description')?.innerHTML || 'No Content Available';
