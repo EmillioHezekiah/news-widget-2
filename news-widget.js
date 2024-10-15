@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const baseUrl = 'https://www.tradepr.work/articles/';
     let currentPage = 1;
-    let totalPages = 9;
+    const totalPages = 9;
     let isViewingContent = false;
 
     function correctImageUrl(src) {
@@ -121,22 +121,9 @@ document.addEventListener('DOMContentLoaded', function () {
         paginationContainer.innerHTML = '';
 
         if (currentPage > 1) {
-            const firstPageButton = document.createElement('span');
-            firstPageButton.innerText = '<<';
-            firstPageButton.classList.add('page-number');
-            firstPageButton.addEventListener('click', function () {
-                loadNewsList(1);
-            });
+            const firstPageButton = createPageButton('<<', 1);
             paginationContainer.appendChild(firstPageButton);
-        }
-
-        if (currentPage > 1) {
-            const prevPageButton = document.createElement('span');
-            prevPageButton.innerText = '<';
-            prevPageButton.classList.add('page-number');
-            prevPageButton.addEventListener('click', function () {
-                loadNewsList(currentPage - 1);
-            });
+            const prevPageButton = createPageButton('<', currentPage - 1);
             paginationContainer.appendChild(prevPageButton);
         }
 
@@ -144,35 +131,17 @@ document.addEventListener('DOMContentLoaded', function () {
         const endPage = Math.min(totalPages, currentPage + 1);
 
         for (let i = startPage; i <= endPage; i++) {
-            const pageButton = document.createElement('span');
-            pageButton.innerText = i;
-            pageButton.classList.add('page-number');
+            const pageButton = createPageButton(i, i);
             if (i === currentPage) {
                 pageButton.classList.add('current-page');
             }
-            pageButton.addEventListener('click', function () {
-                loadNewsList(i);
-            });
             paginationContainer.appendChild(pageButton);
         }
 
         if (currentPage < totalPages) {
-            const nextPageButton = document.createElement('span');
-            nextPageButton.innerText = '>';
-            nextPageButton.classList.add('page-number');
-            nextPageButton.addEventListener('click', function () {
-                loadNewsList(currentPage + 1);
-            });
+            const nextPageButton = createPageButton('>', currentPage + 1);
             paginationContainer.appendChild(nextPageButton);
-        }
-
-        if (currentPage < totalPages) {
-            const lastPageButton = document.createElement('span');
-            lastPageButton.innerText = '>>';
-            lastPageButton.classList.add('page-number');
-            lastPageButton.addEventListener('click', function () {
-                loadNewsList(totalPages);
-            });
+            const lastPageButton = createPageButton('>>', totalPages);
             paginationContainer.appendChild(lastPageButton);
         }
 
@@ -182,6 +151,16 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             console.error('Error: News widget container not found for pagination.');
         }
+    }
+
+    function createPageButton(text, page) {
+        const button = document.createElement('span');
+        button.innerText = text;
+        button.classList.add('page-number');
+        button.addEventListener('click', function () {
+            loadNewsList(page);
+        });
+        return button;
     }
 
     document.addEventListener('click', function (event) {
