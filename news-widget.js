@@ -186,73 +186,51 @@ document.addEventListener('DOMContentLoaded', function () {
             paginationContainer.appendChild(lastPageButton);
         }
 
-        // Append pagination to the widget
-        const widget = document.getElementById('news-widget');
-        widget.appendChild(paginationContainer);
+        document.body.appendChild(paginationContainer);
     }
 
-    // Handle clicking on a news link to load the full article
+    // Open modal and display content
+    function openModal(content) {
+        const modal = document.getElementById('news-modal');
+        const modalContent = document.getElementById('news-modal-content');
+        modalContent.innerHTML = content; // Insert content into modal
+        modal.style.display = 'block'; // Show the modal
+        isViewingContent = true; // Update the viewing status
+        window.scrollTo(0, 0); // Scroll to the top of the page
+    }
+
+    // Close the modal
+    function closeModal() {
+        const modal = document.getElementById('news-modal');
+        modal.style.display = 'none'; // Hide the modal
+        isViewingContent = false; // Update the viewing status
+        loadNewsList(currentPage); // Reload the news list
+    }
+
+    // Add event listeners for modal close button
     document.addEventListener('click', function (event) {
-        if (event.target.matches('.news-link')) {
+        if (event.target.classList.contains('news-link')) {
             event.preventDefault();
-            const newsUrl = decodeURIComponent(event.target.getAttribute('data-url'));
-            loadNewsContent(newsUrl);
+            const url = event.target.getAttribute('data-url');
+            // Fetch the article content
+            fetch(decodeURIComponent(url))
+                .then(response => response.text())
+                .then(data => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(data, 'text/html');
+                    const articleContent = doc.querySelector('.article-content'); // Adjust selector as needed
+                    if (articleContent) {
+                        openModal(articleContent.innerHTML);
+                    } else {
+                        console.error('Article content not found');
+                    }
+                })
+                .catch(error => console.error('Error fetching article:', error));
+        } else if (event.target.id === 'news-modal-close' || event.target === document.getElementById('news-modal')) {
+            closeModal();
         }
     });
 
-    // Load full news content
-    function loadNewsContent(url) {
-        isViewingContent = true;
-        const paginationContainer = document.getElementById('pagination');
-        if (paginationContainer) {
-            paginationContainer.style.display = 'none'; // Hide pagination when viewing content
-        }
-
-        fetch(url)
-            .then(response => response.text())
-            .then(data => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(data, 'text/html');
-
-                const modalContent = document.getElementById('news-modal-content');
-                if (!modalContent) {
-                    console.error('Modal content element not found.');
-                    return; // Exit if the modalContent is not found
-                }
-
-                const newsTitle = doc.querySelector('.col-md-12.tmargin')?.textContent.trim() || 'No Title Available';
-                const newsImage = doc.querySelector('.alert-secondary.btn-block.text-center img')?.src || '';
-                const newsDescription = doc.querySelector('.the-post-description')?.innerHTML || 'No Content Available';
-
-                modalContent.innerHTML = `
-                    <h2>${newsTitle}</h2>
-                    ${newsImage ? `<img src="${correctImageUrl(newsImage)}" alt="${newsTitle}" class="news-modal-image">` : ''}
-                    <div class="news-modal-description">${newsDescription}</div>
-                `;
-
-                // Open the modal and scroll to the top
-                const newsModal = document.getElementById('news-modal');
-                if (newsModal) {
-                    newsModal.style.display = 'block';
-                    modalContent.scrollTop = 0; // Scroll to the top
-                    disableContentEditable(); // Disable contenteditable captions
-                }
-            })
-            .catch(error => console.error('Error loading news content:', error));
-    }
-
-    // Close the modal when the close button is clicked
-    const closeModalButton = document.getElementById('news-modal-close');
-    if (closeModalButton) {
-        closeModalButton.addEventListener('click', function () {
-            const newsModal = document.getElementById('news-modal');
-            if (newsModal) {
-                newsModal.style.display = 'none';
-            }
-            loadNewsList(currentPage); // Reload the news list on modal close
-        });
-    }
-
-    // Load the initial news list
+    // Load the first page of news
     loadNewsList(currentPage);
 });
