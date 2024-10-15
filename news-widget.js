@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function () {
         isViewingContent = true;
         const paginationContainer = document.getElementById('pagination');
         if (paginationContainer) {
-            paginationContainer.style.display = 'none'; // Hide pagination
+            paginationContainer.style.display = 'none'; // Hide pagination when viewing content
         }
 
         fetch(url)
