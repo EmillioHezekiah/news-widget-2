@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Handle pagination dynamically
     function addPagination(currentPage) {
-        const paginationContainer = document.createElement('div');
+        const paginationContainer = document.getElementById('pagination') || document.createElement('div');
         paginationContainer.id = 'pagination';
         paginationContainer.innerHTML = '';
 
@@ -179,7 +179,8 @@ document.addEventListener('DOMContentLoaded', function () {
         paginationContainer.appendChild(lastPageButton);
 
         // Append pagination to the widget
-        document.getElementById('news-widget').appendChild(paginationContainer);
+        const widget = document.getElementById('news-widget');
+        widget.appendChild(paginationContainer);
     }
 
     // Handle clicking on a news link to load the full article
@@ -206,22 +207,28 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (shouldExcludeImage(image)) image = '';
 
                 const contentContainer = doc.querySelector('.the-post-description');
-                const content = contentContainer ? contentContainer.innerHTML.trim() : '<p>No content available.</p>';
+                const content = contentContainer ? contentContainer.innerHTML.trim() : 'No content available';
 
+                // Clear the news content
                 const newsContent = document.getElementById('news-content');
-                newsContent.innerHTML = `
-                    <h1>${title}</h1>
-                    ${image ? `<img src="${image}" alt="${title}" class="news-full-image">` : ''}
-                    <div>${content}</div>
-                `;
+                newsContent.innerHTML = '';
 
-                // Scroll to the loaded content
-                window.scrollTo(0, 0);
+                // Create the news article view
+                const articleView = document.createElement('div');
+                articleView.classList.add('news-article-view');
+                articleView.innerHTML = `
+                    <h1>${title}</h1>
+                    ${image ? `<img src="${image}" alt="${title}" class="news-article-image">` : ''}
+                    <div class="news-article-content">${content}</div>
+                `;
+                newsContent.appendChild(articleView);
+
+                window.scrollTo(0, 0); // Scroll to top
             })
             .catch(error => console.error('Error loading article:', error));
     }
 
-    // Initial load of news list
+    // Initial load of the first page of news
     loadNewsList(currentPage);
-    disableContentEditable(); // Disable contenteditable for captions
+    disableContentEditable();
 });
