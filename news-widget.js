@@ -120,16 +120,18 @@ document.addEventListener('DOMContentLoaded', function () {
         paginationContainer.id = 'pagination';
         paginationContainer.innerHTML = '';
 
-        // Add "<<" button to go to the first page
-        const firstPageButton = document.createElement('span');
-        firstPageButton.innerText = '<<';
-        firstPageButton.classList.add('page-number');
-        firstPageButton.addEventListener('click', function () {
-            loadNewsList(1); // Go to the first page
-        });
-        paginationContainer.appendChild(firstPageButton);
+        // Only add the first page button if not on the first page
+        if (currentPage > 1) {
+            const firstPageButton = document.createElement('span');
+            firstPageButton.innerText = '<<';
+            firstPageButton.classList.add('page-number');
+            firstPageButton.addEventListener('click', function () {
+                loadNewsList(1); // Go to the first page
+            });
+            paginationContainer.appendChild(firstPageButton);
+        }
 
-        // Add "<" button to go to the previous page
+        // Only add the "<" button if not on the first page
         if (currentPage > 1) {
             const prevPageButton = document.createElement('span');
             prevPageButton.innerText = '<';
@@ -158,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function () {
             paginationContainer.appendChild(pageButton);
         }
 
-        // Add ">" button to go to the next page
+        // Only add the ">" button if not on the last page
         if (currentPage < totalPages) {
             const nextPageButton = document.createElement('span');
             nextPageButton.innerText = '>';
@@ -169,14 +171,16 @@ document.addEventListener('DOMContentLoaded', function () {
             paginationContainer.appendChild(nextPageButton);
         }
 
-        // Add ">>" button to go to the last page
-        const lastPageButton = document.createElement('span');
-        lastPageButton.innerText = '>>';
-        lastPageButton.classList.add('page-number');
-        lastPageButton.addEventListener('click', function () {
-            loadNewsList(totalPages); // Go to the last page
-        });
-        paginationContainer.appendChild(lastPageButton);
+        // Only add the last page button if not on the last page
+        if (currentPage < totalPages) {
+            const lastPageButton = document.createElement('span');
+            lastPageButton.innerText = '>>';
+            lastPageButton.classList.add('page-number');
+            lastPageButton.addEventListener('click', function () {
+                loadNewsList(totalPages); // Go to the last page
+            });
+            paginationContainer.appendChild(lastPageButton);
+        }
 
         // Append pagination to the widget
         const widget = document.getElementById('news-widget');
@@ -222,6 +226,16 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="news-article-content">${content}</div>
                     <button class="back-button">Back to News List</button>
                 `;
+
+                // Add thumbnail image (if available)
+                const thumbnailImgElement = doc.querySelector('.img_section img');
+                if (thumbnailImgElement) {
+                    const thumbnailSrc = correctImageUrl(thumbnailImgElement.src);
+                    articleView.innerHTML += `
+                        <img src="${thumbnailSrc}" alt="${title}" class="news-thumbnail" width="240" height="120">
+                    `;
+                }
+
                 newsContent.appendChild(articleView);
 
                 // Add the click event for the back button
