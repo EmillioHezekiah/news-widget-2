@@ -204,45 +204,49 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
+                const title = doc.querySelector('h1').textContent;
+                const contentElement = doc.querySelector('.the-post-description');
 
-                const title = doc.querySelector('h1.bold.h2.nobmargin') ? doc.querySelector('h1.bold.h2.nobmargin').textContent.trim() : 'No Title';
-                const imageElement = doc.querySelector('.img_section img');
-                let image = imageElement ? correctImageUrl(imageElement.src) : '';
-                if (shouldExcludeImage(image)) image = '';
-
-                const content = doc.querySelector('.the-post-description') ? doc.querySelector('.the-post-description').innerHTML.trim() : 'No Content Available';
-                const postedMetaDataElement = doc.querySelector('.posted_meta_data');
-                const { postedDate, postedAuthor } = extractPostedMetaData(postedMetaDataElement);
-
+                // Prepare the modal content
                 const modalContent = document.getElementById('modal-content');
                 modalContent.innerHTML = `
-                    <h1>${title}</h1>
-                    ${image ? `<img src="${image}" alt="${title}" class="news-image">` : ''}
-                    ${formatPostedMetaData(postedDate, postedAuthor)}
-                    <div>${content}</div>
+                    <h2>${title}</h2>
+                    <div class="article-content">${contentElement.innerHTML}</div>
                 `;
-                showModal();
+                disableContentEditable(); // Disable content editable
+                openModal(); // Show the modal
             })
-            .catch(error => console.error('Error loading article:', error));
+            .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Show the modal for displaying full article content
-    function showModal() {
-        const modal = document.getElementById('modal');
-        modal.style.display = 'block';
-        document.body.style.overflow = 'hidden'; // Prevent body scrolling
-        disableContentEditable(); // Disable contenteditable on load
+    // Function to open the modal
+    function openModal() {
+        const modal = document.getElementById('news-modal');
+        modal.style.display = 'block'; // Show the modal
+        modal.scrollTop = 0; // Scroll to top of modal content
     }
 
-    // Close the modal
-    document.getElementById('modal-close').addEventListener('click', function () {
-        const modal = document.getElementById('modal');
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto'; // Restore body scrolling
-        isViewingContent = false; // User is back to viewing the list
-        loadNewsList(currentPage); // Reload the current page
+    // Function to close the modal
+    function closeModal() {
+        const modal = document.getElementById('news-modal');
+        modal.style.display = 'none'; // Hide the modal
+        loadNewsList(currentPage); // Reload the current page of articles
+    }
+
+    // Close the modal when clicking outside of it
+    window.addEventListener('click', function (event) {
+        const modal = document.getElementById('news-modal');
+        if (event.target === modal) {
+            closeModal();
+        }
     });
 
-    // Load the first page of news on startup
+    // Event listener for the close button
+    const closeModalButton = document.getElementById('close-modal');
+    if (closeModalButton) {
+        closeModalButton.addEventListener('click', closeModal);
+    }
+
+    // Load the initial news list
     loadNewsList(currentPage);
 });
