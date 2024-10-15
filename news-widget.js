@@ -129,22 +129,24 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         paginationContainer.appendChild(firstPageButton);
 
-        // Add "<" button to go to the previous page
+        // Add "<" button to go back one page
+        const previousPageButton = document.createElement('span');
+        previousPageButton.innerText = '<';
+        previousPageButton.classList.add('page-number');
         if (currentPage > 1) {
-            const prevPageButton = document.createElement('span');
-            prevPageButton.innerText = '<';
-            prevPageButton.classList.add('page-number');
-            prevPageButton.addEventListener('click', function () {
+            previousPageButton.addEventListener('click', function () {
                 loadNewsList(currentPage - 1); // Go to the previous page
             });
-            paginationContainer.appendChild(prevPageButton);
+        } else {
+            previousPageButton.classList.add('disabled'); // Disable if on first page
         }
+        paginationContainer.appendChild(previousPageButton);
 
-        // Calculate the range of page numbers to display
+        // Determine the range of pages to display
         const startPage = Math.max(1, currentPage - 1);
         const endPage = Math.min(totalPages, currentPage + 1);
 
-        // Add numbered page buttons
+        // Add numbered page buttons (only 3 numbers)
         for (let i = startPage; i <= endPage; i++) {
             const pageButton = document.createElement('span');
             pageButton.innerText = i;
@@ -159,15 +161,17 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // Add ">" button to go to the next page
+        const nextPageButton = document.createElement('span');
+        nextPageButton.innerText = '>';
+        nextPageButton.classList.add('page-number');
         if (currentPage < totalPages) {
-            const nextPageButton = document.createElement('span');
-            nextPageButton.innerText = '>';
-            nextPageButton.classList.add('page-number');
             nextPageButton.addEventListener('click', function () {
                 loadNewsList(currentPage + 1); // Go to the next page
             });
-            paginationContainer.appendChild(nextPageButton);
+        } else {
+            nextPageButton.classList.add('disabled'); // Disable if on the last page
         }
+        paginationContainer.appendChild(nextPageButton);
 
         // Add ">>" button to go to the last page
         const lastPageButton = document.createElement('span');
@@ -201,27 +205,52 @@ document.addEventListener('DOMContentLoaded', function () {
                 const doc = parser.parseFromString(data, 'text/html');
 
                 const title = doc.querySelector('h1.bold.h2.nobmargin') ? doc.querySelector('h1.bold.h2.nobmargin').textContent.trim() : 'No Title';
-                const imageElement = doc.querySelector('.img_section img');
-                let image = imageElement ? correctImageUrl(imageElement.src) : '';
-                if (shouldExcludeImage(image)) image = '';
+                const contentElement = doc.querySelector('.the-post-description');
+                const fullContent = contentElement ? contentElement.innerHTML.trim() : 'No content available.';
 
-                const contentContainer = doc.querySelector('.the-post-description');
-                const content = contentContainer ? contentContainer.innerHTML.trim() : '<p>No content available.</p>';
+                const imageElement = doc.querySelector('.alert-secondary.btn-block.text-center img');
+                const imageUrl = imageElement ? correctImageUrl(imageElement.src) : '';
 
-                const newsContent = document.getElementById('news-content');
-                newsContent.innerHTML = `
-                    <h1>${title}</h1>
-                    ${image ? `<img src="${image}" alt="${title}" class="news-full-image">` : ''}
-                    <div>${content}</div>
+                const modalContent = `
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h2>${title}</h2>
+                        ${imageUrl ? `<img src="${imageUrl}" class="full-article-image" alt="${title}">` : ''}
+                        <div class="full-content">${fullContent}</div>
+                    </div>
                 `;
 
-                // Scroll to the loaded content
-                window.scrollTo(0, 0);
+                // Display the modal with full content
+                showModal(modalContent);
             })
             .catch(error => console.error('Error loading article:', error));
     }
 
+    // Show the modal
+    function showModal(content) {
+        const modal = document.createElement('div');
+        modal.classList.add('modal');
+        modal.innerHTML = content;
+        document.body.appendChild(modal);
+
+        // Close modal on click
+        modal.querySelector('.close').addEventListener('click', function () {
+            document.body.removeChild(modal);
+            loadNewsList(currentPage); // Return to the news list after closing the modal
+        });
+
+        // Add click outside to close
+        modal.addEventListener('click', function (event) {
+            if (event.target === modal) {
+                document.body.removeChild(modal);
+                loadNewsList(currentPage); // Return to the news list after closing the modal
+            }
+        });
+
+        window.scrollTo(0, 0); // Scroll to the top when the modal is opened
+    }
+
     // Initial load of news list
     loadNewsList(currentPage);
-    disableContentEditable(); // Disable contenteditable for captions
+    disableContentEditable(); // Call to disable contenteditable attributes
 });
