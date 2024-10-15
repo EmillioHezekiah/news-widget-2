@@ -6,12 +6,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Helper function to correct image URLs
     function correctImageUrl(src) {
-        if (src.startsWith('/')) {
+        if (src && src.startsWith('/')) { // Added check for src
             return `https://www.tradepr.work${src}`;
-        } else if (!src.startsWith('http')) {
+        } else if (src && !src.startsWith('http')) { // Added check for src
             return `https://www.tradepr.work/uploads/news-pictures-thumbnails/${src}`;
         }
-        return src.replace(/https:\/\/emilliohezekiah.github.io/, 'https://www.tradepr.work');
+        return src ? src.replace(/https:\/\/emilliohezekiah.github.io/, 'https://www.tradepr.work') : '';
     }
 
     // Helper function to exclude certain images (e.g., profile pictures)
