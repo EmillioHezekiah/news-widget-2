@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     newsContent.appendChild(newsItem);
                 });
 
-                // Add pagination buttons for news list page only
+                // Add pagination buttons only if not viewing content
                 if (!isViewingContent) {
                     addPagination(page); // Pass the current page for comparison
                 }
@@ -199,58 +199,36 @@ document.addEventListener('DOMContentLoaded', function () {
     // Load the full article content in a modal
     function loadNewsContent(url) {
         isViewingContent = true; // User is viewing content
+        // Hide pagination when viewing content
+        const paginationContainer = document.getElementById('pagination');
+        if (paginationContainer) {
+            paginationContainer.style.display = 'none'; // Disable pagination
+        }
+
         fetch(url)
             .then(response => response.text())
             .then(data => {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
 
-                const title = doc.querySelector('h1.bold.h2.nobmargin') ? doc.querySelector('h1.bold.h2.nobmargin').textContent.trim() : 'No Title';
-                const imageElement = doc.querySelector('.img_section img');
-                let image = imageElement ? correctImageUrl(imageElement.src) : '';
-                if (shouldExcludeImage(image)) image = '';
+                const title = doc.querySelector('.article-title').textContent.trim();
+                const content = doc.querySelector('.article-content').innerHTML;
 
-                const contentContainer = doc.querySelector('.the-post-description');
-                const content = contentContainer ? contentContainer.innerHTML.trim() : 'No content available';
+                const modalTitle = document.getElementById('modal-title');
+                const modalBody = document.getElementById('modal-body');
 
-                // Clear the news content
-                const newsContent = document.getElementById('news-content');
-                newsContent.innerHTML = '';
+                modalTitle.textContent = title;
+                modalBody.innerHTML = content;
 
-                // Create the news article view
-                const articleView = document.createElement('div');
-                articleView.classList.add('news-article-view');
-                articleView.innerHTML = `
-                    <h1>${title}</h1>
-                    ${image ? `<img src="${image}" alt="${title}" class="news-article-image">` : ''}
-                    <div class="news-article-content">${content}</div>
-                    <button class="back-button">Back to News List</button>
-                `;
-
-                // Add thumbnail image (if available)
-                const thumbnailImgElement = doc.querySelector('.img_section img');
-                if (thumbnailImgElement) {
-                    const thumbnailSrc = correctImageUrl(thumbnailImgElement.src);
-                    articleView.innerHTML += `
-                        <img src="${thumbnailSrc}" alt="${title}" class="news-thumbnail" width="240" height="120">
-                    `;
-                }
-
-                newsContent.appendChild(articleView);
-
-                // Add the click event for the back button
-                const backButton = articleView.querySelector('.back-button');
-                backButton.addEventListener('click', function () {
-                    loadNewsList(currentPage); // Go back to the news list
+                const modal = new bootstrap.Modal(document.getElementById('newsModal'), {
+                    keyboard: false
                 });
-
-                // Scroll to top
-                window.scrollTo(0, 0);
+                modal.show();
             })
             .catch(error => console.error('Error loading article:', error));
     }
 
-    // Initial load of the first page of news
+    // Initial load of news list
     loadNewsList(currentPage);
-    disableContentEditable();
+    disableContentEditable(); // Disable contenteditable on page load
 });
