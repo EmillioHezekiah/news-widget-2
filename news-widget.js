@@ -191,6 +191,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 const titleElement = doc.querySelector('.article-title');
                 const contentElement = doc.querySelector('.article-content');
 
+                console.log('Fetched page content:', data); // Debug log
+                console.log('Title element:', titleElement); // Debug log
+                console.log('Content element:', contentElement); // Debug log
+
                 const modalTitle = document.getElementById('modal-title');
                 const modalBody = document.getElementById('modal-body');
 
@@ -212,6 +216,8 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .catch(error => {
                 console.error('Error loading content:', error);
+                const modalTitle = document.getElementById('modal-title');
+                const modalBody = document.getElementById('modal-body');
                 if (modalTitle) modalTitle.textContent = 'Error Loading Content';
                 if (modalBody) modalBody.innerHTML = '<p>There was an error loading the content. Please try again later.</p>';
                 showModal();
@@ -221,15 +227,10 @@ document.addEventListener('DOMContentLoaded', function () {
     function showModal() {
         const modalElement = document.getElementById('newsModal');
         if (modalElement) {
-            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-                const modal = new bootstrap.Modal(modalElement, { keyboard: false });
-                modal.show();
-            } else {
-                console.error('Bootstrap is not loaded or modal element not found.');
-            }
+            modalElement.style.display = 'block';
+            modalElement.scrollTop = 0;
         }
     }
 
-    // Initial load
-    loadNewsList(currentPage);
+    loadNewsList(1);
 });
