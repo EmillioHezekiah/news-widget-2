@@ -95,7 +95,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 window.scrollTo(0, 0);
             })
-            .catch(error => console.error('Error loading news:', error));
+            .catch(error => {
+                console.error('Error loading news:', error);
+                const widget = document.getElementById('news-widget');
+                widget.innerHTML = '<p>Error loading news. Please try again later.</p>';
+            });
     }
 
     function addPagination(currentPage) {
@@ -193,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (!titleElement || !contentElement) {
                     console.warn('Title or content not found. Please check the structure of the fetched page.');
                     if (modalTitle) modalTitle.textContent = 'Content Not Available';
-                    if (modalBody) modalBody.innerHTML = '<p>The article could not be loaded. Please try again later.</p>';
+                    if (modalBody) modalBody.innerHTML = '<p>The article could not be loaded. Please check the structure of the fetched page.</p>';
                     showModal();
                     return;
                 }
@@ -227,5 +231,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // Initial load
     loadNewsList(currentPage);
 });
