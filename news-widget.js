@@ -1,10 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
     const baseUrl = 'https://www.tradepr.work/articles/';
-    let currentPage = 1; // Track the current page
-    let totalPages = 9; // Set default total pages (this can be dynamic)
-    let isViewingContent = false; // Track whether the user is viewing a full article
+    let currentPage = 1;
+    let totalPages = 9;
+    let isViewingContent = false;
 
-    // Helper function to correct image URLs
     function correctImageUrl(src) {
         if (src.startsWith('/')) {
             return `https://www.tradepr.work${src}`;
@@ -14,17 +13,14 @@ document.addEventListener('DOMContentLoaded', function () {
         return src.replace(/https:\/\/emilliohezekiah.github.io/, 'https://www.tradepr.work');
     }
 
-    // Helper function to exclude certain images (e.g., profile pictures)
     function shouldExcludeImage(src) {
         return src.includes('/pictures/profile/');
     }
 
-    // Clean up article descriptions
     function cleanDescription(description) {
         return description.replace(/View More/gi, '').trim();
     }
 
-    // Format the posted metadata for each article
     function formatPostedMetaData(date, author) {
         return `
             <div class="posted-meta-data">
@@ -35,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function () {
         `;
     }
 
-    // Extract posted metadata from the document
     function extractPostedMetaData(element) {
         const postedMetaData = element ? element.textContent.trim() : '';
         const dateMatch = postedMetaData.match(/Posted\s+(\d{2}\/\d{2}\/\d{4})/);
@@ -47,18 +42,16 @@ document.addEventListener('DOMContentLoaded', function () {
         return { postedDate, postedAuthor };
     }
 
-    // Disable the contenteditable attribute for captions
     function disableContentEditable() {
         const captions = document.querySelectorAll('.fr-inner[contenteditable="true"]');
         captions.forEach(caption => {
-            caption.setAttribute('contenteditable', 'false'); // Disable contenteditable
+            caption.setAttribute('contenteditable', 'false');
         });
     }
 
-    // Load the news list with pagination
     function loadNewsList(page) {
-        currentPage = page; // Update the current page number
-        isViewingContent = false; // User is back to viewing the list
+        currentPage = page;
+        isViewingContent = false;
         fetch(`${baseUrl}?page=${page}`)
             .then(response => response.text())
             .then(data => {
@@ -67,7 +60,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 const articles = doc.querySelectorAll('.row-fluid.search_result');
                 const widget = document.getElementById('news-widget');
 
-                // Clear previous content
                 widget.innerHTML = '<h1 class="news-title" style="font-size: 12pt; margin-bottom: 24px;">News Distribution by Trade PR</h1><div id="news-content"></div>';
                 const newsContent = widget.querySelector('#news-content');
 
@@ -104,90 +96,80 @@ document.addEventListener('DOMContentLoaded', function () {
                     newsContent.appendChild(newsItem);
                 });
 
-                // Add pagination buttons only if not viewing content
                 if (!isViewingContent) {
-                    addPagination(page); // Pass the current page for comparison
+                    addPagination(page);
                 }
 
-                window.scrollTo(0, 0); // Scroll to top when loading the list
+                window.scrollTo(0, 0);
             })
             .catch(error => console.error('Error loading news:', error));
     }
 
-    // Handle pagination dynamically
     function addPagination(currentPage) {
         const paginationContainer = document.getElementById('pagination') || document.createElement('div');
         paginationContainer.id = 'pagination';
         paginationContainer.innerHTML = '';
 
-        // Only add the first page button if not on the first page
         if (currentPage > 1) {
             const firstPageButton = document.createElement('span');
             firstPageButton.innerText = '<<';
             firstPageButton.classList.add('page-number');
             firstPageButton.addEventListener('click', function () {
-                loadNewsList(1); // Go to the first page
+                loadNewsList(1);
             });
             paginationContainer.appendChild(firstPageButton);
         }
 
-        // Only add the "<" button if not on the first page
         if (currentPage > 1) {
             const prevPageButton = document.createElement('span');
             prevPageButton.innerText = '<';
             prevPageButton.classList.add('page-number');
             prevPageButton.addEventListener('click', function () {
-                loadNewsList(currentPage - 1); // Go to the previous page
+                loadNewsList(currentPage - 1);
             });
             paginationContainer.appendChild(prevPageButton);
         }
 
-        // Calculate the range of page numbers to display
         const startPage = Math.max(1, currentPage - 1);
         const endPage = Math.min(totalPages, currentPage + 1);
 
-        // Add numbered page buttons
         for (let i = startPage; i <= endPage; i++) {
             const pageButton = document.createElement('span');
             pageButton.innerText = i;
             pageButton.classList.add('page-number');
             if (i === currentPage) {
-                pageButton.classList.add('current-page'); // Highlight the current page
+                pageButton.classList.add('current-page');
             }
             pageButton.addEventListener('click', function () {
-                loadNewsList(i); // Load the selected page
+                loadNewsList(i);
             });
             paginationContainer.appendChild(pageButton);
         }
 
-        // Only add the ">" button if not on the last page
         if (currentPage < totalPages) {
             const nextPageButton = document.createElement('span');
             nextPageButton.innerText = '>';
             nextPageButton.classList.add('page-number');
             nextPageButton.addEventListener('click', function () {
-                loadNewsList(currentPage + 1); // Go to the next page
+                loadNewsList(currentPage + 1);
             });
             paginationContainer.appendChild(nextPageButton);
         }
 
-        // Only add the last page button if not on the last page
         if (currentPage < totalPages) {
             const lastPageButton = document.createElement('span');
             lastPageButton.innerText = '>>';
             lastPageButton.classList.add('page-number');
             lastPageButton.addEventListener('click', function () {
-                loadNewsList(totalPages); // Go to the last page
+                loadNewsList(totalPages);
             });
             paginationContainer.appendChild(lastPageButton);
         }
 
-        // Append pagination to the widget
         const widget = document.getElementById('news-widget');
         widget.appendChild(paginationContainer);
     }
 
-    // Handle clicking on a news link to load the full article
     document.addEventListener('click', function (event) {
         if (event.target.matches('.news-link')) {
             event.preventDefault();
@@ -196,13 +178,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Load the full article content in a modal
     function loadNewsContent(url) {
-        isViewingContent = true; // User is viewing content
-        // Hide pagination when viewing content
+        isViewingContent = true;
         const paginationContainer = document.getElementById('pagination');
         if (paginationContainer) {
-            paginationContainer.style.display = 'none'; // Disable pagination
+            paginationContainer.style.display = 'none';
         }
 
         fetch(url)
@@ -211,24 +191,35 @@ document.addEventListener('DOMContentLoaded', function () {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
 
-                const title = doc.querySelector('.article-title').textContent.trim();
-                const content = doc.querySelector('.article-content').innerHTML;
+                const titleElement = doc.querySelector('.article-title');
+                const contentElement = doc.querySelector('.article-content');
+
+                if (!titleElement || !contentElement) {
+                    console.error('Error: Title or content not found.');
+                    return;
+                }
+
+                const title = titleElement.textContent.trim();
+                const content = contentElement.innerHTML;
 
                 const modalTitle = document.getElementById('modal-title');
                 const modalBody = document.getElementById('modal-body');
 
-                modalTitle.textContent = title;
-                modalBody.innerHTML = content;
+                if (modalTitle && modalBody) {
+                    modalTitle.textContent = title;
+                    modalBody.innerHTML = content;
 
-                const modal = new bootstrap.Modal(document.getElementById('newsModal'), {
-                    keyboard: false
-                });
-                modal.show();
+                    const modal = new bootstrap.Modal(document.getElementById('newsModal'), {
+                        keyboard: false
+                    });
+                    modal.show();
+                } else {
+                    console.error('Error: Modal elements not found.');
+                }
             })
             .catch(error => console.error('Error loading article:', error));
     }
 
-    // Initial load of news list
     loadNewsList(currentPage);
-    disableContentEditable(); // Disable contenteditable on page load
+    disableContentEditable();
 });
