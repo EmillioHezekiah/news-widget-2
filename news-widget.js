@@ -197,36 +197,45 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (!titleElement || !contentElement) {
                     console.warn('Title or content not found. Please check the structure of the fetched page.');
 
-                    // Get modal elements and ensure they exist before using them
                     const modalTitle = document.getElementById('modal-title');
                     const modalBody = document.getElementById('modal-body');
 
                     if (modalTitle) modalTitle.textContent = 'Content Not Available';
                     if (modalBody) modalBody.innerHTML = '<p>The article could not be loaded. Please try again later.</p>';
 
-                    const modal = new bootstrap.Modal(document.getElementById('newsModal'), {
-                        keyboard: false
-                    });
-                    modal.show();
+                    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                        const modal = new bootstrap.Modal(document.getElementById('newsModal'), {
+                            keyboard: false
+                        });
+                        modal.show();
+                    } else {
+                        console.error('Bootstrap is not loaded or defined.');
+                    }
                     return;
                 }
 
                 const title = titleElement.textContent.trim();
                 const content = contentElement.innerHTML;
 
-                // Get modal elements and ensure they exist before using them
                 const modalTitle = document.getElementById('modal-title');
                 const modalBody = document.getElementById('modal-body');
 
                 if (modalTitle) modalTitle.textContent = title;
                 if (modalBody) modalBody.innerHTML = content;
 
-                const modal = new bootstrap.Modal(document.getElementById('newsModal'), {
-                    keyboard: false
-                });
-                modal.show();
+                if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                    const modal = new bootstrap.Modal(document.getElementById('newsModal'), {
+                        keyboard: false
+                    });
+                    modal.show();
+                } else {
+                    console.error('Bootstrap is not loaded or defined.');
+                }
             })
-            .catch(error => console.error('Error loading article:', error));
+            .catch(error => {
+                console.error('Error loading content:', error);
+                isViewingContent = false;
+            });
     }
 
     loadNewsList(currentPage);
