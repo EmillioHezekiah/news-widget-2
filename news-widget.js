@@ -112,11 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     newsContent.appendChild(newsItem);
                 });
 
-                // Add pagination buttons for news list page only
-                if (!isViewingContent) {
-                    addPagination(page); // Pass the current page for comparison
-                }
-
+                addPagination(page); // Add pagination after loading the list
                 togglePagination(); // Show pagination after loading the list
                 window.scrollTo(0, 0); // Scroll to top when loading the list
             })
@@ -213,45 +209,31 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
-                const titleElement = doc.querySelector('.col-md-12.tmargin h3');
+                const titleElement = doc.querySelector('.col-md-12.tmargin h2');
                 const title = titleElement ? titleElement.textContent.trim() : 'No title available';
+                const articleElement = doc.querySelector('.the-post-description');
+                const articleContent = articleElement ? articleElement.innerHTML : 'No article content available';
                 const imageElement = doc.querySelector('.alert-secondary.btn-block.text-center img');
-                let imgSrc = imageElement ? correctImageUrl(imageElement.src) : '';
-                const paragraphs = doc.querySelectorAll('.the-post-description p');
-                const content = Array.from(paragraphs).map(p => p.outerHTML).join('\n');
+                const imgSrc = imageElement ? correctImageUrl(imageElement.src) : '';
+                const widget = document.getElementById('news-widget');
 
-                if (shouldExcludeImage(imgSrc)) imgSrc = '';
-
-                const postedMetaDataElement = doc.querySelector('.posted_meta_data');
-                const { postedDate, postedAuthor } = extractPostedMetaData(postedMetaDataElement);
-
-                const modal = document.createElement('div');
-                modal.classList.add('modal');
-                modal.innerHTML = `
-                    <div class="modal-content">
-                        <span class="close">&times;</span>
-                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="modal-image">` : ''}
-                        <h2 class="modal-title">${title}</h2>
-                        ${formatPostedMetaData(postedDate, postedAuthor)}
-                        ${content}
+                // Clear previous content
+                widget.innerHTML = `
+                    <h1 class="news-title" style="font-size: 12pt; margin-bottom: 24px;">News Distribution by Trade PR</h1>
+                    <div id="news-content">
+                        <div class="full-article">
+                            ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="full-article-image">` : ''}
+                            <h2 class="article-title">${title}</h2>
+                            ${articleContent}
+                        </div>
                     </div>
                 `;
-
-                document.body.appendChild(modal);
-                modal.style.display = 'block';
-                modal.querySelector('.close').addEventListener('click', function () {
-                    modal.style.display = 'none';
-                    document.body.removeChild(modal);
-                    isViewingContent = false; // Back to viewing list
-                    togglePagination(); // Show pagination when closing the modal
-                });
-
                 togglePagination(); // Hide pagination when viewing content
                 window.scrollTo(0, 0); // Scroll to top when viewing content
             })
-            .catch(error => console.error('Error loading news content:', error));
+            .catch(error => console.error('Error loading article:', error));
     }
 
-    // Initial load
-    loadNewsList(currentPage); // Start on page 1
+    loadNewsList(currentPage); // Load the initial news list
+    disableContentEditable(); // Disable contenteditable captions
 });
