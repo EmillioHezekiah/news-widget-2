@@ -63,26 +63,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 articles.forEach(article => {
                     const titleElement = article.querySelector('.h3.bold.bmargin.center-block');
-                    const title = titleElement ? titleElement.textContent.trim() : 'No title available';
-                    const link = titleElement ? titleElement.closest('a').href : '#';
                     const descriptionElement = article.querySelector('.xs-nomargin');
-                    let description = descriptionElement ? cleanDescription(descriptionElement.textContent.trim()) : 'No description available';
                     const imgElement = article.querySelector('.img_section img');
-
-                    let imgSrc = imgElement ? correctImageUrl(imgElement.src) : '';
-                    if (shouldExcludeImage(imgSrc)) imgSrc = '';
-
-                    const correctedLink = link.replace(/https:\/\/emilliohezekiah.github.io/, 'https://www.tradepr.work');
                     const postedMetaDataElement = article.querySelector('.posted_meta_data');
+
+                    const title = titleElement ? titleElement.textContent.trim() : 'No title available';
+                    const link = titleElement && titleElement.closest('a') ? titleElement.closest('a').href : '#';
+                    const description = descriptionElement ? cleanDescription(descriptionElement.textContent.trim()) : 'No description available';
+                    let imgSrc = imgElement ? correctImageUrl(imgElement.src) : '';
+
+                    if (shouldExcludeImage(imgSrc)) {
+                        imgSrc = '';
+                    }
+
                     const { postedDate, postedAuthor } = extractPostedMetaData(postedMetaDataElement);
 
+                    // Create the news item element
                     const newsItem = document.createElement('div');
                     newsItem.classList.add('news-item');
                     newsItem.innerHTML = `
                         ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-image">` : ''}
                         <div class="news-content">
                             ${formatPostedMetaData(postedDate, postedAuthor)}
-                            <a href="#" class="news-link" data-url="${encodeURIComponent(correctedLink)}">${title}</a>
+                            <a href="#" class="news-link" data-url="${encodeURIComponent(link)}">${title}</a>
                             <p>${description}</p>
                         </div>
                     `;
@@ -153,83 +156,8 @@ document.addEventListener('DOMContentLoaded', function () {
             paginationContainer.appendChild(nextPageButton);
         }
 
-        if (currentPage < totalPages) {
-            const lastPageButton = document.createElement('span');
-            lastPageButton.innerText = '>>';
-            lastPageButton.classList.add('page-number');
-            lastPageButton.addEventListener('click', function () {
-                loadNewsList(totalPages);
-            });
-            paginationContainer.appendChild(lastPageButton);
-        }
-
         const widget = document.getElementById('news-widget');
         widget.appendChild(paginationContainer);
-    }
-
-    document.addEventListener('click', function (event) {
-        if (event.target.matches('.news-link')) {
-            event.preventDefault();
-            const newsUrl = decodeURIComponent(event.target.getAttribute('data-url'));
-            loadNewsContent(newsUrl);
-        }
-    });
-
-    function loadNewsContent(url) {
-        isViewingContent = true;
-        const paginationContainer = document.getElementById('pagination');
-        if (paginationContainer) {
-            paginationContainer.style.display = 'none';
-        }
-
-        fetch(url)
-            .then(response => response.text())
-            .then(data => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(data, 'text/html');
-
-                const titleElement = doc.querySelector('.article-title');
-                const contentElement = doc.querySelector('.article-content');
-
-                console.log('Fetched page content:', data); // Debug log
-                console.log('Title element:', titleElement); // Debug log
-                console.log('Content element:', contentElement); // Debug log
-
-                const modalTitle = document.getElementById('modal-title');
-                const modalBody = document.getElementById('modal-body');
-
-                if (!titleElement || !contentElement) {
-                    console.warn('Title or content not found. Please check the structure of the fetched page.');
-                    if (modalTitle) modalTitle.textContent = 'Content Not Available';
-                    if (modalBody) modalBody.innerHTML = '<p>The article could not be loaded. Please check the structure of the fetched page or contact support.</p>';
-                    showModal();
-                    return;
-                }
-
-                const title = titleElement.textContent.trim();
-                const content = contentElement.innerHTML;
-
-                if (modalTitle) modalTitle.textContent = title;
-                if (modalBody) modalBody.innerHTML = content;
-
-                showModal();
-            })
-            .catch(error => {
-                console.error('Error loading content:', error);
-                const modalTitle = document.getElementById('modal-title');
-                const modalBody = document.getElementById('modal-body');
-                if (modalTitle) modalTitle.textContent = 'Error Loading Content';
-                if (modalBody) modalBody.innerHTML = '<p>There was an error loading the content. Please try again later.</p>';
-                showModal();
-            });
-    }
-
-    function showModal() {
-        const modalElement = document.getElementById('newsModal');
-        if (modalElement) {
-            modalElement.style.display = 'block';
-            modalElement.scrollTop = 0;
-        }
     }
 
     loadNewsList(1);
