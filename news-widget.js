@@ -196,11 +196,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 if (!titleElement || !contentElement) {
                     console.warn('Title or content not found. Please check the structure of the fetched page.');
+
+                    // Get modal elements and ensure they exist before using them
                     const modalTitle = document.getElementById('modal-title');
                     const modalBody = document.getElementById('modal-body');
 
-                    modalTitle.textContent = 'Content Not Available';
-                    modalBody.innerHTML = '<p>The article could not be loaded. Please try again later.</p>';
+                    if (modalTitle) modalTitle.textContent = 'Content Not Available';
+                    if (modalBody) modalBody.innerHTML = '<p>The article could not be loaded. Please try again later.</p>';
 
                     const modal = new bootstrap.Modal(document.getElementById('newsModal'), {
                         keyboard: false
@@ -212,11 +214,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 const title = titleElement.textContent.trim();
                 const content = contentElement.innerHTML;
 
+                // Get modal elements and ensure they exist before using them
                 const modalTitle = document.getElementById('modal-title');
                 const modalBody = document.getElementById('modal-body');
 
-                modalTitle.textContent = title;
-                modalBody.innerHTML = content;
+                if (modalTitle) modalTitle.textContent = title;
+                if (modalBody) modalBody.innerHTML = content;
 
                 const modal = new bootstrap.Modal(document.getElementById('newsModal'), {
                     keyboard: false
