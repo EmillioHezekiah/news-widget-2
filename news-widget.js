@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (modalTitle) modalTitle.textContent = 'Content Not Available';
                     if (modalBody) modalBody.innerHTML = '<p>The article could not be loaded. Please try again later.</p>';
 
-                    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                    if (window.bootstrap && bootstrap.Modal) {
                         const modal = new bootstrap.Modal(document.getElementById('newsModal'), {
                             keyboard: false
                         });
@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (modalTitle) modalTitle.textContent = title;
                 if (modalBody) modalBody.innerHTML = content;
 
-                if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                if (window.bootstrap && bootstrap.Modal) {
                     const modal = new bootstrap.Modal(document.getElementById('newsModal'), {
                         keyboard: false
                     });
