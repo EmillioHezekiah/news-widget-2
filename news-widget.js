@@ -209,37 +209,31 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
-                const title = doc.querySelector('.article-title') ? doc.querySelector('.article-title').textContent : 'No Title';
-                const content = doc.querySelector('.article-content') ? doc.querySelector('.article-content').innerHTML : 'No Content Available';
-                const imgElement = doc.querySelector('.article-image img');
-                const imgSrc = imgElement ? correctImageUrl(imgElement.src) : '';
+                const titleElement = doc.querySelector('.col-md-12.tmargin h2');
+                const title = titleElement ? titleElement.textContent.trim() : 'No title available';
+                const articleElement = doc.querySelector('.the-post-description');
+                const articleContent = articleElement ? articleElement.innerHTML : 'No article content available';
+                const imageElement = doc.querySelector('.alert-secondary.btn-block.text-center img');
+                const imgSrc = imageElement ? correctImageUrl(imageElement.src) : '';
+                const widget = document.getElementById('news-widget');
 
-                // Show the modal with the full article
-                const modalContent = document.querySelector('.modal-content');
-                modalContent.innerHTML = `
-                    <span class="close-button">&times;</span>
-                    <h2>${title}</h2>
-                    ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="modal-image">` : ''}
-                    <div class="article-body">${content}</div>
+                // Clear previous content
+                widget.innerHTML = `
+                    <h1 class="news-title" style="font-size: 12pt; margin-bottom: 24px;">News Distribution by Trade PR</h1>
+                    <div id="news-content">
+                        <div class="full-article">
+                            ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="full-article-image">` : ''}
+                            <h2 class="article-title">${title}</h2>
+                            ${articleContent}
+                        </div>
+                    </div>
                 `;
-
-                modalContent.querySelector('.close-button').addEventListener('click', closeModal);
-                document.querySelector('.modal').style.display = 'block';
-
-                disableContentEditable(); // Disable contenteditable for any caption present
                 togglePagination(); // Hide pagination when viewing content
-                window.scrollTo(0, 0); // Scroll to top when opening modal
+                window.scrollTo(0, 0); // Scroll to top when viewing content
             })
             .catch(error => console.error('Error loading article:', error));
     }
 
-    // Close the modal
-    function closeModal() {
-        document.querySelector('.modal').style.display = 'none'; // Hide the modal
-        loadNewsList(currentPage); // Reload the news list
-        isViewingContent = false; // Reset the content viewing state
-    }
-
-    // Load the first page on initial load
-    loadNewsList(currentPage);
+    loadNewsList(currentPage); // Load the initial news list
+    disableContentEditable(); // Disable contenteditable captions
 });
