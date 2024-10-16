@@ -196,20 +196,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 if (!titleElement || !contentElement) {
                     console.warn('Title or content not found. Please check the structure of the fetched page.');
-
+                    
                     const modalTitle = document.getElementById('modal-title');
                     const modalBody = document.getElementById('modal-body');
 
                     if (modalTitle) modalTitle.textContent = 'Content Not Available';
                     if (modalBody) modalBody.innerHTML = '<p>The article could not be loaded. Please try again later.</p>';
 
-                    if (window.bootstrap && bootstrap.Modal) {
-                        const modal = new bootstrap.Modal(document.getElementById('newsModal'), {
-                            keyboard: false
-                        });
+                    // Show modal without throwing an error
+                    const modalElement = document.getElementById('newsModal');
+                    if (modalElement && window.bootstrap) {
+                        const modal = new bootstrap.Modal(modalElement, { keyboard: false });
                         modal.show();
                     } else {
-                        console.error('Bootstrap is not loaded or defined.');
+                        console.error('Bootstrap is not loaded or modal element not found.');
                     }
                     return;
                 }
@@ -223,18 +223,26 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (modalTitle) modalTitle.textContent = title;
                 if (modalBody) modalBody.innerHTML = content;
 
-                if (window.bootstrap && bootstrap.Modal) {
-                    const modal = new bootstrap.Modal(document.getElementById('newsModal'), {
-                        keyboard: false
-                    });
+                const modalElement = document.getElementById('newsModal');
+                if (modalElement && window.bootstrap) {
+                    const modal = new bootstrap.Modal(modalElement, { keyboard: false });
                     modal.show();
                 } else {
-                    console.error('Bootstrap is not loaded or defined.');
+                    console.error('Bootstrap is not loaded or modal element not found.');
                 }
             })
             .catch(error => {
                 console.error('Error loading content:', error);
-                isViewingContent = false;
+                const modalTitle = document.getElementById('modal-title');
+                const modalBody = document.getElementById('modal-body');
+                if (modalTitle) modalTitle.textContent = 'Error Loading Content';
+                if (modalBody) modalBody.innerHTML = '<p>There was an error loading the content. Please try again later.</p>';
+                
+                const modalElement = document.getElementById('newsModal');
+                if (modalElement && window.bootstrap) {
+                    const modal = new bootstrap.Modal(modalElement, { keyboard: false });
+                    modal.show();
+                }
             });
     }
 
