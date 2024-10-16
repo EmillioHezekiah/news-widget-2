@@ -201,39 +201,62 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Load the full article content in a modal
+    // Load the full content of a news article
     function loadNewsContent(url) {
-        isViewingContent = true; // User is viewing content
+        isViewingContent = true; // User is now viewing content
+        togglePagination(); // Hide pagination when viewing content
+        const modal = document.getElementById('news-modal');
+        const closeButton = modal ? modal.querySelector('.close') : null;
+
+        // Check if the modal and close button exist
+        if (!modal) {
+            console.error('Modal element not found');
+            return;
+        }
+        if (!closeButton) {
+            console.error('Close modal button not found');
+            return;
+        }
+
         fetch(url)
             .then(response => response.text())
             .then(data => {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
-                const titleElement = doc.querySelector('.col-md-12.tmargin h2');
-                const title = titleElement ? titleElement.textContent.trim() : 'No title available';
-                const articleElement = doc.querySelector('.the-post-description');
-                const articleContent = articleElement ? articleElement.innerHTML : 'No article content available';
-                const imageElement = doc.querySelector('.alert-secondary.btn-block.text-center img');
-                const imgSrc = imageElement ? correctImageUrl(imageElement.src) : '';
-                const widget = document.getElementById('news-widget');
+                const contentElement = doc.querySelector('.the-post-description');
+                const titleElement = doc.querySelector('.h3.bold.bmargin.center-block');
+                const imgElement = doc.querySelector('.img_section img');
 
-                // Clear previous content
-                widget.innerHTML = `
-                    <h1 class="news-title" style="font-size: 12pt; margin-bottom: 24px;">News Distribution by Trade PR</h1>
-                    <div id="news-content">
-                        <div class="full-article">
-                            ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="full-article-image">` : ''}
-                            <h2 class="article-title">${title}</h2>
-                            ${articleContent}
-                        </div>
-                    </div>
+                // Clear modal content before loading new content
+                modal.innerHTML = `
+                    <span class="close">&times;</span>
+                    <h2>${titleElement ? titleElement.textContent.trim() : 'No Title'}</h2>
+                    <img class="modal-image" src="${imgElement ? correctImageUrl(imgElement.src) : ''}" alt="News Image" />
+                    <div class="modal-content">${contentElement ? contentElement.innerHTML : 'No Content Available'}</div>
                 `;
-                togglePagination(); // Hide pagination when viewing content
-                window.scrollTo(0, 0); // Scroll to top when viewing content
+
+                // Show the modal
+                modal.style.display = 'block';
+
+                // Add close button functionality
+                closeButton.addEventListener('click', function () {
+                    modal.style.display = 'none';
+                    isViewingContent = false; // User is back to viewing the list
+                    togglePagination(); // Show pagination again
+                });
+
+                window.addEventListener('click', function (event) {
+                    if (event.target === modal) {
+                        modal.style.display = 'none';
+                        isViewingContent = false; // User is back to viewing the list
+                        togglePagination(); // Show pagination again
+                    }
+                });
             })
-            .catch(error => console.error('Error loading article:', error));
+            .catch(error => console.error('Error loading content:', error));
     }
 
-    loadNewsList(currentPage); // Load the initial news list
-    disableContentEditable(); // Disable contenteditable captions
+    // Load the first page of news on initial load
+    loadNewsList(currentPage);
+    disableContentEditable(); // Disable contenteditable on load
 });
