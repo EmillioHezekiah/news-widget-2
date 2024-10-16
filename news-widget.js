@@ -201,31 +201,37 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Load the full article content in a modal
+    // Load the full content of a news article
     function loadNewsContent(url) {
-        isViewingContent = true; // User is viewing content
+        isViewingContent = true; // User is now viewing content
         fetch(url)
             .then(response => response.text())
             .then(data => {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
-                const titleElement = doc.querySelector('.col-md-12.tmargin h2');
+
+                // Get the title and content
+                const titleElement = doc.querySelector('.h1'); // Adjust selector based on actual structure
                 const title = titleElement ? titleElement.textContent.trim() : 'No Title Available';
                 const contentElement = doc.querySelector('.the-post-description');
                 const content = contentElement ? contentElement.innerHTML : '<p>No content available.</p>';
                 const imgElement = doc.querySelector('.alert-secondary.btn-block.text-center img');
                 let imgSrc = imgElement ? correctImageUrl(imgElement.src) : '';
 
-                // Set modal content
+                // Check for modal and set modal content
                 const modal = document.getElementById('news-modal');
-                modal.querySelector('.modal-title').innerHTML = title;
-                modal.querySelector('.modal-body').innerHTML = `
-                    ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="modal-image">` : ''}
-                    <div class="modal-content">${content}</div>
-                    <button class="back-to-list" onclick="toggleModal(); loadNewsList(${currentPage});">Back to the news list</button>
-                `;
-                modal.style.display = 'block'; // Show modal
-                togglePagination(); // Hide pagination when viewing content
+                if (modal) {
+                    modal.querySelector('.modal-title').innerHTML = title;
+                    modal.querySelector('.modal-body').innerHTML = `
+                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="modal-image">` : ''}
+                        <div class="modal-content">${content}</div>
+                        <button class="back-to-list" onclick="toggleModal(); loadNewsList(${currentPage});">Back to the news list</button>
+                    `;
+                    modal.style.display = 'block'; // Show modal
+                    togglePagination(); // Hide pagination when viewing content
+                } else {
+                    console.error('Modal element not found.');
+                }
             })
             .catch(error => console.error('Error loading news content:', error));
     }
@@ -233,11 +239,17 @@ document.addEventListener('DOMContentLoaded', function () {
     // Close the modal and reset the content
     function toggleModal() {
         const modal = document.getElementById('news-modal');
-        modal.style.display = 'none';
-        const modalBody = modal.querySelector('.modal-body');
-        modalBody.innerHTML = ''; // Clear the modal content
-        isViewingContent = false; // Reset viewing content status
-        togglePagination(); // Show pagination when closing the modal
+        if (modal) {
+            modal.style.display = 'none';
+            const modalBody = modal.querySelector('.modal-body');
+            if (modalBody) {
+                modalBody.innerHTML = ''; // Clear the modal content
+            }
+            isViewingContent = false; // Reset viewing content status
+            togglePagination(); // Show pagination when closing the modal
+        } else {
+            console.error('Modal element not found.');
+        }
     }
 
     // Load the first page of news on startup
@@ -246,6 +258,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // Disable contenteditable in captions on load
     disableContentEditable();
 
-    // Handle modal close event
-    document.getElementById('close-modal').addEventListener('click', toggleModal);
+    // Check if the close-modal button exists before adding the event listener
+    const closeModalButton = document.getElementById('close-modal');
+    if (closeModalButton) {
+        closeModalButton.addEventListener('click', toggleModal);
+    } else {
+        console.error('Close modal button not found.');
+    }
 });
