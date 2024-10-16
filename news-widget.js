@@ -195,8 +195,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const contentElement = doc.querySelector('.article-content');
 
                 if (!titleElement || !contentElement) {
-                    console.error('Error: Title or content not found.');
-                    return;
+                    throw new Error('Title or content not found.');
                 }
 
                 const title = titleElement.textContent.trim();
@@ -205,17 +204,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 const modalTitle = document.getElementById('modal-title');
                 const modalBody = document.getElementById('modal-body');
 
-                if (modalTitle && modalBody) {
-                    modalTitle.textContent = title;
-                    modalBody.innerHTML = content;
+                modalTitle.textContent = title;
+                modalBody.innerHTML = content;
 
-                    const modal = new bootstrap.Modal(document.getElementById('newsModal'), {
-                        keyboard: false
-                    });
-                    modal.show();
-                } else {
-                    console.error('Error: Modal elements not found.');
-                }
+                const modal = new bootstrap.Modal(document.getElementById('newsModal'), {
+                    keyboard: false
+                });
+                modal.show();
             })
             .catch(error => console.error('Error loading article:', error));
     }
