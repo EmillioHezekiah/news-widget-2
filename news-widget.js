@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (!titleElement || !contentElement) {
                     console.warn('Title or content not found. Please check the structure of the fetched page.');
                     if (modalTitle) modalTitle.textContent = 'Content Not Available';
-                    if (modalBody) modalBody.innerHTML = '<p>The article could not be loaded. Please check the structure of the fetched page.</p>';
+                    if (modalBody) modalBody.innerHTML = '<p>The article could not be loaded. Please check the structure of the fetched page or contact support.</p>';
                     showModal();
                     return;
                 }
@@ -221,7 +221,6 @@ document.addEventListener('DOMContentLoaded', function () {
     function showModal() {
         const modalElement = document.getElementById('newsModal');
         if (modalElement) {
-            // Ensure Bootstrap is loaded before using modal functionality
             if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
                 const modal = new bootstrap.Modal(modalElement, { keyboard: false });
                 modal.show();
