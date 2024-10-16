@@ -42,13 +42,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return { postedDate, postedAuthor };
     }
 
-    function disableContentEditable() {
-        const captions = document.querySelectorAll('.fr-inner[contenteditable="true"]');
-        captions.forEach(caption => {
-            caption.setAttribute('contenteditable', 'false');
-        });
-    }
-
     function loadNewsList(page) {
         currentPage = page;
         isViewingContent = false;
@@ -194,58 +187,45 @@ document.addEventListener('DOMContentLoaded', function () {
                 const titleElement = doc.querySelector('.article-title');
                 const contentElement = doc.querySelector('.article-content');
 
+                const modalTitle = document.getElementById('modal-title');
+                const modalBody = document.getElementById('modal-body');
+
                 if (!titleElement || !contentElement) {
                     console.warn('Title or content not found. Please check the structure of the fetched page.');
-                    
-                    const modalTitle = document.getElementById('modal-title');
-                    const modalBody = document.getElementById('modal-body');
-
                     if (modalTitle) modalTitle.textContent = 'Content Not Available';
                     if (modalBody) modalBody.innerHTML = '<p>The article could not be loaded. Please try again later.</p>';
-
-                    // Show modal without throwing an error
-                    const modalElement = document.getElementById('newsModal');
-                    if (modalElement && window.bootstrap) {
-                        const modal = new bootstrap.Modal(modalElement, { keyboard: false });
-                        modal.show();
-                    } else {
-                        console.error('Bootstrap is not loaded or modal element not found.');
-                    }
+                    showModal();
                     return;
                 }
 
                 const title = titleElement.textContent.trim();
                 const content = contentElement.innerHTML;
 
-                const modalTitle = document.getElementById('modal-title');
-                const modalBody = document.getElementById('modal-body');
-
                 if (modalTitle) modalTitle.textContent = title;
                 if (modalBody) modalBody.innerHTML = content;
 
-                const modalElement = document.getElementById('newsModal');
-                if (modalElement && window.bootstrap) {
-                    const modal = new bootstrap.Modal(modalElement, { keyboard: false });
-                    modal.show();
-                } else {
-                    console.error('Bootstrap is not loaded or modal element not found.');
-                }
+                showModal();
             })
             .catch(error => {
                 console.error('Error loading content:', error);
-                const modalTitle = document.getElementById('modal-title');
-                const modalBody = document.getElementById('modal-body');
                 if (modalTitle) modalTitle.textContent = 'Error Loading Content';
                 if (modalBody) modalBody.innerHTML = '<p>There was an error loading the content. Please try again later.</p>';
-                
-                const modalElement = document.getElementById('newsModal');
-                if (modalElement && window.bootstrap) {
-                    const modal = new bootstrap.Modal(modalElement, { keyboard: false });
-                    modal.show();
-                }
+                showModal();
             });
     }
 
+    function showModal() {
+        const modalElement = document.getElementById('newsModal');
+        if (modalElement) {
+            // Ensure Bootstrap is loaded before using modal functionality
+            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                const modal = new bootstrap.Modal(modalElement, { keyboard: false });
+                modal.show();
+            } else {
+                console.error('Bootstrap is not loaded or modal element not found.');
+            }
+        }
+    }
+
     loadNewsList(currentPage);
-    disableContentEditable();
 });
