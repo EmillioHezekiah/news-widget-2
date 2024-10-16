@@ -211,29 +211,35 @@ document.addEventListener('DOMContentLoaded', function () {
                 const doc = parser.parseFromString(data, 'text/html');
                 const titleElement = doc.querySelector('.col-md-12.tmargin h2');
                 const title = titleElement ? titleElement.textContent.trim() : 'No title available';
-                const articleElement = doc.querySelector('.the-post-description');
-                const articleContent = articleElement ? articleElement.innerHTML : 'No article content available';
-                const imageElement = doc.querySelector('.alert-secondary.btn-block.text-center img');
-                const imgSrc = imageElement ? correctImageUrl(imageElement.src) : '';
-                const widget = document.getElementById('news-widget');
+                const contentElement = doc.querySelector('.the-post-description');
+                const content = contentElement ? contentElement.innerHTML : '<p>No content available.</p>';
 
-                // Clear previous content
-                widget.innerHTML = `
-                    <h1 class="news-title" style="font-size: 12pt; margin-bottom: 24px;">News Distribution by Trade PR</h1>
-                    <div id="news-content">
-                        <div class="full-article">
-                            ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="full-article-image">` : ''}
-                            <h2 class="article-title">${title}</h2>
-                            ${articleContent}
-                        </div>
-                    </div>
-                `;
+                const modal = document.getElementById('modal');
+                const modalTitle = modal.querySelector('.modal-title');
+                const modalBody = modal.querySelector('.modal-body');
+
+                modalTitle.innerHTML = title;
+                modalBody.innerHTML = content + `<button id="back-button" class="btn btn-secondary" style="margin-top: 10px;">Back</button>`;
+
+                modal.style.display = 'block'; // Show the modal
                 togglePagination(); // Hide pagination when viewing content
-                window.scrollTo(0, 0); // Scroll to top when viewing content
+                disableContentEditable(); // Disable contenteditable for captions
+
+                // Add event listener for the back button
+                document.getElementById('back-button').addEventListener('click', function () {
+                    closeModal(); // Close the modal and go back to the news list
+                });
             })
-            .catch(error => console.error('Error loading article:', error));
+            .catch(error => console.error('Error loading news content:', error));
     }
 
-    loadNewsList(currentPage); // Load the initial news list
-    disableContentEditable(); // Disable contenteditable captions
+    // Close the modal and go back to the news list
+    function closeModal() {
+        const modal = document.getElementById('modal');
+        modal.style.display = 'none'; // Hide the modal
+        loadNewsList(currentPage); // Reload the news list
+    }
+
+    // Load the first page of news when the document is ready
+    loadNewsList(currentPage);
 });
