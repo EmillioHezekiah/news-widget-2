@@ -195,7 +195,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 const contentElement = doc.querySelector('.article-content');
 
                 if (!titleElement || !contentElement) {
-                    throw new Error('Title or content not found.');
+                    console.warn('Title or content not found. Please check the structure of the fetched page.');
+                    const modalTitle = document.getElementById('modal-title');
+                    const modalBody = document.getElementById('modal-body');
+
+                    modalTitle.textContent = 'Content Not Available';
+                    modalBody.innerHTML = '<p>The article could not be loaded. Please try again later.</p>';
+
+                    const modal = new bootstrap.Modal(document.getElementById('newsModal'), {
+                        keyboard: false
+                    });
+                    modal.show();
+                    return;
                 }
 
                 const title = titleElement.textContent.trim();
