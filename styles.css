@@ -111,53 +111,50 @@
     background-color: #f9f9f9;
     border: 2px solid #ccc;
     border-radius: 10px;
-    font-family: 'Poppins';
+    font-family: 'Poppins', sans-serif;
     font-size: 18px;
     line-height: 1.8;
     color: #333;
 }
 
-.full-news-content h1,
 .full-news-content h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 32px;
+    font-family: 'Droid Serif', serif;
+    font-size: 23pt;
     font-weight: bold;
-    color: #600202;
+    color: #840d0d;
     margin-bottom: 15px;
 }
 
 .full-news-content p {
-    font-family: 'Poppins', serif;
-    font-size: 18px;
-    color: #444;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12pt;
+    color: #000;
     margin-bottom: 20px;
 }
 
-/* Modal Image Styles */
-.modal-thumbnail,
-.modal-image,
-.modal-img {
-    display: block;
-    margin: 0 auto;
-    max-width: 100%;
+/* Modal Thumbnail */
+.modal-thumbnail {
+    width: 50%;
     height: auto;
-    margin-bottom: 20px;
-    border-radius: 5px;
+    display: block;
+    margin: 0 auto 20px;
 }
 
 /* Back Button */
-#backButton {
+#back-button {
     font-family: 'Roboto Condensed', sans-serif;
+    font-size: 12pt;
     font-weight: bold;
     color: #840d0d;
-    background-color: transparent;
+    background: none;
     border: none;
     cursor: pointer;
-    font-size: 18px;
     margin: 20px 0;
+    padding: 0;
+    text-decoration: none;
 }
 
-#backButton:hover {
+#back-button:hover {
     text-decoration: underline;
 }
 
@@ -195,12 +192,6 @@
     display: none;
 }
 
-/* Smoother transitions and hover effects for modal images */
-.modal-thumbnail {
-    transition: transform 0.3s ease;
-    max-width: 40%;
-}
-
 /* Froala Editor Image Caption Styles */
 .fr-img-caption,
 .fr-img-wrap,
@@ -232,69 +223,8 @@
     text-align: center;
 }
 
-.fr-img-wrap img {
-    display: block;
-    margin: 0 auto;
-    max-width: 100%;
-    height: auto;
-}
-
 /* Non-editable style */
 .non-editable {
     background-color: #f0f0f0; /* Optional: light grey background */
     cursor: not-allowed; /* Show a "not-allowed" cursor */
-}
-
-/* Additional Styles for Modal Thumbnail and Back Button */
-.news-modal-thumbnail {
-    text-align: center; /* Center the thumbnail */
-    margin-bottom: 20px; /* Space below thumbnail */
-}
-
-.thumbnail-image {
-    width: 50%; /* Set to 50% of modal width */
-    height: auto; /* Maintain aspect ratio */
-    display: block; /* Center the image */
-    margin: 0 auto; /* Center the image */
-}
-
-/* Back to News List button */
-.back-to-news-list {
-    display: inline-block;
-    margin-bottom: 20px;
-    padding: 10px 15px;
-    background-color: #007bff; /* Example background color */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.back-to-news-list:hover {
-    background-color: #0056b3; /* Darker shade for hover effect */
-}
-.news-article-view {
-    padding: 20px;
-    background: #fff; /* Example background color */
-    border-radius: 5px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.news-article-image {
-    max-width: 100%;
-    height: auto;
-}
-
-.back-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #007bff; /* Example button color */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.back-button:hover {
-    background-color: #0056b3; /* Darker shade on hover */
 }
