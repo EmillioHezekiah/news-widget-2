@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
-                const titleElement = doc.querySelector('.col-md-12.tmargin h2');
+                const titleElement = doc.querySelector('h1.bold.h2.nobmargin');
                 const title = titleElement && titleElement.textContent.trim() ? titleElement.textContent.trim() : 'No Title';
                 const articleElement = doc.querySelector('.the-post-description');
                 const articleContent = articleElement ? articleElement.innerHTML : 'No article content available';
@@ -216,17 +216,16 @@ document.addEventListener('DOMContentLoaded', function () {
                         ${imgSrc ? `<img src="${imgSrc}" class="center-block" style="max-width: 100%; height: auto;">` : ''}
                         <h2>${title}</h2>
                         ${articleContent}
-                        <button id="back-button" class="back-button">Back to News List</button>
+                        <button id="back-button" class="back-button">Back to List</button>
                     </div>
                 `;
                 togglePagination();
-                disableContentEditable();
                 window.scrollTo(0, 0);
             })
             .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Handle the back button click to return to the news list
+    // Handle the back button to return to the news list
     document.addEventListener('click', function (event) {
         if (event.target.matches('#back-button')) {
             loadNewsList(currentPage);
@@ -235,4 +234,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Initial load of the news list
     loadNewsList(currentPage);
+
+    // Disable the contenteditable attribute for captions
+    disableContentEditable();
 });
