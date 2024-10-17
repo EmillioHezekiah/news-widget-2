@@ -7,9 +7,9 @@ document.addEventListener('DOMContentLoaded', function () {
     // Helper function to correct image URLs
     function correctImageUrl(src) {
         if (src.startsWith('/')) {
-            return https://www.tradepr.work${src};
+            return `https://www.tradepr.work${src}`;
         } else if (!src.startsWith('http')) {
-            return https://www.tradepr.work/uploads/news-pictures-thumbnails/${src};
+            return `https://www.tradepr.work/uploads/news-pictures-thumbnails/${src}`;
         }
         return src.replace(/https:\/\/emilliohezekiah.github.io/, 'https://www.tradepr.work');
     }
@@ -26,13 +26,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Format the posted metadata for each article
     function formatPostedMetaData(date, author) {
-        return 
+        return `
             <div class="posted-meta-data">
                 <span class="posted-by-snippet-posted">Posted</span>
                 <span class="posted-by-snippet-date">${date}</span>
                 <span class="posted-by-snippet-author">by ${author}</span>
             </div>
-        ;
+        `;
     }
 
     // Extract posted metadata from the document
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function loadNewsList(page) {
         currentPage = page; // Update the current page number
         isViewingContent = false; // User is back to viewing the list
-        fetch(${baseUrl}?page=${page})
+        fetch(`${baseUrl}?page=${page}`)
             .then(response => response.text())
             .then(data => {
                 const parser = new DOMParser();
@@ -93,14 +93,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     const newsItem = document.createElement('div');
                     newsItem.classList.add('news-item');
-                    newsItem.innerHTML = 
-                        ${imgSrc ? <img src="${imgSrc}" alt="${title}" class="news-image"> : ''}
+                    newsItem.innerHTML = `
+                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-image">` : ''}
                         <div class="news-content">
                             ${formatPostedMetaData(postedDate, postedAuthor)}
                             <a href="#" class="news-link" data-url="${encodeURIComponent(correctedLink)}">${title}</a>
                             <p>${description}</p>
                         </div>
-                    ;
+                    `;
                     newsContent.appendChild(newsItem);
                 });
 
@@ -202,16 +202,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 // Add back button and remove posted metadata section
-                newsContent.innerHTML = 
+                newsContent.innerHTML = `
                     <div class="full-news-content">
                         <h1 class="article-title">${title}</h1>
-                        ${additionalImage ? <img src="${additionalImage}" alt="${title}" class="modal-thumbnail"> : ''}
+                        ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail">` : ''}
 
-                        ${image ? <img src="${image}" alt="${title}" class="center-block"> : ''}
+                        ${image ? `<img src="${image}" alt="${title}" class="center-block">` : ''}
                         <div class="content">${content}</div>
                         <button id="backButton">Back to News List</button>
                     </div>
-                ;
+                `;
 
                 document.getElementById('backButton').addEventListener('click', function () {
                     loadNewsList(currentPage);
