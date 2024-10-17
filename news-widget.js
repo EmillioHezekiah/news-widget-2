@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function disableContentEditable() {
         const captions = document.querySelectorAll('.fr-inner[contenteditable="true"]');
         captions.forEach(caption => {
-            caption.setAttribute('contenteditable', 'false'); // Disable contenteditable
+            caption.removeAttribute('contenteditable'); // Disable contenteditable
         });
     }
 
@@ -116,38 +116,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Handle pagination dynamically
     function addPagination(currentPage) {
-        const paginationContainer = document.getElementById('pagination') || document.createElement('div');
+        const paginationContainer = document.createElement('div');
         paginationContainer.id = 'pagination';
         paginationContainer.innerHTML = '';
 
-        // Only add the first page button if not on the first page
-        if (currentPage > 1) {
-            const firstPageButton = document.createElement('span');
-            firstPageButton.innerText = '<<';
-            firstPageButton.classList.add('page-number');
-            firstPageButton.addEventListener('click', function () {
-                loadNewsList(1); // Go to the first page
-            });
-            paginationContainer.appendChild(firstPageButton);
-        }
-
-        // Only add the "<" button if not on the first page
-        if (currentPage > 1) {
-            const prevPageButton = document.createElement('span');
-            prevPageButton.innerText = '<';
-            prevPageButton.classList.add('page-number');
-            prevPageButton.addEventListener('click', function () {
-                loadNewsList(currentPage - 1); // Go to the previous page
-            });
-            paginationContainer.appendChild(prevPageButton);
-        }
-
-        // Calculate the range of page numbers to display
-        const startPage = Math.max(1, currentPage - 1);
-        const endPage = Math.min(totalPages, currentPage + 1);
+        // Add "<<" button to go to the first page
+        const firstPageButton = document.createElement('span');
+        firstPageButton.innerText = '<<';
+        firstPageButton.classList.add('page-number');
+        firstPageButton.addEventListener('click', function () {
+            loadNewsList(1); // Go to the first page
+        });
+        paginationContainer.appendChild(firstPageButton);
 
         // Add numbered page buttons
-        for (let i = startPage; i <= endPage; i++) {
+        for (let i = 1; i <= totalPages; i++) {
             const pageButton = document.createElement('span');
             pageButton.innerText = i;
             pageButton.classList.add('page-number');
@@ -160,31 +143,17 @@ document.addEventListener('DOMContentLoaded', function () {
             paginationContainer.appendChild(pageButton);
         }
 
-        // Only add the ">" button if not on the last page
-        if (currentPage < totalPages) {
-            const nextPageButton = document.createElement('span');
-            nextPageButton.innerText = '>';
-            nextPageButton.classList.add('page-number');
-            nextPageButton.addEventListener('click', function () {
-                loadNewsList(currentPage + 1); // Go to the next page
-            });
-            paginationContainer.appendChild(nextPageButton);
-        }
-
-        // Only add the last page button if not on the last page
-        if (currentPage < totalPages) {
-            const lastPageButton = document.createElement('span');
-            lastPageButton.innerText = '>>';
-            lastPageButton.classList.add('page-number');
-            lastPageButton.addEventListener('click', function () {
-                loadNewsList(totalPages); // Go to the last page
-            });
-            paginationContainer.appendChild(lastPageButton);
-        }
+        // Add ">>" button to go to the last page
+        const lastPageButton = document.createElement('span');
+        lastPageButton.innerText = '>>';
+        lastPageButton.classList.add('page-number');
+        lastPageButton.addEventListener('click', function () {
+            loadNewsList(totalPages); // Go to the last page
+        });
+        paginationContainer.appendChild(lastPageButton);
 
         // Append pagination to the widget
-        const widget = document.getElementById('news-widget');
-        widget.appendChild(paginationContainer);
+        document.getElementById('news-widget').appendChild(paginationContainer);
     }
 
     // Handle clicking on a news link to load the full article
@@ -196,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Load the full article content in a modal
+    // Load the full article content in a regular view below the news list
     function loadNewsContent(url) {
         isViewingContent = true; // User is viewing content
         fetch(url)
@@ -211,46 +180,42 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (shouldExcludeImage(image)) image = '';
 
                 const contentContainer = doc.querySelector('.the-post-description');
-                const content = contentContainer ? contentContainer.innerHTML.trim() : 'No content available';
+                const content = contentContainer ? contentContainer.innerHTML.trim() : 'No Content Available';
 
-                // Clear the news content
+                const postedMetaDataElement = doc.querySelector('.posted_meta_data');
+                const { postedDate, postedAuthor } = extractPostedMetaData(postedMetaDataElement);
+
+                const additionalImageElement = doc.querySelector('img.center-block');
+                let additionalImage = additionalImageElement ? correctImageUrl(additionalImageElement.src) : '';
+                if (shouldExcludeImage(additionalImage)) additionalImage = '';
+
                 const newsContent = document.getElementById('news-content');
-                newsContent.innerHTML = '';
-
-                // Create the news article view
-                const articleView = document.createElement('div');
-                articleView.classList.add('news-article-view');
-                articleView.innerHTML = `
-                    <h1>${title}</h1>
-                    ${image ? `<img src="${image}" alt="${title}" class="news-article-image">` : ''}
-                    <div class="news-article-content">${content}</div>
-                    <button class="back-button">Back to News List</button>
-                `;
-
-                // Add thumbnail image (if available)
-                const thumbnailImgElement = doc.querySelector('.img_section img');
-                if (thumbnailImgElement) {
-                    const thumbnailSrc = correctImageUrl(thumbnailImgElement.src);
-                    articleView.innerHTML += `
-                        <img src="${thumbnailSrc}" alt="${title}" class="news-thumbnail" width="240" height="120">
-                    `;
+                if (!newsContent) {
+                    console.error('News content container not found.');
+                    return;
                 }
 
-                newsContent.appendChild(articleView);
+                // Hide pagination when viewing a full article
+                const pagination = document.getElementById('pagination');
+                if (pagination) {
+                    pagination.style.display = 'none'; // Hide pagination
+                }
 
-                // Add the click event for the back button
-                const backButton = articleView.querySelector('.back-button');
-                backButton.addEventListener('click', function () {
-                    loadNewsList(currentPage); // Go back to the news list
-                });
+                // Add back button and remove posted metadata section
+                newsContent.innerHTML = `
+                    <div class="full-news-content">
+                        <h1 class="article-title">${title}</h1>
+                        ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="additional-image">` : ''}
+                        <div class="news-full-content">${content}</div>
+                    </div>
+                `;
 
-                // Scroll to top
-                window.scrollTo(0, 0);
+                // Optionally disable editable content after loading the full article
+                disableContentEditable();
             })
-            .catch(error => console.error('Error loading article:', error));
+            .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Initial load of the first page of news
+    // Initialize news list and load page 1 on page load
     loadNewsList(currentPage);
-    disableContentEditable();
 });
