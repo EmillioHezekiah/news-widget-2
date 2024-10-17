@@ -55,6 +55,14 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Show or hide the pagination based on the isViewingContent state
+    function togglePagination() {
+        const paginationContainer = document.getElementById('pagination');
+        if (paginationContainer) {
+            paginationContainer.style.display = isViewingContent ? 'none' : 'block';
+        }
+    }
+
     // Load the news list with pagination
     function loadNewsList(page) {
         currentPage = page; // Update the current page number
@@ -104,11 +112,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     newsContent.appendChild(newsItem);
                 });
 
-                // Add pagination buttons for news list page only
-                if (!isViewingContent) {
-                    addPagination(page); // Pass the current page for comparison
-                }
-
+                addPagination(page); // Add pagination after loading the list
+                togglePagination(); // Show pagination after loading the list
                 window.scrollTo(0, 0); // Scroll to top when loading the list
             })
             .catch(error => console.error('Error loading news:', error));
@@ -116,21 +121,38 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Handle pagination dynamically
     function addPagination(currentPage) {
-        const paginationContainer = document.createElement('div');
+        const paginationContainer = document.getElementById('pagination') || document.createElement('div');
         paginationContainer.id = 'pagination';
         paginationContainer.innerHTML = '';
 
-        // Add "<<" button to go to the first page
-        const firstPageButton = document.createElement('span');
-        firstPageButton.innerText = '<<';
-        firstPageButton.classList.add('page-number');
-        firstPageButton.addEventListener('click', function () {
-            loadNewsList(1); // Go to the first page
-        });
-        paginationContainer.appendChild(firstPageButton);
+        // Only add the first page button if not on the first page
+        if (currentPage > 1) {
+            const firstPageButton = document.createElement('span');
+            firstPageButton.innerText = '<<';
+            firstPageButton.classList.add('page-number');
+            firstPageButton.addEventListener('click', function () {
+                loadNewsList(1); // Go to the first page
+            });
+            paginationContainer.appendChild(firstPageButton);
+        }
+
+        // Only add the "<" button if not on the first page
+        if (currentPage > 1) {
+            const prevPageButton = document.createElement('span');
+            prevPageButton.innerText = '<';
+            prevPageButton.classList.add('page-number');
+            prevPageButton.addEventListener('click', function () {
+                loadNewsList(currentPage - 1); // Go to the previous page
+            });
+            paginationContainer.appendChild(prevPageButton);
+        }
+
+        // Calculate the range of page numbers to display
+        const startPage = Math.max(1, currentPage - 1);
+        const endPage = Math.min(totalPages, currentPage + 1);
 
         // Add numbered page buttons
-        for (let i = 1; i <= totalPages; i++) {
+        for (let i = startPage; i <= endPage; i++) {
             const pageButton = document.createElement('span');
             pageButton.innerText = i;
             pageButton.classList.add('page-number');
@@ -143,17 +165,31 @@ document.addEventListener('DOMContentLoaded', function () {
             paginationContainer.appendChild(pageButton);
         }
 
-        // Add ">>" button to go to the last page
-        const lastPageButton = document.createElement('span');
-        lastPageButton.innerText = '>>';
-        lastPageButton.classList.add('page-number');
-        lastPageButton.addEventListener('click', function () {
-            loadNewsList(totalPages); // Go to the last page
-        });
-        paginationContainer.appendChild(lastPageButton);
+        // Only add the ">" button if not on the last page
+        if (currentPage < totalPages) {
+            const nextPageButton = document.createElement('span');
+            nextPageButton.innerText = '>';
+            nextPageButton.classList.add('page-number');
+            nextPageButton.addEventListener('click', function () {
+                loadNewsList(currentPage + 1); // Go to the next page
+            });
+            paginationContainer.appendChild(nextPageButton);
+        }
+
+        // Only add the last page button if not on the last page
+        if (currentPage < totalPages) {
+            const lastPageButton = document.createElement('span');
+            lastPageButton.innerText = '>>';
+            lastPageButton.classList.add('page-number');
+            lastPageButton.addEventListener('click', function () {
+                loadNewsList(totalPages); // Go to the last page
+            });
+            paginationContainer.appendChild(lastPageButton);
+        }
 
         // Append pagination to the widget
-        document.getElementById('news-widget').appendChild(paginationContainer);
+        const widget = document.getElementById('news-widget');
+        widget.appendChild(paginationContainer);
     }
 
     // Handle clicking on a news link to load the full article
@@ -165,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Load the full article content in a regular view below the news list
+    // Load the full article content in a modal
     function loadNewsContent(url) {
         isViewingContent = true; // User is viewing content
         fetch(url)
@@ -173,55 +209,31 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
+                const titleElement = doc.querySelector('.col-md-12.tmargin h2');
+                const title = titleElement ? titleElement.textContent.trim() : 'No title available';
+                const articleElement = doc.querySelector('.the-post-description');
+                const articleContent = articleElement ? articleElement.innerHTML : 'No article content available';
+                const imageElement = doc.querySelector('.alert-secondary.btn-block.text-center img');
+                const imgSrc = imageElement ? correctImageUrl(imageElement.src) : '';
+                const widget = document.getElementById('news-widget');
 
-                const title = doc.querySelector('h1.bold.h2.nobmargin') ? doc.querySelector('h1.bold.h2.nobmargin').textContent.trim() : 'No Title';
-                const imageElement = doc.querySelector('.img_section img');
-                let image = imageElement ? correctImageUrl(imageElement.src) : '';
-                if (shouldExcludeImage(image)) image = '';
-
-                const contentContainer = doc.querySelector('.the-post-description');
-                const content = contentContainer ? contentContainer.innerHTML.trim() : 'No Content Available';
-
-                const postedMetaDataElement = doc.querySelector('.posted_meta_data');
-                const { postedDate, postedAuthor } = extractPostedMetaData(postedMetaDataElement);
-
-                const additionalImageElement = doc.querySelector('img.center-block');
-                let additionalImage = additionalImageElement ? correctImageUrl(additionalImageElement.src) : '';
-                if (shouldExcludeImage(additionalImage)) additionalImage = '';
-
-                const newsContent = document.getElementById('news-content');
-                if (!newsContent) {
-                    console.error('News content container not found.');
-                    return;
-                }
-
-                // Hide pagination when viewing a full article
-                const pagination = document.getElementById('pagination');
-                if (pagination) {
-                    pagination.style.display = 'none'; // Hide pagination
-                }
-
-                // Add back button and remove posted metadata section
-                newsContent.innerHTML = `
-                    <div class="full-news-content">
-                        <h1 class="article-title">${title}</h1>
-                        ${additionalImage ? `<img src="${additionalImage}" alt="${title}" class="modal-thumbnail">` : ''}
-
-                        ${image ? `<img src="${image}" alt="${title}" class="center-block">` : ''}
-                        <div class="content">${content}</div>
-                        <button id="backButton">Back to News List</button>
+                // Clear previous content
+                widget.innerHTML = `
+                    <h1 class="news-title" style="font-size: 12pt; margin-bottom: 24px;">News Distribution by Trade PR</h1>
+                    <div id="news-content">
+                        <div class="full-article">
+                            ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="full-article-image">` : ''}
+                            <h2 class="article-title">${title}</h2>
+                            ${articleContent}
+                        </div>
                     </div>
                 `;
-
-                document.getElementById('backButton').addEventListener('click', function () {
-                    loadNewsList(currentPage);
-                });
-
-                window.scrollTo(0, 0); // Scroll to top of article
+                togglePagination(); // Hide pagination when viewing content
+                window.scrollTo(0, 0); // Scroll to top when viewing content
             })
-            .catch(error => console.error('Error loading full article:', error));
+            .catch(error => console.error('Error loading article:', error));
     }
 
-    // Initial news load
-    loadNewsList(1);
+    loadNewsList(currentPage); // Load the initial news list
+    disableContentEditable(); // Disable contenteditable captions
 });
