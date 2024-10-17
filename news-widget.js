@@ -212,19 +212,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 widget.innerHTML = `
                     <h1 class="news-title" style="font-size: 12pt; margin-bottom: 24px;">News Distribution by Trade PR</h1>
+                    <button id="backToNewsList" style="margin-bottom: 16px;">Back to News List</button>
                     <div class="modal-content" style="padding: 16px;">
                         ${imgSrc ? `<img src="${imgSrc}" class="center-block" style="max-width: 100%; height: auto;">` : ''}
                         <h2>${title}</h2>
-                        <div class="the-post-description">${articleContent}</div>
+                        <div class="content-text">${articleContent}</div>
                     </div>
                 `;
+                disableContentEditable();
                 togglePagination();
                 window.scrollTo(0, 0);
-                disableContentEditable();
             })
             .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Initialize the news widget with the first page
-    loadNewsList(1);
+    // Handle going back to the news list
+    document.addEventListener('click', function (event) {
+        if (event.target.matches('#backToNewsList')) {
+            event.preventDefault();
+            loadNewsList(currentPage);
+        }
+    });
+
+    // Initial load of the news list
+    loadNewsList(currentPage);
 });
