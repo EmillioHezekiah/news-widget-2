@@ -213,28 +213,34 @@ document.addEventListener('DOMContentLoaded', function () {
                 widget.innerHTML = `
                     <h1 class="news-title" style="font-size: 12pt; margin-bottom: 24px;">News Distribution by Trade PR</h1>
                     <div class="modal-content" style="padding: 16px;">
-                        ${imgSrc ? `<img src="${imgSrc}" class="center-block" style="max-width: 100%; height: auto;">` : ''}
+                        ${imgSrc ? `<img src="${imgSrc}" class="center-block" style="max-width: 50%; height: auto; display: block; margin-left: auto; margin-right: auto;" />` : ''}
                         <h2>${title}</h2>
-                        ${articleContent}
-                        <button id="back-button" class="back-button">Back to List</button>
+                        <div class="posted-meta-data">${formatPostedMetaData('Posted Date', 'Author Name')}</div>
+                        <div class="modal-article">${articleContent}</div>
+                        <button class="close-modal">Close</button>
                     </div>
                 `;
+
+                // Style the paragraphs
+                const paragraphs = widget.querySelectorAll('.modal-article p');
+                paragraphs.forEach(p => {
+                    p.style.lineHeight = '1.5';
+                    p.style.fontFamily = 'Arial, sans-serif';
+                    p.style.textAlign = 'justify';
+                    p.style.fontSize = '12pt';
+                });
+
+                widget.querySelector('.close-modal').addEventListener('click', function () {
+                    widget.innerHTML = ''; // Clear the content
+                    loadNewsList(currentPage); // Reload news list
+                });
+
                 togglePagination();
                 window.scrollTo(0, 0);
+                disableContentEditable();
             })
             .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Handle the back button to return to the news list
-    document.addEventListener('click', function (event) {
-        if (event.target.matches('#back-button')) {
-            loadNewsList(currentPage);
-        }
-    });
-
-    // Initial load of the news list
-    loadNewsList(currentPage);
-
-    // Disable the contenteditable attribute for captions
-    disableContentEditable();
+    loadNewsList(currentPage); // Initial load
 });
