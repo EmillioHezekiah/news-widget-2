@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     const baseUrl = 'https://www.tradepr.work/articles/';
-    let currentPage = 1; // Track the current page
-    let totalPages = 9; // Set default total pages (this can be dynamic)
-    let isViewingContent = false; // Track whether the user is viewing a full article
+    let currentPage = 1;
+    let totalPages = 9;
+    let isViewingContent = false;
 
     // Helper function to correct image URLs
     function correctImageUrl(src) {
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function disableContentEditable() {
         const captions = document.querySelectorAll('.fr-inner[contenteditable="true"]');
         captions.forEach(caption => {
-            caption.setAttribute('contenteditable', 'false'); // Disable contenteditable
+            caption.setAttribute('contenteditable', 'false');
         });
     }
 
@@ -65,8 +65,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Load the news list with pagination
     function loadNewsList(page) {
-        currentPage = page; // Update the current page number
-        isViewingContent = false; // User is back to viewing the list
+        currentPage = page;
+        isViewingContent = false;
         fetch(`${baseUrl}?page=${page}`)
             .then(response => response.text())
             .then(data => {
@@ -112,9 +112,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     newsContent.appendChild(newsItem);
                 });
 
-                addPagination(page); // Add pagination after loading the list
-                togglePagination(); // Show pagination after loading the list
-                window.scrollTo(0, 0); // Scroll to top when loading the list
+                addPagination(page);
+                togglePagination();
+                window.scrollTo(0, 0);
             })
             .catch(error => console.error('Error loading news:', error));
     }
@@ -196,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Load the full article content in a modal
     function loadNewsContent(url) {
-        isViewingContent = true; // User is viewing content
+        isViewingContent = true;
         fetch(url)
             .then(response => response.text())
             .then(data => {
@@ -210,30 +210,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 const imgSrc = imageElement ? correctImageUrl(imageElement.src) : '';
                 const widget = document.getElementById('news-widget');
 
-                // Clear previous content
                 widget.innerHTML = `
                     <h1 class="news-title" style="font-size: 12pt; margin-bottom: 24px;">News Distribution by Trade PR</h1>
                     <div class="modal-content" style="padding: 16px;">
                         ${imgSrc ? `<img src="${imgSrc}" class="center-block" style="max-width: 100%; height: auto;">` : ''}
                         <h2>${title}</h2>
-                        <div class="modal-article">${articleContent}</div>
-                        <button class="back-button">Back to News List</button>
+                        <div class="the-post-description">${articleContent}</div>
                     </div>
                 `;
-                togglePagination(); // Hide pagination when viewing the content
-                window.scrollTo(0, 0); // Scroll to top when loading the content
+                togglePagination();
+                window.scrollTo(0, 0);
+                disableContentEditable();
             })
-            .catch(error => console.error('Error loading article:', error));
+            .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Handle back to news list button click
-    document.addEventListener('click', function (event) {
-        if (event.target.matches('.back-button')) {
-            event.preventDefault();
-            loadNewsList(currentPage);
-        }
-    });
-
-    // Load the initial news list
-    loadNewsList(currentPage);
+    // Initialize the news widget with the first page
+    loadNewsList(1);
 });
