@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 articles.forEach(article => {
                     const titleElement = article.querySelector('.h3.bold.bmargin.center-block');
-                    const title = titleElement ? titleElement.textContent.trim() : 'No title available';
+                    const title = titleElement && titleElement.textContent.trim() ? titleElement.textContent.trim() : 'Untitled';
                     const link = titleElement ? titleElement.closest('a').href : '#';
                     const descriptionElement = article.querySelector('.xs-nomargin');
                     let description = descriptionElement ? cleanDescription(descriptionElement.textContent.trim()) : 'No description available';
@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
                 const titleElement = doc.querySelector('.col-md-12.tmargin h2');
-                const title = titleElement ? titleElement.textContent.trim() : 'No title available';
+                const title = titleElement && titleElement.textContent.trim() ? titleElement.textContent.trim() : 'Untitled';
                 const articleElement = doc.querySelector('.the-post-description');
                 const articleContent = articleElement ? articleElement.innerHTML : 'No article content available';
                 const imageElement = doc.querySelector('.alert-secondary.btn-block.text-center img');
@@ -212,28 +212,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 widget.innerHTML = `
                     <h1 class="news-title" style="font-size: 12pt; margin-bottom: 24px;">News Distribution by Trade PR</h1>
-                    <button id="backToNewsList" style="margin-bottom: 16px;">Back to News List</button>
                     <div class="modal-content" style="padding: 16px;">
                         ${imgSrc ? `<img src="${imgSrc}" class="center-block" style="max-width: 100%; height: auto;">` : ''}
                         <h2>${title}</h2>
-                        <div class="content-text">${articleContent}</div>
+                        ${articleContent}
+                        <button id="back-button" class="back-button">Back to News List</button>
                     </div>
                 `;
-                disableContentEditable();
-                togglePagination();
                 window.scrollTo(0, 0);
+                togglePagination();
             })
-            .catch(error => console.error('Error loading news content:', error));
+            .catch(error => console.error('Error loading article:', error));
     }
 
-    // Handle going back to the news list
+    // Go back to the news list when the "Back to News List" button is clicked
     document.addEventListener('click', function (event) {
-        if (event.target.matches('#backToNewsList')) {
-            event.preventDefault();
+        if (event.target.id === 'back-button') {
             loadNewsList(currentPage);
         }
     });
 
-    // Initial load of the news list
+    // Initialize the widget with the first page of news
     loadNewsList(currentPage);
+    disableContentEditable();
 });
