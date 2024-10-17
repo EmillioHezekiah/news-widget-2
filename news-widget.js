@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
                 const titleElement = doc.querySelector('.col-md-12.tmargin h2');
-                const title = titleElement && titleElement.textContent.trim() ? titleElement.textContent.trim() : 'Untitled';
+                const title = titleElement && titleElement.textContent.trim() ? titleElement.textContent.trim() : 'No Title';
                 const articleElement = doc.querySelector('.the-post-description');
                 const articleContent = articleElement ? articleElement.innerHTML : 'No article content available';
                 const imageElement = doc.querySelector('.alert-secondary.btn-block.text-center img');
@@ -219,20 +219,20 @@ document.addEventListener('DOMContentLoaded', function () {
                         <button id="back-button" class="back-button">Back to News List</button>
                     </div>
                 `;
-                window.scrollTo(0, 0);
                 togglePagination();
+                disableContentEditable();
+                window.scrollTo(0, 0);
             })
-            .catch(error => console.error('Error loading article:', error));
+            .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Go back to the news list when the "Back to News List" button is clicked
+    // Handle the back button click to return to the news list
     document.addEventListener('click', function (event) {
-        if (event.target.id === 'back-button') {
+        if (event.target.matches('#back-button')) {
             loadNewsList(currentPage);
         }
     });
 
-    // Initialize the widget with the first page of news
+    // Initial load of the news list
     loadNewsList(currentPage);
-    disableContentEditable();
 });
