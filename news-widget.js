@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         ${imgSrc ? `<img src="${imgSrc}" class="center-block" style="max-width: 30%; height: auto; display: block; margin-left: auto; margin-right: auto;" />` : ''}
                         <h2 style="font-family: 'Droid Serif'; font-size: 16pt; color: #4D4D4D;">${title}</h2>
                         <div class="modal-description" style="font-size: 14pt; font-family: 'Poppins'; text-align: justify;">${articleContent}</div>
-                        <button id="backButton" style="margin-top: 20px;">Back to News List</button>
+                        <button class="close-modal" style="background: none; border: none; font-weight: bold; color: #840d0d; font-family: 'Roboto Condensed'; font-size: 14pt;">Back</button>
                     </div>
                 `;
 
