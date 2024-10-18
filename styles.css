@@ -250,11 +250,5 @@
     margin: 0 auto; /* Centers image */
     display: block;
 }
-.fr-video.fr-deletable.fr-fvc.fr-dvb {
-    width: 100%;
-    max-width: 300px;
-    height: auto;
-    margin: 0 auto; /* Centers image */
-    display: block;
-}
+
 
