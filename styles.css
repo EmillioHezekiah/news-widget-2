@@ -172,9 +172,13 @@
     background-color: #888;
 }
 
-  .modal-article {
+  .modal-article p {
     font-family: 'Poppins', sans-serif;
     font-size: 12pt;
+    line-height: 1.5;
+    text-align: justify;
+    color: #333; /* Customize the color if needed */
+    margin-bottom: 15px; /* Adjust spacing between paragraphs */
   }
 
 /* Image Caption */
