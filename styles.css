@@ -180,7 +180,10 @@
 
 .modal-article p {
   text-align: justify;
+  margin-bottom: 1em;
+      font-family: 'Poppins', sans-serif;
 }
+
 
 /* Image Caption */
 .full-news-content .image-caption {
