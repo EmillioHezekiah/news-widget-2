@@ -172,19 +172,6 @@
     background-color: #888;
 }
 
-.modal-article {
-  font-family: 'Poppins', sans-serif;
-  font-size: 12pt;
-  line-height: 1.5;
-}
-
-.modal-article p {
-  text-align: justify;
-  margin-bottom: 1em;
-      font-family: 'Poppins', sans-serif;
-}
-
-
 /* Image Caption */
 .full-news-content .image-caption {
     text-align: center;
