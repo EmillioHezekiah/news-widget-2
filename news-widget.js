@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <h2>${title}</h2>
                         <div class="posted-meta-data">${formatPostedMetaData('Posted Date', 'Author Name')}</div>
                         <div class="modal-article">${articleContent}</div>
-                        <button class="close-modal">Close</button>
+                        <button class="close-modal">Back</button>
                     </div>
                 `;
 
