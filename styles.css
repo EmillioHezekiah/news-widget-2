@@ -243,4 +243,10 @@
 #backButton:hover {
     text-decoration: underline; /* Adds an underline effect on hover */
 }
-
+.fr-fic fr-dii{
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    margin: 0 auto; /* Centers image */
+    display: block;
+}
