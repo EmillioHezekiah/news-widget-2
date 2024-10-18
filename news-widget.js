@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const widget = document.getElementById('news-widget');
 
                 // Clear previous content
-                widget.innerHTML = '<h1 class="news-title" style="font-size: 24pt; margin-bottom: 24px; font-family: 'Roboto Condensed';">News Distribution by Trade PR</h1><div id="news-content"></div>';
+                widget.innerHTML = '<h1 class="news-title" style="font-size: 24pt; margin-bottom: 24px; font-family: 'Roboto';">News Distribution by Trade PR</h1><div id="news-content"></div>';
                 const newsContent = widget.querySelector('#news-content');
 
                 if (articles.length === 0) {
