@@ -228,18 +228,4 @@
     background-color: #f0f0f0; /* Optional: light grey background */
     cursor: not-allowed; /* Show a "not-allowed" cursor */
 }
-.close-modal {
-    background: none;
-    border: none;
-    font-weight: bold;
-    color: #840d0d;
-    font-family: 'Roboto Condensed';
-    font-size: 14pt;
-    cursor: pointer; /* Changes the cursor on hover */
-}
-
-/* Optional: If you want a hover effect */
-.close-modal:hover {
-    text-decoration: underline; /* Adds an underline effect on hover */
-}
 
