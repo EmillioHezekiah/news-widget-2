@@ -172,6 +172,11 @@
     background-color: #888;
 }
 
+  .modal-article {
+    font-family: 'Poppins', sans-serif;
+    font-size: 12pt;
+  }
+
 /* Image Caption */
 .full-news-content .image-caption {
     text-align: center;
