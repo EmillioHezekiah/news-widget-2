@@ -211,13 +211,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 const widget = document.getElementById('news-widget');
 
                 widget.innerHTML = `
-                    <h1 class="news-title" style="font-size: 12pt; margin-bottom: 24px;">News Distribution by Trade PR</h1>
                     <div class="modal-content" style="padding: 16px;">
-                        ${imgSrc ? `<img src="${imgSrc}" class="center-block" style="max-width: 50%; height: auto; display: block; margin-left: auto; margin-right: auto;" />` : ''}
-                        <h2>${title}</h2>
-                        <div class="posted-meta-data">${formatPostedMetaData('Posted Date', 'Author Name')}</div>
-                        <div class="modal-article">${articleContent}</div>
-                        <button class="close-modal">Back</button>
+                        ${imgSrc ? `<img src="${imgSrc}" class="center-block" style="max-width: 30%; height: auto; display: block; margin-left: auto; margin-right: auto;" />` : ''}
+                        <h2 style="font-family: 'Droid Serif'; font-size: 16pt; color: #840d0d;">${title}</h2>
+                        <div class="modal-article" style="font-family: 'Poppins'; font-size: 12pt;>${articleContent}</div>
+                        <button class="close-modal" style="background: none; border: none; font-weight: bold; color: #840d0d; font-family: 'Roboto Condensed'; font-size: 14pt;">Back</button>
                     </div>
                 `;
 
