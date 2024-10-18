@@ -213,32 +213,26 @@ document.addEventListener('DOMContentLoaded', function () {
                 widget.innerHTML = `
                     <div class="modal-content" style="padding: 16px;">
                         ${imgSrc ? `<img src="${imgSrc}" class="center-block" style="max-width: 30%; height: auto; display: block; margin-left: auto; margin-right: auto;" />` : ''}
-                        <h2 style="font-family: 'Droid Serif'; font-size: 16pt; color: #840d0d;">${title}</h2>
-                        <div class="modal-article" style="font-family: 'Poppins'; font-size: 14pt; text-align: justify;">${articleContent}</div>
-                        <button class="close-modal" style="background: none; border: none; font-weight: bold; color: #840d0d; font-family: 'Roboto Condensed'; font-size: 14pt;">Back</button>
+                        <h2 style="font-family: 'Droid Serif'; font-size: 16pt; color: #4D4D4D;">${title}</h2>
+                        <div class="modal-description" style="font-size: 14pt; font-family: 'Poppins'; text-align: justify;">${articleContent}</div>
+                        <button id="backButton" style="margin-top: 20px;">Back to News List</button>
                     </div>
                 `;
 
-                // Style the paragraphs
-                const paragraphs = widget.querySelectorAll('.modal-article p');
-                paragraphs.forEach(p => {
-                    p.style.lineHeight = '1.5';
-                    p.style.fontFamily = 'Arial, sans-serif';
-                    p.style.textAlign = 'justify';
-                    p.style.fontSize = '12pt';
-                });
-
-                widget.querySelector('.close-modal').addEventListener('click', function () {
-                    widget.innerHTML = ''; // Clear the content
-                    loadNewsList(currentPage); // Reload news list
-                });
-
+                disableContentEditable();
                 togglePagination();
                 window.scrollTo(0, 0);
-                disableContentEditable();
             })
             .catch(error => console.error('Error loading news content:', error));
     }
 
-    loadNewsList(currentPage); // Initial load
+    // Handle back button in the modal
+    document.addEventListener('click', function (event) {
+        if (event.target.matches('#backButton')) {
+            loadNewsList(currentPage);
+        }
+    });
+
+    // Initial load
+    loadNewsList(currentPage);
 });
