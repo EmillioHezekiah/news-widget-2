@@ -250,3 +250,10 @@
     margin: 0 auto; /* Centers image */
     display: block;
 }
+.ytp-cued-thumbnail-overlay-image{
+    width: 100%;
+
+    height: auto;
+    margin: 0 auto; /* Centers image */
+    display: block;
+}
