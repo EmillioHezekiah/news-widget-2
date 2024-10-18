@@ -228,7 +228,7 @@
     background-color: #f0f0f0; /* Optional: light grey background */
     cursor: not-allowed; /* Show a "not-allowed" cursor */
 }
-.backButton {
+#backButton {
     background: none;
     border: none;
     font-weight: bold;
@@ -239,7 +239,7 @@
 }
 
 /* Optional: If you want a hover effect */
-.backButton:hover {
+#backButton:hover {
     text-decoration: underline; /* Adds an underline effect on hover */
 }
 
