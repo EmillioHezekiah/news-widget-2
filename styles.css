@@ -250,7 +250,7 @@
     margin: 0 auto; /* Centers image */
     display: block;
 }
-.ytp-cued-thumbnail-overlay-image{
+.fr-video.fr-deletable.fr-fvc.fr-dvb{
     width: 100%;
 
     height: auto;
