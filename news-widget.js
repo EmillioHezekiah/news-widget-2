@@ -208,28 +208,25 @@ document.addEventListener('DOMContentLoaded', function () {
                 const imgSrc = imageElement ? correctImageUrl(imageElement.src) : '';
                 const widget = document.getElementById('news-widget');
 
-                const modalContent = `
-                    <div class="modal-content">
-                        <span class="close-modal">&times;</span>
+                widget.innerHTML = `
+                    <div class="modal-content" style="padding: 16px;">
+                        <button id="back-button" class="back-button" style="background-color: #4CAF50; color: white; padding: 12px 20px; font-size: 16px; cursor: pointer;">Back to News List</button>
+                        <h1>${title}</h1>
                         ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-image">` : ''}
-                        <h2 class="modal-title">${title}</h2>
-                        <div class="modal-article">${articleContent}</div>
+                        <div class="article-content">${articleContent}</div>
                     </div>
                 `;
-                const modal = document.createElement('div');
-                modal.classList.add('modal');
-                modal.innerHTML = modalContent;
-                widget.appendChild(modal);
-                modal.querySelector('.close-modal').addEventListener('click', function () {
-                    modal.remove();
-                    window.scrollTo(0, 0); // Reset scroll position
-                });
+                togglePagination();
 
-                window.scrollTo(0, 0); // Scroll to top when viewing content
+                // Add event listener for the "Back to News List" button
+                document.getElementById('back-button').addEventListener('click', function () {
+                    loadNewsList(currentPage); // Return to the news list
+                    window.scrollTo(0, 0); // Scroll back to the top
+                });
             })
             .catch(error => console.error('Error loading article:', error));
     }
 
-    // Start loading the first page of news
+    // Start by loading the first page of the news list
     loadNewsList(1);
 });
