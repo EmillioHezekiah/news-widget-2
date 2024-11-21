@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const baseUrl = 'https://www.tradepr.work/articles/';
     let currentPage = 1;
-    let totalPages = 9;
+    let totalPages = 9; // Default value, to be updated dynamically
     let isViewingContent = false;
 
     // Helper function to correct image URLs
@@ -113,6 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     newsContent.appendChild(newsItem);
                 });
 
+                totalPages = doc.querySelectorAll('.pagination a').length - 1; // Get the total number of pages from pagination links
                 addPagination(page);
                 togglePagination();
                 window.scrollTo(0, 0);
@@ -120,16 +121,22 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Error loading news:', error));
     }
 
-    // Handle pagination dynamically (pagination like code 2)
+    // Handle pagination dynamically
     function addPagination(currentPage) {
         const paginationContainer = document.getElementById('pagination') || document.createElement('div');
         paginationContainer.id = 'pagination';
         paginationContainer.innerHTML = '';
 
-        const startPage = Math.max(1, currentPage - 1);
-        const endPage = Math.min(totalPages, currentPage + 1);
-
+        // Add "First" and "Previous" buttons
         if (currentPage > 1) {
+            const firstPageButton = document.createElement('span');
+            firstPageButton.innerText = '<<';
+            firstPageButton.classList.add('page-number');
+            firstPageButton.addEventListener('click', function () {
+                loadNewsList(1); // Go to the first page
+            });
+            paginationContainer.appendChild(firstPageButton);
+
             const prevPageButton = document.createElement('span');
             prevPageButton.innerText = '<';
             prevPageButton.classList.add('page-number');
@@ -139,7 +146,8 @@ document.addEventListener('DOMContentLoaded', function () {
             paginationContainer.appendChild(prevPageButton);
         }
 
-        for (let i = startPage; i <= endPage; i++) {
+        // Add page numbers dynamically
+        for (let i = 1; i <= totalPages; i++) {
             const pageButton = document.createElement('span');
             pageButton.innerText = i;
             pageButton.classList.add('page-number');
@@ -152,6 +160,7 @@ document.addEventListener('DOMContentLoaded', function () {
             paginationContainer.appendChild(pageButton);
         }
 
+        // Add "Next" and "Last" buttons
         if (currentPage < totalPages) {
             const nextPageButton = document.createElement('span');
             nextPageButton.innerText = '>';
@@ -160,6 +169,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 loadNewsList(currentPage + 1);
             });
             paginationContainer.appendChild(nextPageButton);
+
+            const lastPageButton = document.createElement('span');
+            lastPageButton.innerText = '>>';
+            lastPageButton.classList.add('page-number');
+            lastPageButton.addEventListener('click', function () {
+                loadNewsList(totalPages); // Go to the last page
+            });
+            paginationContainer.appendChild(lastPageButton);
         }
 
         const widget = document.getElementById('news-widget');
@@ -193,25 +210,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 widget.innerHTML = `
                     <div class="modal-content" style="padding: 16px;">
-                        ${imgSrc ? `<img src="${imgSrc}" class="center-block" style="max-width: 45%; height: auto; display: block; margin-left: auto; margin-right: auto;" />` : ''}
-                        <h2 style="font-family: 'Droid Serif'; font-size: 20pt; color: #840d0d;">${title}</h2>
-                        <div class="post-description" style="font-family: 'Roboto Condensed'; font-size: 14pt; color: #000;">${articleContent}</div>
-                    </div>
-                    <div class="close-button" style="padding: 16px;">
-                        <button class="close-modal" style="font-size: 16px;">Close</button>
+                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="full-image">` : ''}
+                        <h1 class="full-article-title">${title}</h1>
+                        <div class="full-article-content">${articleContent}</div>
                     </div>
                 `;
 
-                const closeButton = widget.querySelector('.close-modal');
-                closeButton.addEventListener('click', function () {
-                    isViewingContent = false;
-                    togglePagination();
-                    loadNewsList(currentPage); // Reload the current page of articles
-                });
+                togglePagination();
+                window.scrollTo(0, 0);
             })
             .catch(error => console.error('Error loading article:', error));
     }
 
-    // Initial load
-    loadNewsList(currentPage);
+    // Load the first page on initialization
+    loadNewsList(1);
 });
