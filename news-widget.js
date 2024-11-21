@@ -221,19 +221,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
                 const content = doc.querySelector('.post-content');
-                const title = doc.querySelector('.h1').textContent.trim() || 'Untitled';
-                const description = content ? content.innerHTML : 'No content available';
-
-                const contentContainer = document.createElement('div');
-                contentContainer.classList.add('full-article');
-                contentContainer.innerHTML = `
-                    <h2>${title}</h2>
-                    <div>${description}</div>
-                `;
-                document.getElementById('news-widget').appendChild(contentContainer);
+                const widget = document.getElementById('news-widget');
+                widget.innerHTML = content ? content.innerHTML : '<p>Content not available</p>';
             })
-            .catch(error => console.error('Error loading article:', error));
+            .catch(error => console.error('Error loading full content:', error));
     }
 
+    // Initial load of the first page of news
     loadNewsList(currentPage);
 });
