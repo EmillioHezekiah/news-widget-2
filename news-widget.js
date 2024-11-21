@@ -211,17 +211,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 widget.innerHTML = `
                     <div class="modal-content" style="padding: 16px;">
                         ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="full-image">` : ''}
-                        <h1 class="full-article-title">${title}</h1>
-                        <div class="full-article-content">${articleContent}</div>
+                        <h1 class="article-title">${title}</h1>
+                        <div class="article-content">${articleContent}</div>
+                        <button id="backToListBtn" class="btn btn-primary">Back to News List</button>
                     </div>
                 `;
+                document.getElementById('backToListBtn').addEventListener('click', function () {
+                    loadNewsList(currentPage); // Go back to the news list
+                });
 
                 togglePagination();
-                window.scrollTo(0, 0);
             })
-            .catch(error => console.error('Error loading article:', error));
+            .catch(error => console.error('Error loading full article:', error));
     }
 
-    // Load the first page on initialization
-    loadNewsList(1);
+    loadNewsList(currentPage); // Initial load of news list
 });
