@@ -220,13 +220,13 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
-                const content = doc.querySelector('.post-content');
+                const content = doc.querySelector('.the-post-description'); // Updated selector
                 const widget = document.getElementById('news-widget');
                 widget.innerHTML = content ? content.innerHTML : '<p>Content not available</p>';
             })
-            .catch(error => console.error('Error loading full content:', error));
+            .catch(error => console.error('Error loading content:', error));
     }
 
-    // Initial load of the first page of news
-    loadNewsList(currentPage);
+    // Initial loading of news
+    loadNewsList(1);
 });
