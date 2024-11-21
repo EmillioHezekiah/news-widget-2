@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const baseUrl = 'https://www.tradepr.work/articles/';
     let currentPage = 1;
-    let totalPages = 9;
+    let totalPages = 9; // Default total pages
     let isViewingContent = false;
 
     function correctImageUrl(src) {
@@ -56,6 +56,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function getTotalPages(doc) {
+        const paginationElement = doc.querySelector('.pagination');
+        if (!paginationElement) return totalPages; // Default to current totalPages if no pagination found
+        const lastPageLink = paginationElement.querySelector('a:last-of-type');
+        const lastPageNumber = lastPageLink ? parseInt(lastPageLink.textContent.trim(), 10) : totalPages;
+        return isNaN(lastPageNumber) ? totalPages : lastPageNumber;
+    }
+
     function loadNewsList(page) {
         currentPage = page;
         isViewingContent = false;
@@ -67,9 +75,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 const articles = doc.querySelectorAll('.row-fluid.search_result');
                 const widget = document.getElementById('news-widget');
 
-                widget.innerHTML = '<h1 class="news-title" style="font-size: 21pt; margin-bottom: 24px; font-family: \'Roboto Condensed\'; color: #840d0d">News Distribution by Trade PR</h1><div id="news-content"></div>';
+                widget.innerHTML = `
+                    <h1 class="news-title" style="font-size: 21pt; margin-bottom: 24px; font-family: 'Roboto Condensed'; color: #840d0d">
+                        News Distribution by Trade PR
+                    </h1>
+                    <div id="news-content"></div>
+                `;
 
                 const newsContent = widget.querySelector('#news-content');
+                totalPages = getTotalPages(doc); // Dynamically update total pages
 
                 if (articles.length === 0) {
                     newsContent.innerHTML = '<p>No news items found.</p>';
@@ -124,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function () {
             addPaginationButton(paginationContainer, '<', () => loadNewsList(currentPage - 1));
         }
 
-        for (let i = Math.max(1, currentPage - 1); i <= Math.min(totalPages, currentPage + 1); i++) {
+        for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
             addPaginationButton(paginationContainer, i, () => loadNewsList(i), i === currentPage);
         }
 
