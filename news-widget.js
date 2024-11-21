@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const baseUrl = 'https://www.tradepr.work/articles/';
     let currentPage = 1;
-    let totalPages = 9;
+    let totalPages = 9; // Initial value; will be updated dynamically.
     let isViewingContent = false;
 
     // Helper function to correct image URLs
@@ -61,6 +61,27 @@ document.addEventListener('DOMContentLoaded', function () {
         if (paginationContainer) {
             paginationContainer.style.display = isViewingContent ? 'none' : 'block';
         }
+    }
+
+    // Fetch the total number of pages from the website
+    function fetchTotalPages() {
+        fetch(baseUrl)
+            .then(response => response.text())
+            .then(data => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(data, 'text/html');
+                const pagination = doc.querySelector('.pagination');
+                if (pagination) {
+                    const lastPageLink = pagination.querySelector('li:last-child a');
+                    const totalPageNumber = lastPageLink ? parseInt(lastPageLink.textContent.trim()) : 9; // Default to 9 if not found
+                    totalPages = totalPageNumber;
+                    loadNewsList(currentPage);
+                } else {
+                    totalPages = 9; // Fallback if pagination is not found
+                    loadNewsList(currentPage);
+                }
+            })
+            .catch(error => console.error('Error fetching total pages:', error));
     }
 
     // Load the news list with pagination
@@ -203,37 +224,15 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
-                const titleElement = doc.querySelector('h1.bold.h2.nobmargin');
-                const title = titleElement && titleElement.textContent.trim() ? titleElement.textContent.trim() : 'No Title';
-                const articleElement = doc.querySelector('.the-post-description');
-                const articleContent = articleElement ? articleElement.innerHTML : 'No article content available';
-                const imageElement = doc.querySelector('.alert-secondary.btn-block.text-center img');
-                const imgSrc = imageElement ? correctImageUrl(imageElement.src) : '';
-                const widget = document.getElementById('news-widget');
+                const articleContent = doc.querySelector('.col-md-12.the-post-description');
 
-                widget.innerHTML = `
-                    <div class="modal-content" style="padding: 16px;">
-                        ${imgSrc ? `<img src="${imgSrc}" class="center-block" style="max-width: 45%; height: auto; display: block; margin-left: auto; margin-right: auto;" />` : ''}
-                        <h2 style="font-family: 'Droid Serif'; font-size: 20pt; color: #840d0d;">${title}</h2>
-                        <div class="modal-description" style="font-size: 14pt; font-family: 'Poppins'; text-align: justify;">${articleContent}</div>
-                        <button id="backButton" style="margin-top: 20px;">Back to News List</button>
-                    </div>
-                `;
-
-                disableContentEditable();
+                const modalContent = document.getElementById('modal-content');
+                modalContent.innerHTML = articleContent ? articleContent.innerHTML : 'Content not available.';
                 togglePagination();
-                window.scrollTo(0, 0);
             })
-            .catch(error => console.error('Error loading news content:', error));
+            .catch(error => console.error('Error loading full article:', error));
     }
 
-    // Handle back button in the modal
-    document.addEventListener('click', function (event) {
-        if (event.target.matches('#backButton')) {
-            loadNewsList(currentPage);
-        }
-    });
-
-    // Initial load
-    loadNewsList(currentPage);
+    // Initialize the page with the first set of news articles
+    fetchTotalPages();
 });
