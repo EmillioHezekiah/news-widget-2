@@ -47,14 +47,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return { postedDate, postedAuthor };
     }
 
-    // Disable the contenteditable attribute for captions
-    function disableContentEditable() {
-        const captions = document.querySelectorAll('.fr-inner[contenteditable="true"]');
-        captions.forEach(caption => {
-            caption.setAttribute('contenteditable', 'false');
-        });
-    }
-
     // Show or hide the pagination based on the isViewingContent state
     function togglePagination() {
         const paginationContainer = document.getElementById('pagination');
@@ -213,14 +205,21 @@ document.addEventListener('DOMContentLoaded', function () {
                         <h1>${title}</h1>
                         ${imgSrc ? `<img src="${imgSrc}" class="full-article-image">` : ''}
                         <div class="article-body">${articleContent}</div>
+                        <button id="back-to-list" class="btn">Back to News List</button>
                     </div>
                 `;
 
-                togglePagination();
-                window.scrollTo(0, 0); // Scroll to the top when opening the modal
+                const backButton = document.getElementById('back-to-list');
+                backButton.addEventListener('click', function () {
+                    loadNewsList(currentPage); // Go back to the news list
+                    togglePagination();
+                });
+
+                window.scrollTo(0, 0); // Scroll to the top of the modal
             })
-            .catch(error => console.error('Error loading article content:', error));
+            .catch(error => console.error('Error loading article:', error));
     }
 
-    loadNewsList(currentPage);
+    // Initialize by loading the first page
+    loadNewsList(1);
 });
