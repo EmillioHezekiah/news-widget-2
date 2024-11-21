@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     const lastPageLink = paginationElement.querySelector('a:last-of-type');
                     if (lastPageLink) {
                         const lastPageMatch = lastPageLink.href.match(/page=(\d+)/);
-                        totalPages = lastPageMatch ? parseInt(lastPageMatch[1], 10) : totalPages;
+                        totalPages = lastPageMatch ? parseInt(lastPageMatch[1], 10) : 1;
                     }
                 }
 
@@ -207,21 +207,17 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                 `;
 
-                disableContentEditable();
+                document.getElementById('backButton').addEventListener('click', function () {
+                    loadNewsList(currentPage);
+                });
+
                 togglePagination();
                 window.scrollTo(0, 0);
             })
-            .catch(error => console.error('Error loading article:', error));
+            .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Back button to return to the news list
-    document.addEventListener('click', function (event) {
-        if (event.target.id === 'backButton') {
-            event.preventDefault();
-            loadNewsList(currentPage);
-        }
-    });
-
-    // Load the initial news list
+    // Initialize
     loadNewsList(1);
+    disableContentEditable();
 });
