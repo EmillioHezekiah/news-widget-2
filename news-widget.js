@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const baseUrl = 'https://www.tradepr.work/articles/';
     let currentPage = 1;
-    let totalPages = 9; // Initial value; will be updated dynamically.
+    let totalPages = 9; // Initial total pages, this will be adjusted dynamically
     let isViewingContent = false;
 
     // Helper function to correct image URLs
@@ -63,27 +63,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Fetch the total number of pages from the website
-    function fetchTotalPages() {
-        fetch(baseUrl)
-            .then(response => response.text())
-            .then(data => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(data, 'text/html');
-                const pagination = doc.querySelector('.pagination');
-                if (pagination) {
-                    const lastPageLink = pagination.querySelector('li:last-child a');
-                    const totalPageNumber = lastPageLink ? parseInt(lastPageLink.textContent.trim()) : 9; // Default to 9 if not found
-                    totalPages = totalPageNumber;
-                    loadNewsList(currentPage);
-                } else {
-                    totalPages = 9; // Fallback if pagination is not found
-                    loadNewsList(currentPage);
-                }
-            })
-            .catch(error => console.error('Error fetching total pages:', error));
-    }
-
     // Load the news list with pagination
     function loadNewsList(page) {
         currentPage = page;
@@ -134,11 +113,21 @@ document.addEventListener('DOMContentLoaded', function () {
                     newsContent.appendChild(newsItem);
                 });
 
+                // Dynamically calculate total pages from the website (assuming the real website has a navigation element indicating the total pages)
+                totalPages = getTotalPages(doc);
+
                 addPagination(page);
                 togglePagination();
                 window.scrollTo(0, 0);
             })
             .catch(error => console.error('Error loading news:', error));
+    }
+
+    // Calculate the total number of pages dynamically
+    function getTotalPages(doc) {
+        const paginationLinks = doc.querySelectorAll('.pagination a'); // Adjust the selector to match the real website
+        const totalPagesLink = paginationLinks[paginationLinks.length - 1];
+        return totalPagesLink ? parseInt(totalPagesLink.textContent.trim(), 10) : 9; // Default to 9 pages if not found
     }
 
     // Handle pagination dynamically
@@ -219,21 +208,38 @@ document.addEventListener('DOMContentLoaded', function () {
     // Load the full article content in a modal
     function loadNewsContent(url) {
         isViewingContent = true;
-        togglePagination();
         fetch(url)
             .then(response => response.text())
             .then(data => {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
-                const articleContent = doc.querySelector('.col-md-12.the-post-description');
+                const titleElement = doc.querySelector('h1.bold.h2.nobmargin');
+                const title = titleElement && titleElement.textContent.trim() ? titleElement.textContent.trim() : 'Untitled';
+                const contentElement = doc.querySelector('.the-post-description');
+                const content = contentElement ? contentElement.innerHTML.trim() : 'No content available';
 
-                const modalContent = document.getElementById('modal-content');
-                modalContent.innerHTML = articleContent ? articleContent.innerHTML : 'Content not available.';
-                window.scrollTo(0, 0);
+                const modal = document.createElement('div');
+                modal.classList.add('modal');
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h2>${title}</h2>
+                        <div class="modal-body">
+                            ${content}
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+
+                // Close the modal on click
+                modal.querySelector('.close').addEventListener('click', function () {
+                    modal.remove();
+                    togglePagination();
+                });
             })
-            .catch(error => console.error('Error loading full article:', error));
+            .catch(error => console.error('Error loading content:', error));
     }
 
-    // Initialize the page with the first set of news articles
-    fetchTotalPages();
+    // Initialize the page with the first news list
+    loadNewsList(1);
 });
