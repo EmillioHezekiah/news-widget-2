@@ -227,13 +227,16 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Close modal when clicking outside
-    document.getElementById('news-modal').addEventListener('click', function (event) {
-        if (event.target === this) {
-            this.style.display = 'none';
-            isViewingContent = false;
-            togglePagination();  // Show pagination again
-        }
-    });
+    const newsModal = document.getElementById('news-modal');
+    if (newsModal) {
+        newsModal.addEventListener('click', function (event) {
+            if (event.target === this) {
+                this.style.display = 'none';
+                isViewingContent = false;
+                togglePagination();  // Show pagination again
+            }
+        });
+    }
 
     // Initialize the first page of the news list
     loadNewsList(currentPage);
