@@ -143,20 +143,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Handle pagination dynamically
     function addPagination(currentPage) {
-        const paginationContainer = document.getElementById('pagination') || document.createElement('div');
-        paginationContainer.id = 'pagination';
-        paginationContainer.innerHTML = '';
-
-        if (currentPage > 1) {
-            const firstPageButton = document.createElement('span');
-            firstPageButton.innerText = '<<';
-            firstPageButton.classList.add('page-number');
-            firstPageButton.addEventListener('click', function () {
-                loadNewsList(1);
-            });
-            paginationContainer.appendChild(firstPageButton);
+        const paginationContainer = document.getElementById('pagination');
+        if (!paginationContainer) {
+            const newPaginationContainer = document.createElement('div');
+            newPaginationContainer.id = 'pagination';
+            document.body.appendChild(newPaginationContainer);
         }
 
+        const pagination = document.getElementById('pagination');
+        pagination.innerHTML = '';
+
+        // Previous Page Button
         if (currentPage > 1) {
             const prevPageButton = document.createElement('span');
             prevPageButton.innerText = '<';
@@ -164,9 +161,10 @@ document.addEventListener('DOMContentLoaded', function () {
             prevPageButton.addEventListener('click', function () {
                 loadNewsList(currentPage - 1);
             });
-            paginationContainer.appendChild(prevPageButton);
+            pagination.appendChild(prevPageButton);
         }
 
+        // Page Numbers
         const startPage = Math.max(1, currentPage - 1);
         const endPage = Math.min(totalPages, currentPage + 1);
 
@@ -180,9 +178,10 @@ document.addEventListener('DOMContentLoaded', function () {
             pageButton.addEventListener('click', function () {
                 loadNewsList(i);
             });
-            paginationContainer.appendChild(pageButton);
+            pagination.appendChild(pageButton);
         }
 
+        // Next Page Button
         if (currentPage < totalPages) {
             const nextPageButton = document.createElement('span');
             nextPageButton.innerText = '>';
@@ -190,9 +189,10 @@ document.addEventListener('DOMContentLoaded', function () {
             nextPageButton.addEventListener('click', function () {
                 loadNewsList(currentPage + 1);
             });
-            paginationContainer.appendChild(nextPageButton);
+            pagination.appendChild(nextPageButton);
         }
 
+        // Last Page Button
         if (currentPage < totalPages) {
             const lastPageButton = document.createElement('span');
             lastPageButton.innerText = '>>';
@@ -200,11 +200,8 @@ document.addEventListener('DOMContentLoaded', function () {
             lastPageButton.addEventListener('click', function () {
                 loadNewsList(totalPages);
             });
-            paginationContainer.appendChild(lastPageButton);
+            pagination.appendChild(lastPageButton);
         }
-
-        const widget = document.getElementById('news-widget');
-        widget.appendChild(paginationContainer);
     }
 
     // Handle clicking on a news link to load the full article
