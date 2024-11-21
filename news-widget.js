@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const baseUrl = 'https://www.tradepr.work/articles/';
     let currentPage = 1;
-    let totalPages = 9;  // Default value, will be updated dynamically.
+    let totalPages = 9; // Default, will be updated dynamically.
     let isViewingContent = false;
 
     // Helper function to correct image URLs
@@ -74,16 +74,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 const doc = parser.parseFromString(data, 'text/html');
                 const articles = doc.querySelectorAll('.row-fluid.search_result');
                 const widget = document.getElementById('news-widget');
-                
-                // Update the totalPages dynamically
-                const paginationInfo = doc.querySelector('.pagination');  // Assuming pagination is in a container with class .pagination
-                const lastPageLink = paginationInfo ? paginationInfo.querySelector('li:last-child a') : null;
-                totalPages = lastPageLink ? parseInt(lastPageLink.textContent.trim()) : 9;  // Default to 9 if no info available
+
+                // Update the totalPages dynamically based on pagination links from the real website
+                totalPages = getTotalPages(doc);
 
                 // Clear previous content
                 widget.innerHTML = '<h1 class="news-title" style="font-size: 21pt; margin-bottom: 24px; font-family: \'Roboto Condensed\'; color: #840d0d">News Distribution by Trade PR</h1><div id="news-content"></div>';
-                
+
                 const newsContent = widget.querySelector('#news-content');
+
                 if (articles.length === 0) {
                     newsContent.innerHTML = '<p>No news items found.</p>';
                     return;
@@ -117,11 +116,24 @@ document.addEventListener('DOMContentLoaded', function () {
                     newsContent.appendChild(newsItem);
                 });
 
-                addPagination(currentPage);
+                addPagination(page);
                 togglePagination();
                 window.scrollTo(0, 0);
             })
             .catch(error => console.error('Error loading news:', error));
+    }
+
+    // Get total pages from the pagination element in the response
+    function getTotalPages(doc) {
+        const paginationLinks = doc.querySelectorAll('.pagination li');
+        let maxPage = 1; // Default to 1 if no pagination found.
+        paginationLinks.forEach(link => {
+            const pageNumber = parseInt(link.textContent.trim());
+            if (!isNaN(pageNumber)) {
+                maxPage = Math.max(maxPage, pageNumber);
+            }
+        });
+        return maxPage;
     }
 
     // Handle pagination dynamically
@@ -207,37 +219,36 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
-                const titleElement = doc.querySelector('h1.bold.h2.nobmargin');
-                const title = titleElement && titleElement.textContent.trim() ? titleElement.textContent.trim() : 'No Title';
-                const articleElement = doc.querySelector('.the-post-description');
-                const articleContent = articleElement ? articleElement.innerHTML : 'No content available.';
-                const imgElement = doc.querySelector('.the-post-description img');
-                const imgSrc = imgElement ? correctImageUrl(imgElement.src) : '';
+                const articleContent = doc.querySelector('.the-post-description');
+                const articleTitle = doc.querySelector('.h1').textContent.trim();
+                const articleImage = doc.querySelector('.post-main-image img');
+                const fullContent = articleContent ? articleContent.innerHTML : 'No content available';
 
-                const modalContent = document.querySelector('#modal-content');
-                modalContent.innerHTML = `
-                    <h2>${title}</h2>
-                    ${imgSrc ? `<img src="${imgSrc}" class="modal-image">` : ''}
-                    <div class="modal-article">${articleContent}</div>
+                const modalContent = `
+                    <div class="modal-header">
+                        <h2>${articleTitle}</h2>
+                    </div>
+                    <div class="modal-body">
+                        ${articleImage ? `<img src="${correctImageUrl(articleImage.src)}" class="modal-image">` : ''}
+                        <div class="full-content">${fullContent}</div>
+                    </div>
                 `;
-                document.getElementById('news-modal').style.display = 'block';
-                togglePagination();  // Hide pagination while viewing content
+                const modal = document.getElementById('news-modal');
+                modal.querySelector('.modal-content').innerHTML = modalContent;
+                modal.style.display = 'block';
+                togglePagination();
             })
-            .catch(error => console.error('Error loading full article:', error));
+            .catch(error => console.error('Error loading full content:', error));
     }
 
-    // Close modal when clicking outside
-    const newsModal = document.getElementById('news-modal');
-    if (newsModal) {
-        newsModal.addEventListener('click', function (event) {
-            if (event.target === this) {
-                this.style.display = 'none';
-                isViewingContent = false;
-                togglePagination();  // Show pagination again
-            }
-        });
-    }
+    // Close modal when clicking outside of it
+    window.addEventListener('click', function (event) {
+        const modal = document.getElementById('news-modal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+            togglePagination();
+        }
+    });
 
-    // Initialize the first page of the news list
     loadNewsList(currentPage);
 });
