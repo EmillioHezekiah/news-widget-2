@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Load the news list with pagination
+    // Load the news list with pagination (pagination like code 2)
     function loadNewsList(page) {
         currentPage = page;
         isViewingContent = false;
@@ -120,21 +120,14 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Error loading news:', error));
     }
 
-    // Handle pagination dynamically
+    // Handle pagination dynamically (pagination like code 2)
     function addPagination(currentPage) {
         const paginationContainer = document.getElementById('pagination') || document.createElement('div');
         paginationContainer.id = 'pagination';
         paginationContainer.innerHTML = '';
 
-        if (currentPage > 1) {
-            const firstPageButton = document.createElement('span');
-            firstPageButton.innerText = '<<';
-            firstPageButton.classList.add('page-number');
-            firstPageButton.addEventListener('click', function () {
-                loadNewsList(1);
-            });
-            paginationContainer.appendChild(firstPageButton);
-        }
+        const startPage = Math.max(1, currentPage - 1);
+        const endPage = Math.min(totalPages, currentPage + 1);
 
         if (currentPage > 1) {
             const prevPageButton = document.createElement('span');
@@ -145,9 +138,6 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             paginationContainer.appendChild(prevPageButton);
         }
-
-        const startPage = Math.max(1, currentPage - 1);
-        const endPage = Math.min(totalPages, currentPage + 1);
 
         for (let i = startPage; i <= endPage; i++) {
             const pageButton = document.createElement('span');
@@ -170,16 +160,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 loadNewsList(currentPage + 1);
             });
             paginationContainer.appendChild(nextPageButton);
-        }
-
-        if (currentPage < totalPages) {
-            const lastPageButton = document.createElement('span');
-            lastPageButton.innerText = '>>';
-            lastPageButton.classList.add('page-number');
-            lastPageButton.addEventListener('click', function () {
-                loadNewsList(totalPages);
-            });
-            paginationContainer.appendChild(lastPageButton);
         }
 
         const widget = document.getElementById('news-widget');
@@ -224,15 +204,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const closeButton = widget.querySelector('.close-modal');
                 closeButton.addEventListener('click', function () {
-                    widget.innerHTML = '';
                     isViewingContent = false;
                     togglePagination();
-                    loadNewsList(currentPage);
+                    loadNewsList(currentPage); // Reload the current page of articles
                 });
-            });
+            })
+            .catch(error => console.error('Error loading article:', error));
     }
 
-    // Initial load of the news list
+    // Initial load
     loadNewsList(currentPage);
-    disableContentEditable();
 });
