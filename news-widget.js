@@ -77,9 +77,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 const paginationElement = doc.querySelector('.pagination');
 
                 // Update totalPages dynamically
-                const lastPageLink = paginationElement?.querySelector('a:last-of-type')?.href || '';
-                const lastPageMatch = lastPageLink.match(/page=(\d+)/);
-                totalPages = lastPageMatch ? parseInt(lastPageMatch[1], 10) : 1;
+                if (paginationElement) {
+                    const lastPageLink = paginationElement.querySelector('a:last-of-type');
+                    if (lastPageLink) {
+                        const lastPageMatch = lastPageLink.href.match(/page=(\d+)/);
+                        totalPages = lastPageMatch ? parseInt(lastPageMatch[1], 10) : totalPages;
+                    }
+                }
 
                 // Clear previous content
                 widget.innerHTML = '<h1 class="news-title" style="font-size: 21pt; margin-bottom: 24px; font-family: \'Roboto Condensed\'; color: #840d0d">News Distribution by Trade PR</h1><div id="news-content"></div>';
@@ -207,15 +211,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 togglePagination();
                 window.scrollTo(0, 0);
             })
-            .catch(error => console.error('Error loading news content:', error));
+            .catch(error => console.error('Error loading article:', error));
     }
 
-    // Handle clicking on the "Back to News List" button
+    // Back button to return to the news list
     document.addEventListener('click', function (event) {
         if (event.target.id === 'backButton') {
+            event.preventDefault();
             loadNewsList(currentPage);
         }
     });
 
+    // Load the initial news list
     loadNewsList(1);
 });
