@@ -203,52 +203,37 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Handle clicking on a news link to load the full article
-    document.addEventListener('click', function (event) {
-        if (event.target.matches('.news-link')) {
+    document.body.addEventListener('click', function (event) {
+        if (event.target && event.target.classList.contains('news-link')) {
             event.preventDefault();
-            const newsUrl = decodeURIComponent(event.target.getAttribute('data-url'));
-            loadNewsContent(newsUrl);
+            const url = decodeURIComponent(event.target.dataset.url);
+            loadNewsContent(url);
         }
     });
 
-    // Load the full article content in a modal
+    // Load content when a news item is clicked
     function loadNewsContent(url) {
         isViewingContent = true;
+        togglePagination();
         fetch(url)
             .then(response => response.text())
             .then(data => {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
-                const articleContent = doc.querySelector('.the-post-description');
-                const articleTitle = doc.querySelector('.h1').textContent.trim();
-                const articleImage = doc.querySelector('.post-main-image img');
-                const fullContent = articleContent ? articleContent.innerHTML : 'No content available';
+                const content = doc.querySelector('.post-content');
+                const title = doc.querySelector('.h1').textContent.trim() || 'Untitled';
+                const description = content ? content.innerHTML : 'No content available';
 
-                const modalContent = `
-                    <div class="modal-header">
-                        <h2>${articleTitle}</h2>
-                    </div>
-                    <div class="modal-body">
-                        ${articleImage ? `<img src="${correctImageUrl(articleImage.src)}" class="modal-image">` : ''}
-                        <div class="full-content">${fullContent}</div>
-                    </div>
+                const contentContainer = document.createElement('div');
+                contentContainer.classList.add('full-article');
+                contentContainer.innerHTML = `
+                    <h2>${title}</h2>
+                    <div>${description}</div>
                 `;
-                const modal = document.getElementById('news-modal');
-                modal.querySelector('.modal-content').innerHTML = modalContent;
-                modal.style.display = 'block';
-                togglePagination();
+                document.getElementById('news-widget').appendChild(contentContainer);
             })
-            .catch(error => console.error('Error loading full content:', error));
+            .catch(error => console.error('Error loading article:', error));
     }
-
-    // Close modal when clicking outside of it
-    window.addEventListener('click', function (event) {
-        const modal = document.getElementById('news-modal');
-        if (event.target === modal) {
-            modal.style.display = 'none';
-            togglePagination();
-        }
-    });
 
     loadNewsList(currentPage);
 });
