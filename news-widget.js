@@ -143,17 +143,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Handle pagination dynamically
     function addPagination(currentPage) {
-        const paginationContainer = document.getElementById('pagination');
-        if (!paginationContainer) {
-            const newPaginationContainer = document.createElement('div');
-            newPaginationContainer.id = 'pagination';
-            document.body.appendChild(newPaginationContainer);
+        const paginationContainer = document.getElementById('pagination') || document.createElement('div');
+        paginationContainer.id = 'pagination';
+        paginationContainer.innerHTML = '';
+
+        if (currentPage > 1) {
+            const firstPageButton = document.createElement('span');
+            firstPageButton.innerText = '<<';
+            firstPageButton.classList.add('page-number');
+            firstPageButton.addEventListener('click', function () {
+                loadNewsList(1);
+            });
+            paginationContainer.appendChild(firstPageButton);
         }
 
-        const pagination = document.getElementById('pagination');
-        pagination.innerHTML = '';
-
-        // Previous Page Button
         if (currentPage > 1) {
             const prevPageButton = document.createElement('span');
             prevPageButton.innerText = '<';
@@ -161,10 +164,9 @@ document.addEventListener('DOMContentLoaded', function () {
             prevPageButton.addEventListener('click', function () {
                 loadNewsList(currentPage - 1);
             });
-            pagination.appendChild(prevPageButton);
+            paginationContainer.appendChild(prevPageButton);
         }
 
-        // Page Numbers
         const startPage = Math.max(1, currentPage - 1);
         const endPage = Math.min(totalPages, currentPage + 1);
 
@@ -178,10 +180,9 @@ document.addEventListener('DOMContentLoaded', function () {
             pageButton.addEventListener('click', function () {
                 loadNewsList(i);
             });
-            pagination.appendChild(pageButton);
+            paginationContainer.appendChild(pageButton);
         }
 
-        // Next Page Button
         if (currentPage < totalPages) {
             const nextPageButton = document.createElement('span');
             nextPageButton.innerText = '>';
@@ -189,10 +190,9 @@ document.addEventListener('DOMContentLoaded', function () {
             nextPageButton.addEventListener('click', function () {
                 loadNewsList(currentPage + 1);
             });
-            pagination.appendChild(nextPageButton);
+            paginationContainer.appendChild(nextPageButton);
         }
 
-        // Last Page Button
         if (currentPage < totalPages) {
             const lastPageButton = document.createElement('span');
             lastPageButton.innerText = '>>';
@@ -200,8 +200,11 @@ document.addEventListener('DOMContentLoaded', function () {
             lastPageButton.addEventListener('click', function () {
                 loadNewsList(totalPages);
             });
-            pagination.appendChild(lastPageButton);
+            paginationContainer.appendChild(lastPageButton);
         }
+
+        const widget = document.getElementById('news-widget');
+        widget.appendChild(paginationContainer);
     }
 
     // Handle clicking on a news link to load the full article
@@ -216,6 +219,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Load the full article content in a modal
     function loadNewsContent(url) {
         isViewingContent = true;
+        togglePagination();
         fetch(url)
             .then(response => response.text())
             .then(data => {
@@ -225,7 +229,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const modalContent = document.getElementById('modal-content');
                 modalContent.innerHTML = articleContent ? articleContent.innerHTML : 'Content not available.';
-                togglePagination();
+                window.scrollTo(0, 0);
             })
             .catch(error => console.error('Error loading full article:', error));
     }
