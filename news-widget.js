@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 totalPages = doc.querySelectorAll('.pagination a').length - 1; // Get the total number of pages from pagination links
                 addPagination(page);
                 togglePagination();
-                window.scrollTo(0, 0);
+                window.scrollTo(0, 0); // Scroll to the top of the page
             })
             .catch(error => console.error('Error loading news:', error));
     }
@@ -210,20 +210,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 widget.innerHTML = `
                     <div class="modal-content" style="padding: 16px;">
-                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="full-image">` : ''}
-                        <h1 class="article-title">${title}</h1>
-                        <div class="article-content">${articleContent}</div>
-                        <button id="backToListBtn" class="btn btn-primary">Back to News List</button>
+                        <h1>${title}</h1>
+                        ${imgSrc ? `<img src="${imgSrc}" class="full-article-image">` : ''}
+                        <div class="article-body">${articleContent}</div>
                     </div>
                 `;
-                document.getElementById('backToListBtn').addEventListener('click', function () {
-                    loadNewsList(currentPage); // Go back to the news list
-                });
 
                 togglePagination();
+                window.scrollTo(0, 0); // Scroll to the top when opening the modal
             })
-            .catch(error => console.error('Error loading full article:', error));
+            .catch(error => console.error('Error loading article content:', error));
     }
 
-    loadNewsList(currentPage); // Initial load of news list
+    loadNewsList(currentPage);
 });
