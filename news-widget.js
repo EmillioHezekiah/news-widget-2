@@ -47,6 +47,14 @@ document.addEventListener('DOMContentLoaded', function () {
         return { postedDate, postedAuthor };
     }
 
+    // Disable the contenteditable attribute for captions
+    function disableContentEditable() {
+        const captions = document.querySelectorAll('.fr-inner[contenteditable="true"]');
+        captions.forEach(caption => {
+            caption.setAttribute('contenteditable', 'false');
+        });
+    }
+
     // Show or hide the pagination based on the isViewingContent state
     function togglePagination() {
         const paginationContainer = document.getElementById('pagination');
@@ -55,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Load the news list with pagination (pagination like code 2)
+    // Load the news list with pagination
     function loadNewsList(page) {
         currentPage = page;
         isViewingContent = false;
@@ -202,24 +210,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 widget.innerHTML = `
                     <div class="modal-content" style="padding: 16px;">
+                        <button id="back-button" class="back-button" style="background-color: #4CAF50; color: white; padding: 12px 20px; font-size: 16px; cursor: pointer;">Back to News List</button>
                         <h1>${title}</h1>
-                        ${imgSrc ? `<img src="${imgSrc}" class="full-article-image">` : ''}
-                        <div class="article-body">${articleContent}</div>
-                        <button id="back-to-list" class="btn">Back to News List</button>
+                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-image">` : ''}
+                        <div class="article-content">${articleContent}</div>
                     </div>
                 `;
+                togglePagination();
 
-                const backButton = document.getElementById('back-to-list');
-                backButton.addEventListener('click', function () {
-                    loadNewsList(currentPage); // Go back to the news list
-                    togglePagination();
+                // Add event listener for the "Back to News List" button
+                document.getElementById('back-button').addEventListener('click', function () {
+                    loadNewsList(currentPage); // Return to the news list
+                    window.scrollTo(0, 0); // Scroll back to the top
                 });
-
-                window.scrollTo(0, 0); // Scroll to the top of the modal
             })
             .catch(error => console.error('Error loading article:', error));
     }
 
-    // Initialize by loading the first page
+    // Start by loading the first page of the news list
     loadNewsList(1);
 });
