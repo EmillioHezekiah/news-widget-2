@@ -191,6 +191,14 @@ document.addEventListener('DOMContentLoaded', function () {
     // Load the full article content in a modal
     function loadNewsContent(url) {
         isViewingContent = true;
+        const modalContent = document.getElementById('modal-content');
+        
+        // Check if modal content exists
+        if (!modalContent) {
+            console.error('Modal content container not found.');
+            return;
+        }
+
         fetch(url)
             .then(response => response.text())
             .then(data => {
@@ -199,22 +207,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 const titleElement = doc.querySelector('h1.bold.h2.nobmargin');
                 const title = titleElement && titleElement.textContent.trim() ? titleElement.textContent.trim() : 'No Title';
                 const articleElement = doc.querySelector('.the-post-description');
-                const articleContent = articleElement ? articleElement.innerHTML : 'No article content available';
-                const imageElement = doc.querySelector('.alert-secondary.btn-block.text-center img');
-                const imgSrc = imageElement ? correctImageUrl(imageElement.src) : '';
+                const articleContent = articleElement ? articleElement.innerHTML : 'No content available.';
 
-                const modalContent = document.getElementById('modal-content');
                 modalContent.innerHTML = `
-                    ${imgSrc ? `<img src="${imgSrc}" class="modal-image">` : ''}
-                    <h2>${title}</h2>
+                    <h1>${title}</h1>
                     <div class="article-content">${articleContent}</div>
                 `;
-                togglePagination();
-                window.scrollTo(0, 0); // Ensure scroll position resets
+
+                togglePagination(); // Hide pagination when viewing full content
             })
-            .catch(error => console.error('Error loading article content:', error));
+            .catch(error => {
+                console.error('Error loading news content:', error);
+            });
     }
 
-    // Load the first page initially
+    // Initial load for the first page
     loadNewsList(currentPage);
 });
