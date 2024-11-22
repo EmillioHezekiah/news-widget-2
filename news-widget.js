@@ -76,7 +76,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 const doc = parser.parseFromString(data, 'text/html');
                 const articles = doc.querySelectorAll('.row-fluid.search_result');
                 const widget = document.getElementById('news-widget');
-                const newsContent = widget.querySelector('#news-content');
+                const newsContent = widget ? widget.querySelector('#news-content') : null;
+
+                if (!newsContent) {
+                    console.error('Error: News content container not found.');
+                    return;
+                }
 
                 // Clear previous content
                 newsContent.innerHTML = '<h1 class="news-title">News Distribution by Trade PR</h1><div id="news-content"></div>';
@@ -117,7 +122,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 totalPages = doc.querySelectorAll('.pagination a').length - 1; // Get the actual number of pages
                 addPagination(page);
             })
-            .catch(error => console.error('Error loading news:', error));
+            .catch(error => {
+                console.error('Error loading news:', error);
+            });
     }
 
     // Handle pagination dynamically
@@ -198,19 +205,17 @@ document.addEventListener('DOMContentLoaded', function () {
         togglePagination(); // Hide pagination when viewing content
 
         const modalContent = document.getElementById('news-modal-content');
-        if (!modalContent) return; // If modal content is not found, do nothing
+        if (!modalContent) {
+            console.error('Error: Modal content container not found.');
+            return;
+        }
 
         fetch(url)
             .then(response => response.text())
             .then(data => {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
-                const articleContent = doc.querySelector('.post-container');
-                if (!articleContent) {
-                    modalContent.innerHTML = '<p>Content not found.</p>';
-                    return;
-                }
-
+                const articleContent = doc.querySelector('.article-content');
                 const articleTitle = doc.querySelector('.entry-title') ? doc.querySelector('.entry-title').textContent : 'Untitled';
                 const articleText = articleContent ? articleContent.innerHTML : 'No content available.';
 
@@ -219,7 +224,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     ${articleText}
                 `;
             })
-            .catch(error => console.error('Error loading article content:', error));
+            .catch(error => {
+                console.error('Error loading article content:', error);
+            });
     }
 
     // Initial load of the first page
