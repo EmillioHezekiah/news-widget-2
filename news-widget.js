@@ -188,6 +188,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (event.target.matches('.news-link')) {
             event.preventDefault();
             const newsUrl = decodeURIComponent(event.target.getAttribute('data-url'));
+            window.scrollTo(0, 0); // Reset scroll position to the top
             loadNewsContent(newsUrl);
         }
     });
@@ -210,23 +211,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 widget.innerHTML = `
                     <div class="modal-content" style="padding: 16px;">
-                        <button id="back-button" class="back-button" style="background-color: #4CAF50; color: white; padding: 12px 20px; font-size: 16px; cursor: pointer;">Back to News List</button>
-                        <h1>${title}</h1>
-                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-image">` : ''}
+                        <button id="back-button" class="btn btn-primary" style="margin-bottom: 8px;">Back</button>
+                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" style="margin-bottom: 16px; width: 100%; max-height: 450px; object-fit: contain;">` : ''}
+                        <h2>${title}</h2>
                         <div class="article-content">${articleContent}</div>
                     </div>
                 `;
-                togglePagination();
 
-                // Add event listener for the "Back to News List" button
-                document.getElementById('back-button').addEventListener('click', function () {
-                    loadNewsList(currentPage); // Return to the news list
-                    window.scrollTo(0, 0); // Scroll back to the top
+                const backButton = widget.querySelector('#back-button');
+                backButton.addEventListener('click', function () {
+                    loadNewsList(currentPage);
                 });
+
+                togglePagination();
+                disableContentEditable();
+                window.scrollTo(0, 0); // Ensure the modal content starts at the top
             })
-            .catch(error => console.error('Error loading article:', error));
+            .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Start by loading the first page of the news list
-    loadNewsList(1);
+    // Load the initial news list
+    loadNewsList(currentPage);
 });
