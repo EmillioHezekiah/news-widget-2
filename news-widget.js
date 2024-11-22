@@ -196,26 +196,34 @@ document.addEventListener('DOMContentLoaded', function () {
     // Load the full article content in a modal
     function loadNewsContent(url) {
         isViewingContent = true;
+        const modalContent = document.getElementById('news-modal-content');
+        if (!modalContent) return; // If modal content is not found, do nothing
+
+        // Ensure the pagination is hidden while viewing content
+        togglePagination();
+
         fetch(url)
             .then(response => response.text())
             .then(data => {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
-                const titleElement = doc.querySelector('h1.bold.h2.nobmargin');
-                const title = titleElement && titleElement.textContent.trim() ? titleElement.textContent.trim() : 'No Title';
-                const articleElement = doc.querySelector('.the-post-description');
-                const articleContent = articleElement ? articleElement.innerHTML : 'No content available';
+                const articleContent = doc.querySelector('.post-container');
+                if (!articleContent) {
+                    modalContent.innerHTML = '<p>Content not found.</p>';
+                    return;
+                }
 
-                const modalContent = document.getElementById('news-modal-content');
+                const articleTitle = doc.querySelector('.entry-title') ? doc.querySelector('.entry-title').textContent : 'Untitled';
+                const articleText = articleContent ? articleContent.innerHTML : 'No content available.';
+
                 modalContent.innerHTML = `
-                    <h2>${title}</h2>
-                    <div>${articleContent}</div>
+                    <h1>${articleTitle}</h1>
+                    ${articleText}
                 `;
-                togglePagination(); // Hide pagination when viewing content
             })
-            .catch(error => console.error('Error loading news content:', error));
+            .catch(error => console.error('Error loading article content:', error));
     }
 
-    // Initialize by loading the first page
-    loadNewsList(currentPage);
+    // Initial load of the first page
+    loadNewsList(1);
 });
