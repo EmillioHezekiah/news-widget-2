@@ -262,3 +262,9 @@
     margin: 0 auto; /* Centers image */
     display: block;
 }
+.modal-body {
+    font-size: 12pt;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
