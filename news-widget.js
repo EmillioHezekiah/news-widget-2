@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const baseUrl = 'https://www.tradepr.work/articles/';
     let currentPage = 1;
-    let totalPages = 6; // Update this to match the actual number of pages on the website (currently 6)
+    let totalPages = 9; // Default value, to be updated dynamically
     let isViewingContent = false;
 
     // Helper function to correct image URLs
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     newsContent.appendChild(newsItem);
                 });
 
-                totalPages = doc.querySelectorAll('.pagination a').length - 1; // Get the actual number of pages (excluding the "Next" button)
+                totalPages = doc.querySelectorAll('.pagination a').length - 1; // Get the total number of pages from pagination links
                 addPagination(page);
                 togglePagination();
                 window.scrollTo(0, 0); // Scroll to the top of the page
@@ -196,34 +196,37 @@ document.addEventListener('DOMContentLoaded', function () {
     // Load the full article content in a modal
     function loadNewsContent(url) {
         isViewingContent = true;
-        const modalContent = document.getElementById('news-modal-content');
-        if (!modalContent) return; // If modal content is not found, do nothing
-
-        // Ensure the pagination is hidden while viewing content
-        togglePagination();
-
         fetch(url)
             .then(response => response.text())
             .then(data => {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
-                const articleContent = doc.querySelector('.post-container');
-                if (!articleContent) {
-                    modalContent.innerHTML = '<p>Content not found.</p>';
-                    return;
-                }
+                const titleElement = doc.querySelector('h1.bold.h2.nobmargin');
+                const title = titleElement && titleElement.textContent.trim() ? titleElement.textContent.trim() : 'No Title';
+                const articleElement = doc.querySelector('.the-post-description');
+                const articleContent = articleElement ? articleElement.innerHTML : 'No article content available';
+                const imageElement = doc.querySelector('.alert-secondary.btn-block.text-center img');
+                const imgSrc = imageElement ? correctImageUrl(imageElement.src) : '';
+                const widget = document.getElementById('news-widget');
 
-                const articleTitle = doc.querySelector('.entry-title') ? doc.querySelector('.entry-title').textContent : 'Untitled';
-                const articleText = articleContent ? articleContent.innerHTML : 'No content available.';
-
-                modalContent.innerHTML = `
-                    <h1>${articleTitle}</h1>
-                    ${articleText}
+                widget.innerHTML = `
+                    <div class="modal-content" style="padding: 16px">
+                        <button id="back-button" class="btn btn-default btn-xs">Back to News List</button>
+                        <h1>${title}</h1>
+                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-image-content">` : ''}
+                        <div class="modal-body">${articleContent}</div>
+                    </div>
                 `;
+
+                document.getElementById('back-button').addEventListener('click', function () {
+                    loadNewsList(currentPage);
+                });
+
+                disableContentEditable();
+                togglePagination();
             })
-            .catch(error => console.error('Error loading article content:', error));
+            .catch(error => console.error('Error loading article:', error));
     }
 
-    // Initial load of the first page
-    loadNewsList(1);
+    loadNewsList(currentPage);
 });
