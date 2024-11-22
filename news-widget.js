@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (startPage > 1) {
             const ellipsis = document.createElement('span');
-            ellipsis.innerText = '...';
+            
             paginationContainer.appendChild(ellipsis);
         }
 
@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (endPage < totalPages) {
             const ellipsis = document.createElement('span');
-            ellipsis.innerText = '...';
+            
             paginationContainer.appendChild(ellipsis);
         }
 
