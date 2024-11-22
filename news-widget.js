@@ -216,20 +216,34 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
-                const titleElement = doc.querySelector('h1.bold.h2.nobmargin');
-                const title = titleElement ? titleElement.textContent.trim() : 'Untitled';
-                const contentElement = doc.querySelector('.the-post-description');
-                const content = contentElement ? contentElement.innerHTML : '<p>No content available.</p>';
+                const content = doc.querySelector('.the-post-description');
+                const title = doc.querySelector('.col-md-12.tmargin').textContent.trim();
+                const postedMetaDataElement = doc.querySelector('.posted_meta_data');
+                const { postedDate, postedAuthor } = extractPostedMetaData(postedMetaDataElement);
+
                 const modalContent = document.getElementById('modal-content');
                 modalContent.innerHTML = `
                     <h2>${title}</h2>
-                    <div>${content}</div>
+                    <p><strong>Posted:</strong> ${postedDate}</p>
+                    <p><strong>by:</strong> ${postedAuthor}</p>
+                    <p>${content.innerHTML}</p>
                 `;
+
+                const modal = document.getElementById('news-modal');
+                modal.style.display = 'block';
                 togglePagination();
+                disableContentEditable();
             })
             .catch(error => console.error('Error loading content:', error));
     }
 
-    // Load the first page on initial load
-    loadNewsList(1);
+    // Close modal when clicking outside or on the close button
+    document.getElementById('close-modal').addEventListener('click', function () {
+        const modal = document.getElementById('news-modal');
+        modal.style.display = 'none';
+        togglePagination();
+    });
+
+    // Initialize the news list
+    loadNewsList(currentPage);
 });
