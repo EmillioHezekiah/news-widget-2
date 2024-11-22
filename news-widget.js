@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const baseUrl = 'https://www.tradepr.work/articles/';
     let currentPage = 1;
-    let totalPages = 9; // Default value, will be updated dynamically
+    let totalPages = 6; // Default value, will be updated dynamically based on the actual number of pages
     let isViewingContent = false;
 
     // Helper function to correct image URLs
@@ -45,14 +45,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const postedAuthor = authorMatch ? authorMatch[1].replace(/<\/?a[^>]*>/g, '').trim() : 'No Author';
 
         return { postedDate, postedAuthor };
-    }
-
-    // Disable the contenteditable attribute for captions
-    function disableContentEditable() {
-        const captions = document.querySelectorAll('.fr-inner[contenteditable="true"]');
-        captions.forEach(caption => {
-            caption.setAttribute('contenteditable', 'false');
-        });
     }
 
     // Show or hide the pagination based on the isViewingContent state
@@ -113,7 +105,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     newsContent.appendChild(newsItem);
                 });
 
-                totalPages = doc.querySelectorAll('.pagination a').length - 1; // Get the total number of pages from pagination links
+                // Update the totalPages based on actual pagination
+                const paginationLinks = doc.querySelectorAll('.pagination a');
+                totalPages = paginationLinks.length - 2; // Subtracting the "First" and "Last" links
+
                 addPagination(page);
                 togglePagination();
                 window.scrollTo(0, 0); // Scroll to the top of the page
@@ -208,22 +203,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 const imageElement = doc.querySelector('.alert-secondary.btn-block.text-center img');
                 const imgSrc = imageElement ? correctImageUrl(imageElement.src) : '';
 
-                const modal = document.getElementById('modal');
-                modal.innerHTML = `
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h2>${title}</h2>
-                    </div>
-                    <div class="modal-body">
-                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-image">` : ''}
-                        <div class="article-content">${articleContent}</div>
-                    </div>
+                const modalContent = document.getElementById('modal-content');
+                modalContent.innerHTML = `
+                    ${imgSrc ? `<img src="${imgSrc}" class="modal-image">` : ''}
+                    <h2>${title}</h2>
+                    <div class="article-content">${articleContent}</div>
                 `;
-                modal.style.display = 'block'; // Show the modal
+                togglePagination();
+                window.scrollTo(0, 0); // Ensure scroll position resets
             })
-            .catch(error => console.error('Error loading full article:', error));
+            .catch(error => console.error('Error loading article content:', error));
     }
 
-    // Initial load
+    // Load the first page initially
     loadNewsList(currentPage);
 });
