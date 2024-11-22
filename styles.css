@@ -39,12 +39,16 @@
 
 /* News Image Thumbnail */
 .news-image {
-    width: 212.43px; /* Adjusted as necessary */
-    height: 120px; /* Fixed height for consistency */
+    width: 300px; /* Increased width */
+    height: 200px; /* Increased height */
     margin-right: 15px;
+    margin-left: auto; /* Centering the image */
+    margin-right: auto; /* Centering the image */
     object-fit: cover;
     border-radius: 5px;
+    display: block; /* Ensures centering works */
 }
+
 
 /* News Content */
 .news-content {
