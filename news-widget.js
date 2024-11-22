@@ -146,17 +146,8 @@ document.addEventListener('DOMContentLoaded', function () {
             paginationContainer.appendChild(prevPageButton);
         }
 
-        // Add only two page numbers at a time (around the current page)
-        let startPage = Math.max(1, currentPage - 1);
-        let endPage = Math.min(totalPages, currentPage + 1);
-
-        if (startPage > 1) {
-            const ellipsis = document.createElement('span');
-            ellipsis.innerText = '...';
-            paginationContainer.appendChild(ellipsis);
-        }
-
-        for (let i = startPage; i <= endPage; i++) {
+        // Add page numbers dynamically
+        for (let i = 1; i <= totalPages; i++) {
             const pageButton = document.createElement('span');
             pageButton.innerText = i;
             pageButton.classList.add('page-number');
@@ -167,12 +158,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 loadNewsList(i);
             });
             paginationContainer.appendChild(pageButton);
-        }
-
-        if (endPage < totalPages) {
-            const ellipsis = document.createElement('span');
-            ellipsis.innerText = '...';
-            paginationContainer.appendChild(ellipsis);
         }
 
         // Add "Next" and "Last" buttons
@@ -216,34 +201,32 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
-                const content = doc.querySelector('.the-post-description');
-                const title = doc.querySelector('.col-md-12.tmargin').textContent.trim();
-                const postedMetaDataElement = doc.querySelector('.posted_meta_data');
-                const { postedDate, postedAuthor } = extractPostedMetaData(postedMetaDataElement);
+                const titleElement = doc.querySelector('h1.bold.h2.nobmargin');
+                const title = titleElement && titleElement.textContent.trim() ? titleElement.textContent.trim() : 'No Title';
+                const articleElement = doc.querySelector('.the-post-description');
+                const articleContent = articleElement ? articleElement.innerHTML : 'No article content available';
+                const imageElement = doc.querySelector('.alert-secondary.btn-block.text-center img');
+                const imgSrc = imageElement ? correctImageUrl(imageElement.src) : '';
+                const widget = document.getElementById('news-widget');
 
-                const modalContent = document.getElementById('modal-content');
-                modalContent.innerHTML = `
-                    <h2>${title}</h2>
-                    <p><strong>Posted:</strong> ${postedDate}</p>
-                    <p><strong>by:</strong> ${postedAuthor}</p>
-                    <p>${content.innerHTML}</p>
+                widget.innerHTML = `
+                    <div class="modal-content" style="padding: 16px">
+                        <button id="back-button" class="btn btn-default btn-xs">Back</button>
+                        <h1>${title}</h1>
+                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-image">` : ''}
+                        <div class="modal-body">${articleContent}</div>
+                    </div>
                 `;
 
-                const modal = document.getElementById('news-modal');
-                modal.style.display = 'block';
-                togglePagination();
+                document.getElementById('back-button').addEventListener('click', function () {
+                    loadNewsList(currentPage);
+                });
+
                 disableContentEditable();
+                togglePagination();
             })
-            .catch(error => console.error('Error loading content:', error));
+            .catch(error => console.error('Error loading article:', error));
     }
 
-    // Close modal when clicking outside or on the close button
-    document.getElementById('close-modal').addEventListener('click', function () {
-        const modal = document.getElementById('news-modal');
-        modal.style.display = 'none';
-        togglePagination();
-    });
-
-    // Initialize the news list
     loadNewsList(currentPage);
 });
