@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const baseUrl = 'https://www.tradepr.work/articles/';
     let currentPage = 1;
-    let totalPages = 9; // Default value, to be updated dynamically
+    let totalPages = 6; // Update this to match the actual number of pages on the website (currently 6)
     let isViewingContent = false;
 
     // Helper function to correct image URLs
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     newsContent.appendChild(newsItem);
                 });
 
-                totalPages = doc.querySelectorAll('.pagination a').length - 1; // Get the total number of pages from pagination links
+                totalPages = doc.querySelectorAll('.pagination a').length - 1; // Get the actual number of pages (excluding the "Next" button)
                 addPagination(page);
                 togglePagination();
                 window.scrollTo(0, 0); // Scroll to the top of the page
@@ -204,29 +204,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 const titleElement = doc.querySelector('h1.bold.h2.nobmargin');
                 const title = titleElement && titleElement.textContent.trim() ? titleElement.textContent.trim() : 'No Title';
                 const articleElement = doc.querySelector('.the-post-description');
-                const articleContent = articleElement ? articleElement.innerHTML : 'No article content available';
-                const imageElement = doc.querySelector('.alert-secondary.btn-block.text-center img');
-                const imgSrc = imageElement ? correctImageUrl(imageElement.src) : '';
-                const widget = document.getElementById('news-widget');
+                const articleContent = articleElement ? articleElement.innerHTML : 'No content available';
 
-                widget.innerHTML = `
-                    <div class="modal-content" style="padding: 16px">
-                        <button id="back-button" class="btn btn-default btn-xs">Back to News List</button>
-                        <h1>${title}</h1>
-                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-image-content">` : ''}
-                        <div class="modal-body">${articleContent}</div>
-                    </div>
+                const modalContent = document.getElementById('news-modal-content');
+                modalContent.innerHTML = `
+                    <h2>${title}</h2>
+                    <div>${articleContent}</div>
                 `;
-
-                document.getElementById('back-button').addEventListener('click', function () {
-                    loadNewsList(currentPage);
-                });
-
-                disableContentEditable();
-                togglePagination();
+                togglePagination(); // Hide pagination when viewing content
             })
-            .catch(error => console.error('Error loading article:', error));
+            .catch(error => console.error('Error loading news content:', error));
     }
 
+    // Initialize by loading the first page
     loadNewsList(currentPage);
 });
