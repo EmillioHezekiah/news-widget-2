@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const baseUrl = 'https://www.tradepr.work/articles/';
     let currentPage = 1;
-    let totalPages = 9; // Default value, to be updated dynamically
+    let totalPages = 9; // Default value, will be updated dynamically
     let isViewingContent = false;
 
     // Helper function to correct image URLs
@@ -207,26 +207,23 @@ document.addEventListener('DOMContentLoaded', function () {
                 const articleContent = articleElement ? articleElement.innerHTML : 'No article content available';
                 const imageElement = doc.querySelector('.alert-secondary.btn-block.text-center img');
                 const imgSrc = imageElement ? correctImageUrl(imageElement.src) : '';
-                const widget = document.getElementById('news-widget');
 
-                widget.innerHTML = `
-                    <div class="modal-content" style="padding: 16px">
-                        <button id="back-button" class="btn btn-default btn-xs">Back to News List</button>
-                        <h1>${title}</h1>
-                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-image-content">` : ''}
-                        <div class="modal-body">${articleContent}</div>
+                const modal = document.getElementById('modal');
+                modal.innerHTML = `
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h2>${title}</h2>
+                    </div>
+                    <div class="modal-body">
+                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-image">` : ''}
+                        <div class="article-content">${articleContent}</div>
                     </div>
                 `;
-
-                document.getElementById('back-button').addEventListener('click', function () {
-                    loadNewsList(currentPage);
-                });
-
-                disableContentEditable();
-                togglePagination();
+                modal.style.display = 'block'; // Show the modal
             })
-            .catch(error => console.error('Error loading article:', error));
+            .catch(error => console.error('Error loading full article:', error));
     }
 
+    // Initial load
     loadNewsList(currentPage);
 });
