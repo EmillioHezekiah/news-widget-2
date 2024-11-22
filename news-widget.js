@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="modal-content" style="padding: 16px">
                         <button id="back-button" class="btn btn-default btn-xs">Back to News List</button>
                         <h1 style="font-size: 23pt; font-family: 'Droid Serif'; color: #840d0d; font-weight: bold;">${title}</h1>
-                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-image">` : ''}
+                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-image-content">` : ''}
                         <div class="modal-body">${articleContent}</div>
                     </div>
                 `;
