@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const baseUrl = 'https://www.tradepr.work/articles/';
     let currentPage = 1;
-    let totalPages = 6; // Default value, will be updated dynamically based on the actual number of pages
+    let totalPages = 9; // Default value, to be updated dynamically
     let isViewingContent = false;
 
     // Helper function to correct image URLs
@@ -45,6 +45,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const postedAuthor = authorMatch ? authorMatch[1].replace(/<\/?a[^>]*>/g, '').trim() : 'No Author';
 
         return { postedDate, postedAuthor };
+    }
+
+    // Disable the contenteditable attribute for captions
+    function disableContentEditable() {
+        const captions = document.querySelectorAll('.fr-inner[contenteditable="true"]');
+        captions.forEach(caption => {
+            caption.setAttribute('contenteditable', 'false');
+        });
     }
 
     // Show or hide the pagination based on the isViewingContent state
@@ -105,10 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     newsContent.appendChild(newsItem);
                 });
 
-                // Update the totalPages based on actual pagination
-                const paginationLinks = doc.querySelectorAll('.pagination a');
-                totalPages = paginationLinks.length - 2; // Subtracting the "First" and "Last" links
-
+                totalPages = doc.querySelectorAll('.pagination a').length - 1; // Get the total number of pages from pagination links
                 addPagination(page);
                 togglePagination();
                 window.scrollTo(0, 0); // Scroll to the top of the page
@@ -191,14 +196,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Load the full article content in a modal
     function loadNewsContent(url) {
         isViewingContent = true;
-        const modalContent = document.getElementById('modal-content');
-        
-        // Check if modal content exists
-        if (!modalContent) {
-            console.error('Modal content container not found.');
-            return;
-        }
-
         fetch(url)
             .then(response => response.text())
             .then(data => {
@@ -207,19 +204,29 @@ document.addEventListener('DOMContentLoaded', function () {
                 const titleElement = doc.querySelector('h1.bold.h2.nobmargin');
                 const title = titleElement && titleElement.textContent.trim() ? titleElement.textContent.trim() : 'No Title';
                 const articleElement = doc.querySelector('.the-post-description');
-                const articleContent = articleElement ? articleElement.innerHTML : 'No content available.';
+                const articleContent = articleElement ? articleElement.innerHTML : 'No article content available';
+                const imageElement = doc.querySelector('.alert-secondary.btn-block.text-center img');
+                const imgSrc = imageElement ? correctImageUrl(imageElement.src) : '';
+                const widget = document.getElementById('news-widget');
 
-                // If modal content container exists, set the inner HTML
-                modalContent.innerHTML = `
-                    <h1>${title}</h1>
-                    <div class="article-content">${articleContent}</div>
+                widget.innerHTML = `
+                    <div class="modal-content" style="padding: 16px">
+                        <button id="back-button" class="btn btn-default btn-xs">Back to News List</button>
+                        <h1>${title}</h1>
+                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-image-content">` : ''}
+                        <div class="modal-body">${articleContent}</div>
+                    </div>
                 `;
 
-                togglePagination(); // Hide pagination when viewing full content
+                document.getElementById('back-button').addEventListener('click', function () {
+                    loadNewsList(currentPage);
+                });
+
+                disableContentEditable();
+                togglePagination();
             })
-            .catch(error => console.error('Error loading news content:', error));
+            .catch(error => console.error('Error loading article:', error));
     }
 
-    // Initialize the first page of news
-    loadNewsList(1);
+    loadNewsList(currentPage);
 });
