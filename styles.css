@@ -47,8 +47,8 @@
 }
 
 .news-image-content {
-    width: 300px; /* Increased width */
-    height: 200px; /* Increased height */
+    width: 500px; /* Increased width */
+    height: 300px; /* Increased height */
     margin-right: 15px;
     margin-left: auto; /* Centering the image */
     margin-right: auto; /* Centering the image */
@@ -56,6 +56,7 @@
     border-radius: 5px;
     display: block; /* Ensures centering works */
 }
+
 
 /* News Content */
 .news-content {
