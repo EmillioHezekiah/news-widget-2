@@ -210,40 +210,49 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Load the full article content in a modal
     function loadNewsContent(url) {
+        const modalContent = document.getElementById('modal-content');
+        const modal = document.getElementById('modal');
+
+        if (!modal || !modalContent) return;
+
         isViewingContent = true;
+        togglePagination();
+
         fetch(url)
             .then(response => response.text())
             .then(data => {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
-                const content = doc.querySelector('.the-post-description');
-                const title = doc.querySelector('.col-md-12.tmargin').textContent.trim();
-                const postedMetaDataElement = doc.querySelector('.posted_meta_data');
-                const { postedDate, postedAuthor } = extractPostedMetaData(postedMetaDataElement);
+                const title = doc.querySelector('.col-md-12 h1').textContent;
+                const content = doc.querySelector('.the-post-description').innerHTML;
+                const image = doc.querySelector('.alert-secondary img');
+                const imgSrc = image ? correctImageUrl(image.src) : '';
 
-                const modalContent = document.getElementById('modal-content');
                 modalContent.innerHTML = `
                     <h2>${title}</h2>
-                    <p><strong>Posted:</strong> ${postedDate}</p>
-                    <p><strong>by:</strong> ${postedAuthor}</p>
-                    <p>${content.innerHTML}</p>
+                    ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-image">` : ''}
+                    <div class="news-body">${content}</div>
                 `;
-
-                const modal = document.getElementById('news-modal');
-                modal.style.display = 'block';
-                togglePagination();
-                disableContentEditable();
+                modal.style.display = 'block'; // Show the modal
             })
-            .catch(error => console.error('Error loading content:', error));
+            .catch(error => {
+                console.error('Error loading news content:', error);
+                modalContent.innerHTML = '<p>Error loading the content.</p>';
+            });
     }
 
-    // Close modal when clicking outside or on the close button
-    document.getElementById('close-modal').addEventListener('click', function () {
-        const modal = document.getElementById('news-modal');
-        modal.style.display = 'none';
-        togglePagination();
-    });
+    // Close the modal when the close button is clicked
+    const closeModalButton = document.getElementById('close-modal');
+    if (closeModalButton) {
+        closeModalButton.addEventListener('click', function () {
+            const modal = document.getElementById('modal');
+            if (modal) {
+                modal.style.display = 'none'; // Hide the modal
+            }
+        });
+    }
 
-    // Initialize the news list
+    // Initialize the page by loading the first page
     loadNewsList(currentPage);
+    disableContentEditable();
 });
