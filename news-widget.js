@@ -210,26 +210,26 @@ document.addEventListener('DOMContentLoaded', function () {
                 const widget = document.getElementById('news-widget');
 
                 widget.innerHTML = `
-                    <div class="modal-content" style="padding: 16px;">
-                        <button id="back-button" class="btn btn-primary" style="margin-bottom: 8px;">Back</button>
-                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" style="margin-bottom: 16px; width: 100%; max-height: 450px; object-fit: contain;">` : ''}
-                        <h2>${title}</h2>
-                        <div class="article-content">${articleContent}</div>
+                    <div class="modal-content" style="padding: 16px; position: relative;">
+                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" style="width: 100%; height: auto; margin-bottom: 16px;">` : ''}
+                        <h2 style="font-size: 24pt; font-family: 'Roboto Condensed'; color: #840d0d; text-align: center;">${title}</h2>
+                        <div class="article-content" style="font-family: 'Open Sans', sans-serif; line-height: 1.6; margin-top: 24px;">
+                            ${articleContent}
+                        </div>
+                        <button id="back-button" style="position: absolute; bottom: 16px; left: 16px; padding: 8px 12px; font-size: 14px; background-color: #840d0d; color: #fff; border: none; cursor: pointer;">Back</button>
                     </div>
                 `;
 
-                const backButton = widget.querySelector('#back-button');
+                const backButton = document.getElementById('back-button');
                 backButton.addEventListener('click', function () {
-                    loadNewsList(currentPage);
+                    loadNewsList(currentPage); // Go back to the news list
                 });
-
                 togglePagination();
-                disableContentEditable();
-                window.scrollTo(0, 0); // Ensure the modal content starts at the top
             })
             .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Load the initial news list
-    loadNewsList(currentPage);
+    // Initialize the news list
+    loadNewsList(1);
+    disableContentEditable();
 });
