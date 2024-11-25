@@ -205,11 +205,15 @@ document.addEventListener('DOMContentLoaded', function () {
                         <h1 class="news-title">${title}</h1>
                         <img src="${imgSrc}" alt="${title}" class="modal-image">
                         <div class="news-content">${articleContent}</div>
+                        <button class="back-to-news-list" onclick="loadNewsList(currentPage)">Back to News List</button>
                     </div>
                 `;
-            });
+            })
+            .catch(error => console.error('Error loading news content:', error));
+
+        togglePagination();
     }
 
-    // Initialize by loading the first page
+    // Initialize the news list
     loadNewsList(currentPage);
 });
