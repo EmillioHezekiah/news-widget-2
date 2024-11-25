@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     newsContent.appendChild(newsItem);
                 });
 
-                totalPages = doc.querySelectorAll('.pagination a').length - 1; // Get the total number of pages from pagination links
+                totalPages = parseInt(doc.querySelector('.pagination').dataset.totalPages, 10) || totalPages;
                 addPagination(page);
                 togglePagination();
                 window.scrollTo(0, 0); // Scroll to the top of the page
@@ -121,41 +121,50 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Error loading news:', error));
     }
 
-    // Add and handle pagination dynamically
+    // Handle pagination dynamically
     function addPagination(currentPage) {
         const paginationContainer = document.getElementById('pagination') || document.createElement('div');
         paginationContainer.id = 'pagination';
         paginationContainer.innerHTML = '';
 
-        // Add "First" and "Previous" buttons
+        // Add "Previous" button
         if (currentPage > 1) {
-            paginationContainer.appendChild(createPaginationButton('<<', () => loadNewsList(1)));
-            paginationContainer.appendChild(createPaginationButton('<', () => loadNewsList(currentPage - 1)));
+            const prevPageButton = document.createElement('span');
+            prevPageButton.innerText = 'Previous';
+            prevPageButton.classList.add('page-number');
+            prevPageButton.addEventListener('click', function () {
+                loadNewsList(currentPage - 1);
+            });
+            paginationContainer.appendChild(prevPageButton);
         }
 
-        // Add page numbers
+        // Add page numbers dynamically
         for (let i = 1; i <= totalPages; i++) {
-            const button = createPaginationButton(i, () => loadNewsList(i));
-            if (i === currentPage) button.classList.add('current-page');
-            paginationContainer.appendChild(button);
+            const pageButton = document.createElement('span');
+            pageButton.innerText = i;
+            pageButton.classList.add('page-number');
+            if (i === currentPage) {
+                pageButton.classList.add('current-page');
+            }
+            pageButton.addEventListener('click', function () {
+                loadNewsList(i);
+            });
+            paginationContainer.appendChild(pageButton);
         }
 
-        // Add "Next" and "Last" buttons
+        // Add "Next" button
         if (currentPage < totalPages) {
-            paginationContainer.appendChild(createPaginationButton('>', () => loadNewsList(currentPage + 1)));
-            paginationContainer.appendChild(createPaginationButton('>>', () => loadNewsList(totalPages)));
+            const nextPageButton = document.createElement('span');
+            nextPageButton.innerText = 'Next';
+            nextPageButton.classList.add('page-number');
+            nextPageButton.addEventListener('click', function () {
+                loadNewsList(currentPage + 1);
+            });
+            paginationContainer.appendChild(nextPageButton);
         }
 
         const widget = document.getElementById('news-widget');
         widget.appendChild(paginationContainer);
-    }
-
-    function createPaginationButton(text, onClick) {
-        const button = document.createElement('span');
-        button.innerText = text;
-        button.classList.add('page-number');
-        button.addEventListener('click', onClick);
-        return button;
     }
 
     // Handle clicking on a news link to load the full article
