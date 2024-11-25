@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const baseUrl = 'https://www.tradepr.work/articles/';
     let currentPage = 1;
-    let totalPages = 6; // Set default total pages to 6, to be updated dynamically
+    let totalPages = 6; // Set default total pages to 6, will be updated dynamically
     let isViewingContent = false;
 
     // Helper function to correct image URLs
@@ -114,7 +114,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 // Dynamically calculate total pages from pagination
-                totalPages = Math.min(6, parseInt(doc.querySelector('.pagination').dataset.totalPages, 10) || 6);
+                const paginationElement = doc.querySelector('.pagination');
+                if (paginationElement) {
+                    const lastPageLink = paginationElement.querySelector('a:last-of-type');
+                    totalPages = lastPageLink ? parseInt(lastPageLink.textContent.trim(), 10) : 1;
+                }
+
                 addPagination(currentPage);
                 togglePagination();
                 window.scrollTo(0, 0); // Scroll to the top of the page
@@ -204,21 +209,18 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="modal-content" style="padding: 30px 10px;">
                         <h1 class="news-title">${title}</h1>
                         <img src="${imgSrc}" alt="${title}" class="news-modal-image">
-                        <div class="modal-description">${articleContent}</div>
-                        <button id="backToNewsButton" class="btn btn-primary">Back to News</button>
+                        <div class="modal-body">
+                            ${articleContent}
+                        </div>
                     </div>
                 `;
 
-                const backToNewsButton = document.getElementById('backToNewsButton');
-                backToNewsButton.addEventListener('click', function () {
-                    loadNewsList(currentPage);
-                });
-
                 togglePagination();
+                disableContentEditable();
             })
-            .catch(error => console.error('Error loading news content:', error));
+            .catch(error => console.error('Error loading article content:', error));
     }
 
-    // Initialize by loading the first page of news
+    // Initialize the widget by loading the first page
     loadNewsList(currentPage);
 });
