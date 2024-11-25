@@ -130,8 +130,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Only show pagination if there are multiple pages
         if (totalPages > 1) {
-            // Add "Previous" button
+            // Add "<< Previous" button
             if (currentPage > 1) {
+                const firstPageButton = document.createElement('span');
+                firstPageButton.innerText = '<<';
+                firstPageButton.classList.add('page-number');
+                firstPageButton.addEventListener('click', function () {
+                    loadNewsList(1); // Go to the first page
+                });
+                paginationContainer.appendChild(firstPageButton);
+
                 const prevPageButton = document.createElement('span');
                 prevPageButton.innerText = '<';
                 prevPageButton.classList.add('page-number');
@@ -158,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 paginationContainer.appendChild(pageButton);
             }
 
-            // Add "Next" button
+            // Add "Next >>" button
             if (currentPage < totalPages) {
                 const nextPageButton = document.createElement('span');
                 nextPageButton.innerText = '>';
@@ -167,6 +175,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     loadNewsList(currentPage + 1);
                 });
                 paginationContainer.appendChild(nextPageButton);
+
+                const lastPageButton = document.createElement('span');
+                lastPageButton.innerText = '>>';
+                lastPageButton.classList.add('page-number');
+                lastPageButton.addEventListener('click', function () {
+                    loadNewsList(totalPages); // Go to the last page
+                });
+                paginationContainer.appendChild(lastPageButton);
             }
         }
 
@@ -196,31 +212,30 @@ document.addEventListener('DOMContentLoaded', function () {
                 const title = titleElement && titleElement.textContent.trim() ? titleElement.textContent.trim() : 'No Title';
                 const articleElement = doc.querySelector('.the-post-description');
                 const articleContent = articleElement ? articleElement.innerHTML : 'No article content available';
-                const imageElement = doc.querySelector('.alert-secondary.btn-block.text-center img');
-                const imgSrc = imageElement ? correctImageUrl(imageElement.src) : '';
-                const widget = document.getElementById('news-widget');
+                const imageElement = doc.querySelector('.the-post-image img');
+                const imageSrc = imageElement ? correctImageUrl(imageElement.src) : '';
 
-                widget.innerHTML = `
-                    <div class="modal-content" style="padding: 30px 10px;">
-                        <h1 class="news-title">${title}</h1>
-                        <img src="${imgSrc}" alt="${title}" class="news-modal-image">
-                        <div class="modal-description">${articleContent}</div>
-                        <button id="backToListButton" class="back-button">Back to News List</button>
-                    </div>
+                // Display the content in the modal
+                const modal = document.getElementById('news-modal');
+                modal.querySelector('.modal-title').textContent = title;
+                modal.querySelector('.modal-body').innerHTML = `
+                    ${imageSrc ? `<img src="${imageSrc}" alt="${title}" class="modal-image">` : ''}
+                    <div class="modal-content">${articleContent}</div>
                 `;
-                togglePagination(); // Hide pagination when viewing content
+                document.getElementById('news-modal').style.display = 'block';
             })
-            .catch(error => console.error('Error loading full article:', error));
+            .catch(error => console.error('Error loading article:', error));
     }
 
-    // Event listener for the Back to News List button
-    document.addEventListener('click', function (event) {
-        if (event.target.id === 'backToListButton') {
+    // Close modal when clicking outside or on close button
+    document.getElementById('news-modal').addEventListener('click', function (event) {
+        if (event.target === this || event.target.matches('.modal-close')) {
+            this.style.display = 'none';
             isViewingContent = false;
-            loadNewsList(currentPage); // Return to the current page of the news list
+            togglePagination();
         }
     });
 
-    // Initial load of the first page
-    loadNewsList(1);
+    // Load the first page on initial load
+    loadNewsList(currentPage);
 });
