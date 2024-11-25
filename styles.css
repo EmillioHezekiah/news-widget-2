@@ -252,7 +252,7 @@
 }
 
 /* Optional: If you want a hover effect */
-#backButton:hover {
+#back-to-news:hover {
     text-decoration: underline; /* Adds an underline effect on hover */
 }
 .fr-fic.fr-dii{
