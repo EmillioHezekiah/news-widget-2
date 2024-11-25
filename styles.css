@@ -118,15 +118,12 @@
 }
 
 /* Full Article Modal Content */
-.full-news-content {
-    padding: 30px;
-    background-color: #f9f9f9;
-    border: 2px solid #ccc;
-    border-radius: 10px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 18px;
-    line-height: 1.8;
-    color: #333;
+.full-news-content-judul {
+    font-family: 'Droid Serif', serif;
+    font-size: 23pt;
+    font-weight: bold;
+    color: #840d0d;
+    margin-bottom: 15px;
 }
 
 .full-news-content h2 {
@@ -137,7 +134,7 @@
     margin-bottom: 15px;
 }
 
-.full-news-content p {
+.full-news-content-paragraf {
     font-family: 'Poppins', sans-serif;
     font-size: 12pt;
     color: #000;
