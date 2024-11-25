@@ -140,20 +140,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 paginationContainer.appendChild(prevPageButton);
             }
 
-            // Add page numbers dynamically
-            for (let i = 1; i <= totalPages; i++) {
-                if (i >= Math.max(currentPage - 2, 1) && i <= Math.min(currentPage + 2, totalPages)) {  // Show only nearby pages (±2)
-                    const pageButton = document.createElement('span');
-                    pageButton.innerText = i;
-                    pageButton.classList.add('page-number');
-                    if (i === currentPage) {
-                        pageButton.classList.add('current-page');
-                    }
-                    pageButton.addEventListener('click', function () {
-                        loadNewsList(i);
-                    });
-                    paginationContainer.appendChild(pageButton);
+            // Add page numbers dynamically (show only ±2 pages around the current page)
+            const startPage = Math.max(1, currentPage - 2);
+            const endPage = Math.min(totalPages, currentPage + 2);
+
+            for (let i = startPage; i <= endPage; i++) {
+                const pageButton = document.createElement('span');
+                pageButton.innerText = i;
+                pageButton.classList.add('page-number');
+                if (i === currentPage) {
+                    pageButton.classList.add('current-page');
                 }
+                pageButton.addEventListener('click', function () {
+                    loadNewsList(i);
+                });
+                paginationContainer.appendChild(pageButton);
             }
 
             // Add "Next" button
@@ -203,17 +204,19 @@ document.addEventListener('DOMContentLoaded', function () {
                         <button id="back-button" class="btn btn-default btn-xs">Back to News List</button>
                         <h1>${title}</h1>
                         ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-image-content">` : ''}
-                        <div class="modal-body">${articleContent}</div>
+                        <div class="article-content">${articleContent}</div>
                     </div>
                 `;
 
                 document.getElementById('back-button').addEventListener('click', function () {
-                    loadNewsList(currentPage); // Go back to the news list
+                    loadNewsList(currentPage);
                 });
+
+                togglePagination();
             })
-            .catch(error => console.error('Error loading article content:', error));
+            .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Initial load of the news list
+    // Initial load of news list
     loadNewsList(currentPage);
 });
