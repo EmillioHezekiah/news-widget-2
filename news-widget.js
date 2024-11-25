@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Add page numbers dynamically
             for (let i = 1; i <= totalPages; i++) {
-                if (i >= currentPage - 2 && i <= currentPage + 2) {  // Show only nearby pages (±2)
+                if (i >= Math.max(currentPage - 2, 1) && i <= Math.min(currentPage + 2, totalPages)) {  // Show only nearby pages (±2)
                     const pageButton = document.createElement('span');
                     pageButton.innerText = i;
                     pageButton.classList.add('page-number');
@@ -208,15 +208,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 `;
 
                 document.getElementById('back-button').addEventListener('click', function () {
-                    isViewingContent = false;
-                    loadNewsList(currentPage);
+                    loadNewsList(currentPage); // Go back to the news list
                 });
-
-                togglePagination();
             })
-            .catch(error => console.error('Error loading full article:', error));
+            .catch(error => console.error('Error loading article content:', error));
     }
 
-    // Initialize the news list on page load
+    // Initial load of the news list
     loadNewsList(currentPage);
 });
