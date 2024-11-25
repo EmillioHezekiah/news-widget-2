@@ -203,17 +203,24 @@ document.addEventListener('DOMContentLoaded', function () {
                 widget.innerHTML = `
                     <div class="modal-content" style="padding: 30px 10px;">
                         <h1 class="news-title">${title}</h1>
-                        <img src="${imgSrc}" alt="${title}" class="modal-image">
-                        <div class="news-content">${articleContent}</div>
-                        <button class="back-to-news-list" onclick="loadNewsList(currentPage)">Back to News List</button>
+                        <img src="${imgSrc}" alt="${title}" class="news-modal-image">
+                        <div class="modal-description">${articleContent}</div>
+                        <button id="backToListButton" class="back-button">Back to News List</button>
                     </div>
                 `;
+                togglePagination(); // Hide pagination when viewing content
             })
-            .catch(error => console.error('Error loading news content:', error));
-
-        togglePagination();
+            .catch(error => console.error('Error loading full article:', error));
     }
 
-    // Initialize the news list
-    loadNewsList(currentPage);
+    // Event listener for the Back to News List button
+    document.addEventListener('click', function (event) {
+        if (event.target.id === 'backToListButton') {
+            isViewingContent = false;
+            loadNewsList(currentPage); // Return to the current page of the news list
+        }
+    });
+
+    // Initial load of the first page
+    loadNewsList(1);
 });
