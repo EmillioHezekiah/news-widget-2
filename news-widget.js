@@ -183,9 +183,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 widget.innerHTML = `
                     <div class="modal-content">
-                        <h1 class="full-news-content">${title}</h1>
+                        <h1 class="full-news-content-judul">${title}</h1>
                         ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="modal-thumbnail">` : ''}
-                        <div class="news-content">${articleContent}</div>
+                        <div class="full-news-content-judul">${articleContent}</div>
                         <button id="back-to-news">Back to News List</button>
                     </div>
                 `;
