@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const baseUrl = 'https://www.tradepr.work/articles/';
     let currentPage = 1;
-    let totalPages = 9; // Default value, to be updated dynamically
+    let totalPages = 6; // Set default total pages to 6, to be updated dynamically
     let isViewingContent = false;
 
     // Helper function to correct image URLs
@@ -113,7 +113,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     newsContent.appendChild(newsItem);
                 });
 
-                totalPages = parseInt(doc.querySelector('.pagination').dataset.totalPages, 10) || totalPages;
+                // Dynamically calculate total pages from pagination
+                totalPages = Math.min(6, parseInt(doc.querySelector('.pagination').dataset.totalPages, 10) || 6);
                 addPagination(currentPage);
                 togglePagination();
                 window.scrollTo(0, 0); // Scroll to the top of the page
@@ -200,23 +201,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 const widget = document.getElementById('news-widget');
 
                 widget.innerHTML = `
-                    <div class="modal-content" style="padding: 16px">
-                        <button id="back-button" class="btn btn-default btn-xs">Back to News List</button>
-                        <h1>${title}</h1>
-                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-image-content">` : ''}
-                        <div class="article-content">${articleContent}</div>
+                    <div class="modal-content" style="padding: 30px 10px;">
+                        <h1 class="news-title">${title}</h1>
+                        <img src="${imgSrc}" alt="${title}" class="modal-image">
+                        <div class="news-content">${articleContent}</div>
                     </div>
                 `;
-
-                document.getElementById('back-button').addEventListener('click', function () {
-                    loadNewsList(currentPage);
-                });
-
-                togglePagination();
-            })
-            .catch(error => console.error('Error loading news content:', error));
+            });
     }
 
-    // Initial load of news list
+    // Initialize by loading the first page
     loadNewsList(currentPage);
 });
