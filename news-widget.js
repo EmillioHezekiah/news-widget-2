@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 totalPages = parseInt(doc.querySelector('.pagination').dataset.totalPages, 10) || totalPages;
-                addPagination(page);
+                addPagination(currentPage);
                 togglePagination();
                 window.scrollTo(0, 0); // Scroll to the top of the page
             })
@@ -127,40 +127,45 @@ document.addEventListener('DOMContentLoaded', function () {
         paginationContainer.id = 'pagination';
         paginationContainer.innerHTML = '';
 
-        // Add "Previous" button
-        if (currentPage > 1) {
-            const prevPageButton = document.createElement('span');
-            prevPageButton.innerText = 'Previous';
-            prevPageButton.classList.add('page-number');
-            prevPageButton.addEventListener('click', function () {
-                loadNewsList(currentPage - 1);
-            });
-            paginationContainer.appendChild(prevPageButton);
-        }
-
-        // Add page numbers dynamically
-        for (let i = 1; i <= totalPages; i++) {
-            const pageButton = document.createElement('span');
-            pageButton.innerText = i;
-            pageButton.classList.add('page-number');
-            if (i === currentPage) {
-                pageButton.classList.add('current-page');
+        // Only show pagination if there are multiple pages
+        if (totalPages > 1) {
+            // Add "Previous" button
+            if (currentPage > 1) {
+                const prevPageButton = document.createElement('span');
+                prevPageButton.innerText = 'Previous';
+                prevPageButton.classList.add('page-number');
+                prevPageButton.addEventListener('click', function () {
+                    loadNewsList(currentPage - 1);
+                });
+                paginationContainer.appendChild(prevPageButton);
             }
-            pageButton.addEventListener('click', function () {
-                loadNewsList(i);
-            });
-            paginationContainer.appendChild(pageButton);
-        }
 
-        // Add "Next" button
-        if (currentPage < totalPages) {
-            const nextPageButton = document.createElement('span');
-            nextPageButton.innerText = 'Next';
-            nextPageButton.classList.add('page-number');
-            nextPageButton.addEventListener('click', function () {
-                loadNewsList(currentPage + 1);
-            });
-            paginationContainer.appendChild(nextPageButton);
+            // Add page numbers dynamically
+            for (let i = 1; i <= totalPages; i++) {
+                if (i >= currentPage - 2 && i <= currentPage + 2) {  // Show only nearby pages (±2)
+                    const pageButton = document.createElement('span');
+                    pageButton.innerText = i;
+                    pageButton.classList.add('page-number');
+                    if (i === currentPage) {
+                        pageButton.classList.add('current-page');
+                    }
+                    pageButton.addEventListener('click', function () {
+                        loadNewsList(i);
+                    });
+                    paginationContainer.appendChild(pageButton);
+                }
+            }
+
+            // Add "Next" button
+            if (currentPage < totalPages) {
+                const nextPageButton = document.createElement('span');
+                nextPageButton.innerText = 'Next';
+                nextPageButton.classList.add('page-number');
+                nextPageButton.addEventListener('click', function () {
+                    loadNewsList(currentPage + 1);
+                });
+                paginationContainer.appendChild(nextPageButton);
+            }
         }
 
         const widget = document.getElementById('news-widget');
@@ -203,14 +208,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 `;
 
                 document.getElementById('back-button').addEventListener('click', function () {
+                    isViewingContent = false;
                     loadNewsList(currentPage);
                 });
 
-                disableContentEditable();
                 togglePagination();
             })
-            .catch(error => console.error('Error loading article:', error));
+            .catch(error => console.error('Error loading full article:', error));
     }
 
+    // Initialize the news list on page load
     loadNewsList(currentPage);
 });
