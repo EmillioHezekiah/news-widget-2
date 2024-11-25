@@ -241,7 +241,7 @@
     background-color: #f0f0f0; /* Optional: light grey background */
     cursor: not-allowed; /* Show a "not-allowed" cursor */
 }
-#backButton {
+#back-to-news {
     background: none;
     border: none;
     font-weight: bold;
