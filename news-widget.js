@@ -83,7 +83,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 totalPages = extractTotalPages(doc);
                 addPagination(page);
-                togglePagination();
                 window.scrollTo(0, 0); // Scroll to the top of the page
             })
             .catch(error => console.error('Error loading news:', error));
