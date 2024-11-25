@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="modal-content">
                         <h1 class"full-news-content">${title}</h1>
                         ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-image-content">` : ''}
-                        <div>${articleContent}</div>
+                        <div class="news-content">${articleContent}</div>
                         <button id="back-to-news">Back to News List</button>
                     </div>
                 `;
