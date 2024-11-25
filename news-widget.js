@@ -205,22 +205,20 @@ document.addEventListener('DOMContentLoaded', function () {
                         <h1 class="news-title">${title}</h1>
                         <img src="${imgSrc}" alt="${title}" class="news-modal-image">
                         <div class="modal-description">${articleContent}</div>
-                        <button id="backToListButton" class="back-button">Back to News List</button>
+                        <button id="backToNewsButton" class="btn btn-primary">Back to News</button>
                     </div>
                 `;
-                togglePagination(); // Hide pagination when viewing content
+
+                const backToNewsButton = document.getElementById('backToNewsButton');
+                backToNewsButton.addEventListener('click', function () {
+                    loadNewsList(currentPage);
+                });
+
+                togglePagination();
             })
-            .catch(error => console.error('Error loading full article:', error));
+            .catch(error => console.error('Error loading news content:', error));
     }
 
-    // Event listener for the Back to News List button
-    document.addEventListener('click', function (event) {
-        if (event.target.id === 'backToListButton') {
-            isViewingContent = false;
-            loadNewsList(currentPage); // Return to the current page of the news list
-        }
-    });
-
-    // Initial load of the first page
-    loadNewsList(1);
+    // Initialize by loading the first page of news
+    loadNewsList(currentPage);
 });
