@@ -183,12 +183,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 widget.innerHTML = `
                     <div class="modal-content">
-                        <h1 class"full-news-content">${title}</h1>
+                        <h1 class="full-news-content">${title}</h1>
                         ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-image-content">` : ''}
                         <div class="news-content">${articleContent}</div>
                         <button id="back-to-news">Back to News List</button>
                     </div>
                 `;
+
+                // Scroll to the top of the content
+                window.scrollTo(0, 0);
 
                 document.getElementById('back-to-news').onclick = () => loadNewsList(currentPage);
                 togglePagination();
