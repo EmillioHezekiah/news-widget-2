@@ -130,10 +130,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Only show pagination if there are multiple pages
         if (totalPages > 1) {
-            // Add "Previous" button
+            // Add "<<" button to go to the first page
+            if (currentPage > 1) {
+                const firstPageButton = document.createElement('span');
+                firstPageButton.innerText = '<<';
+                firstPageButton.classList.add('page-number');
+                firstPageButton.addEventListener('click', function () {
+                    loadNewsList(1);
+                });
+                paginationContainer.appendChild(firstPageButton);
+            }
+
+            // Add "<" button for previous page
             if (currentPage > 1) {
                 const prevPageButton = document.createElement('span');
-                prevPageButton.innerText = 'Previous';
+                prevPageButton.innerText = '<';
                 prevPageButton.classList.add('page-number');
                 prevPageButton.addEventListener('click', function () {
                     loadNewsList(currentPage - 1);
@@ -158,15 +169,26 @@ document.addEventListener('DOMContentLoaded', function () {
                 paginationContainer.appendChild(pageButton);
             }
 
-            // Add "Next" button
+            // Add ">" button for next page
             if (currentPage < totalPages) {
                 const nextPageButton = document.createElement('span');
-                nextPageButton.innerText = 'Next';
+                nextPageButton.innerText = '>';
                 nextPageButton.classList.add('page-number');
                 nextPageButton.addEventListener('click', function () {
                     loadNewsList(currentPage + 1);
                 });
                 paginationContainer.appendChild(nextPageButton);
+            }
+
+            // Add ">>" button to go to the last page
+            if (currentPage < totalPages) {
+                const lastPageButton = document.createElement('span');
+                lastPageButton.innerText = '>>';
+                lastPageButton.classList.add('page-number');
+                lastPageButton.addEventListener('click', function () {
+                    loadNewsList(totalPages);
+                });
+                paginationContainer.appendChild(lastPageButton);
             }
         }
 
@@ -193,34 +215,37 @@ document.addEventListener('DOMContentLoaded', function () {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
                 const titleElement = doc.querySelector('h1.bold.h2.nobmargin');
-                const title = titleElement && titleElement.textContent.trim() ? titleElement.textContent.trim() : 'No Title';
-                const articleElement = doc.querySelector('.the-post-description');
-                const articleContent = articleElement ? articleElement.innerHTML : 'No article content available';
-                const imageElement = doc.querySelector('.alert-secondary.btn-block.text-center img');
-                const imgSrc = imageElement ? correctImageUrl(imageElement.src) : '';
-                const widget = document.getElementById('news-widget');
+                const title = titleElement ? titleElement.textContent.trim() : 'Untitled';
 
-                widget.innerHTML = `
-                    <div class="modal-content" style="padding: 30px 10px;">
-                        <h1 class="news-title">${title}</h1>
-                        <img src="${imgSrc}" alt="${title}" class="news-modal-image">
-                        <div class="modal-description">${articleContent}</div>
-                        <button id="backToListButton" class="back-button">Back to News List</button>
-                    </div>
+                const contentElement = doc.querySelector('.the-post-description');
+                const content = contentElement ? contentElement.innerHTML : 'No content available';
+
+                const imgElement = doc.querySelector('.post-img img');
+                const imgSrc = imgElement ? correctImageUrl(imgElement.src) : '';
+
+                const modalContent = document.getElementById('modal-content');
+                modalContent.innerHTML = `
+                    ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="modal-image">` : ''}
+                    <h2>${title}</h2>
+                    <div class="content">${content}</div>
                 `;
-                togglePagination(); // Hide pagination when viewing content
+
+                // Show modal
+                const modal = document.getElementById('modal');
+                modal.style.display = 'block';
+                togglePagination(); // Hide pagination while viewing content
             })
-            .catch(error => console.error('Error loading full article:', error));
+            .catch(error => console.error('Error loading content:', error));
     }
 
-    // Event listener for the Back to News List button
-    document.addEventListener('click', function (event) {
-        if (event.target.id === 'backToListButton') {
-            isViewingContent = false;
-            loadNewsList(currentPage); // Return to the current page of the news list
-        }
+    // Close modal functionality
+    document.getElementById('modal-close').addEventListener('click', function () {
+        const modal = document.getElementById('modal');
+        modal.style.display = 'none';
+        togglePagination();
+        isViewingContent = false;
     });
 
-    // Initial load of the first page
-    loadNewsList(1);
+    // Initialize by loading the first page
+    loadNewsList(currentPage);
 });
