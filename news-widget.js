@@ -209,33 +209,37 @@ document.addEventListener('DOMContentLoaded', function () {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
                 const titleElement = doc.querySelector('h1.bold.h2.nobmargin');
-                const title = titleElement && titleElement.textContent.trim() ? titleElement.textContent.trim() : 'No Title';
-                const articleElement = doc.querySelector('.the-post-description');
-                const articleContent = articleElement ? articleElement.innerHTML : 'No article content available';
+                const title = titleElement && titleElement.textContent.trim() ? titleElement.textContent.trim() : 'Untitled';
+                const articleContent = doc.querySelector('.the-post-description').innerHTML;
                 const imageElement = doc.querySelector('.the-post-image img');
                 const imageSrc = imageElement ? correctImageUrl(imageElement.src) : '';
 
                 // Display the content in the modal
                 const modal = document.getElementById('news-modal');
-                modal.querySelector('.modal-title').textContent = title;
-                modal.querySelector('.modal-body').innerHTML = `
-                    ${imageSrc ? `<img src="${imageSrc}" alt="${title}" class="modal-image">` : ''}
-                    <div class="modal-content">${articleContent}</div>
-                `;
-                document.getElementById('news-modal').style.display = 'block';
+                if (modal) {
+                    modal.querySelector('.modal-title').textContent = title;
+                    modal.querySelector('.modal-body').innerHTML = `
+                        ${imageSrc ? `<img src="${imageSrc}" alt="${title}" class="modal-image">` : ''}
+                        <div class="modal-content">${articleContent}</div>
+                    `;
+                    modal.style.display = 'block';
+                    togglePagination(); // Hide pagination while viewing content
+                }
             })
             .catch(error => console.error('Error loading article:', error));
     }
 
     // Close modal when clicking outside or on close button
-    document.getElementById('news-modal').addEventListener('click', function (event) {
-        if (event.target === this || event.target.matches('.modal-close')) {
-            this.style.display = 'none';
+    document.addEventListener('click', function (event) {
+        const modal = document.getElementById('news-modal');
+        if (modal && (event.target === modal || event.target.matches('.modal-close'))) {
+            modal.style.display = 'none';
             isViewingContent = false;
             togglePagination();
         }
     });
 
-    // Load the first page on initial load
+    // Initialize page load
     loadNewsList(currentPage);
+    disableContentEditable(); // Disable contenteditable for captions
 });
