@@ -219,17 +219,19 @@
 }
 
 /* Center Image and Caption */
-.fr-img-wrap {
 
-    display: grid;
+
+.fr-img-wrap {
+    display: flex; /* Use flexbox for centering */
     justify-content: center; /* Centers horizontally */
     align-items: center; /* Centers vertically */
-    text-align: center;
-    margin: 0 auto;
-    height: 100vh; /* Ensures the element spans the full height of the viewport */
-
-
+    text-align: center; /* Centers text inside the element */
+    margin: 0 auto; /* Prevents additional margins */
+   
+    width: 100%; /* Ensures it spans the full width */
 }
+
+
 
 .fr-inner {
     margin-top: 10px;
