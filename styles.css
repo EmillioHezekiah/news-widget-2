@@ -222,13 +222,24 @@
 
 
 .fr-img-wrap {
-    display: flex; /* Use flexbox for centering */
-    justify-content: center; /* Centers horizontally */
-    align-items: center; /* Centers vertically */
-    text-align: center; /* Centers text inside the element */
-    margin: 0 auto; /* Prevents additional margins */
-   
-    width: 100%; /* Ensures it spans the full width */
+    display: flex; /* Enables flexbox layout */
+    flex-direction: column; /* Stacks items vertically */
+    justify-content: center; /* Centers items vertically */
+    align-items: center; /* Centers items horizontally */
+    text-align: center; /* Centers the caption text */
+    margin: 0 auto; /* Ensures the container is centered */
+    width: 100%; /* Allows flexibility for responsiveness */
+}
+
+.fr-img-wrap img {
+    max-width: 100%; /* Makes the image responsive */
+    height: auto; /* Maintains the aspect ratio */
+}
+
+.fr-img-wrap .fr-inner {
+    margin-top: 1em; /* Adds some space between the image and the caption */
+    font-size: 1rem; /* Adjusts the caption font size */
+    color: rgb(0, 0, 0); /* Ensures the caption color is black */
 }
 
 
