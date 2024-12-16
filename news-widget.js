@@ -185,6 +185,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="modal-content">
                         <h1 class="full-news-content-judul">${title}</h1>
                         ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="modal-thumbnail">` : ''}
+                        <div class="sharethis-sticky-share-buttons"></div>
                         <div class="full-news-content-paragraf">${articleContent}</div>
                         <button id="back-to-news">Back to News List</button>
                     </div>
