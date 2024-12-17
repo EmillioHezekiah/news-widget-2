@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } else if (!src.startsWith('http')) {
             return `https://www.tradepr.work/uploads/news-pictures-thumbnails/${src}`;
         }
-        return src.replace(/https:\/\/emilliohezekiah.github.io/, 'https://www.tradepr.work');
+        return src.replace(/https:\/\/embed.tradepr.work/, 'https://www.tradepr.work');
     }
 
     // Helper function to exclude certain images (e.g., profile pictures)
