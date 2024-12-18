@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } else if (!src.startsWith('http')) {
             return `https://www.tradepr.work/uploads/news-pictures-thumbnails/${src}`;
         }
-        return src.replace(/https:\/\/embed.tradepr.work/, 'https://www.tradepr.work');
+        return src.replace(/https:\/\/emilliohezekiah.github.io/, 'https://www.tradepr.work');
     }
 
     // Helper function to exclude certain images (e.g., profile pictures)
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     let imgSrc = imgElement ? correctImageUrl(imgElement.src) : '';
                     if (shouldExcludeImage(imgSrc)) imgSrc = '';
 
-                    const correctedLink = link.replace(/https:\/\/emilliohezekiah.github.io/, 'https://embed.tradepr.work');
+                    const correctedLink = link.replace(/https:\/\/emilliohezekiah.github.io/, 'https://www.tradepr.work');
                     const postedMetaDataElement = article.querySelector('.posted_meta_data');
                     const { postedDate, postedAuthor } = extractPostedMetaData(postedMetaDataElement);
 
@@ -113,6 +113,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     newsContent.appendChild(newsItem);
                 });
 
+                const paginationElement = doc.querySelector('.pagination');
+                totalPages = paginationElement ? Math.max(...[...paginationElement.querySelectorAll('a')].map(a => parseInt(a.textContent.trim(), 10)).filter(Number)) : 1;
+
                 addPagination(currentPage);
                 togglePagination();
                 window.scrollTo(0, 0); // Scroll to the top of the page
@@ -126,7 +129,6 @@ document.addEventListener('DOMContentLoaded', function () {
         paginationContainer.id = 'pagination';
         paginationContainer.innerHTML = '';
 
-        // Pagination logic
         if (totalPages > 1) {
             if (currentPage > 1) {
                 const prevButton = document.createElement('span');
@@ -188,6 +190,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                 `;
 
+                // Scroll to the top of the content
                 window.scrollTo(0, 0);
 
                 document.getElementById('back-to-news').onclick = () => loadNewsList(currentPage);
