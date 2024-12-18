@@ -54,7 +54,7 @@
     margin-right: auto; /* Centering the image */
     object-fit: cover;
     border-radius: 5px;
-    display: block; /* Ensures centering works */
+    display: flex; /* Ensures centering works */
 }
 
 
