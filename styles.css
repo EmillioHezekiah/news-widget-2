@@ -212,7 +212,7 @@
 
 .fr-fic.fr-dib {
     width: 100%;
-    max-width: 300px;
+    max-width: auto;
     height: auto;
     margin: 0 auto; /* Centers image */
     display: block;
