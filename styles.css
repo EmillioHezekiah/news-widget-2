@@ -20,7 +20,6 @@
     margin-bottom: 10px;
 }
 
-/* Individual posted metadata */
 .posted-by-snippet-posted,
 .posted-by-snippet-date,
 .posted-by-snippet-author {
@@ -39,24 +38,21 @@
 
 /* News Image Thumbnail */
 .news-image {
-    width: 212.43px; /* Adjusted as necessary */
-    height: 120px; /* Fixed height for consistency */
+    width: 212.43px;
+    height: 120px;
     margin-right: 15px;
     object-fit: cover;
     border-radius: 5px;
 }
 
 .news-image-content {
-    width: 500px; /* Increased width */
-    height: 300px; /* Increased height */
-    margin-right: 15px;
-    margin-left: auto; /* Centering the image */
-    margin-right: auto; /* Centering the image */
+    width: 500px;
+    height: 300px;
+    margin: 0 auto;
     object-fit: cover;
     border-radius: 5px;
-    display: block; /* Ensures centering works */
+    display: block;
 }
-
 
 /* News Content */
 .news-content {
@@ -118,14 +114,7 @@
 }
 
 /* Full Article Modal Content */
-.full-news-content-judul {
-    font-family: 'Droid Serif', serif;
-    font-size: 23pt;
-    font-weight: bold;
-    color: #840d0d;
-    margin-bottom: 15px;
-}
-
+.full-news-content-judul,
 .full-news-content h2 {
     font-family: 'Droid Serif', serif;
     font-size: 23pt;
@@ -181,108 +170,41 @@
     background-color: #888;
 }
 
-/* Image Caption */
-.full-news-content .image-caption {
-    text-align: center;
-    font-size: 14px;
-    color: #555;
-    margin: 10px 0 20px;
-    font-style: italic;
-}
-
-/* News List Image */
-.news-item img.news-image {
-    display: block;
-    margin-bottom: 0;
-}
-
-/* Image Caption in News List */
-.news-item .news-content .image-caption {
-    display: none;
-}
-
 /* Froala Editor Image Caption Styles */
-.fr-img-caption,
-.fr-img-wrap,
-.fr-inner {
-    display: block;
-    text-align: center;
-    margin-top: 5px;
-}
-
-.fr-fic.fr-dib {
-    width: 100%;
-    max-width: 300px;
-    height: auto;
-    margin: 0 auto; /* Centers image */
-    display: block;
-}
-
-/* Center Image and Caption */
-
-
 .fr-img-wrap {
-    display: flex; /* Use flexbox for centering */
-    flex-direction: column; /* Stack the image and caption vertically */
-    align-items: center; /* Center the image and caption horizontally */
-    justify-content: center; /* Optional: Center vertically if needed */
-    text-align: center; /* Center the caption text */
-    margin: 0 auto; /* Center the entire block in its parent container */
-    width: 100%; /* Ensure the container spans the full width */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 0 auto;
+    width: 100%;
 }
 
 .fr-img-wrap img {
-    max-width: 100%; /* Ensure the image is responsive */
-    height: auto; /* Maintain the aspect ratio of the image */
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    display: block;
 }
-
-.fr-inner {
-    margin-top: 10px; /* Add spacing between the image and the caption */
-    font-size: 16px; /* Adjust the font size for the caption */
-    color: rgb(0, 0, 0); /* Ensure the text is visible */
-    text-align: center; /* Center-align the caption text */
-}
-
-
-
-
 
 .fr-inner {
     margin-top: 10px;
-    font-size: 14px;
-    color: #555;
-    font-style: 'Poppins';
+    font-size: 16px;
+    color: rgb(0, 0, 0);
     text-align: center;
 }
 
 /* Non-editable style */
 .non-editable {
-    background-color: #f0f0f0; /* Optional: light grey background */
-    cursor: not-allowed; /* Show a "not-allowed" cursor */
-}
-#back-to-news {
-    background: none;
-    border: none;
-    font-weight: bold;
-    color: #840d0d;
-    font-family: 'Roboto Condensed';
-    font-size: 14pt;
-    cursor: pointer; /* Changes the cursor on hover */
+    background-color: #f0f0f0;
+    cursor: not-allowed;
 }
 
-/* Optional: If you want a hover effect */
-#back-to-news:hover {
-    text-decoration: underline; /* Adds an underline effect on hover */
-}
-.fr-fic.fr-dii{
-    width: 100%;
+/* Center Image and Caption */
+.fr-fic.fr-dii {
     max-width: 300px;
     height: auto;
-    margin: 0 auto; /* Centers image */
+    margin: 0 auto;
     display: block;
-}
-.modal-body {
-    font-size: 12pt;
-    font-family: 'Poppins', sans-serif;
-    color: black;
 }
