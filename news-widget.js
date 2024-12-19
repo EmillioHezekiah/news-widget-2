@@ -55,6 +55,14 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Add a custom class for caption containers
+    function addCustomCaptionClass() {
+        const captionContainers = document.querySelectorAll('div[style*="box-sizing: border-box;"][style*="color: rgba(0, 0, 0, 0);"]');
+        captionContainers.forEach(container => {
+            container.classList.add('custom-news-caption');
+        });
+    }
+
     // Show or hide the pagination based on the isViewingContent state
     function togglePagination() {
         const paginationContainer = document.getElementById('pagination');
@@ -199,6 +207,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(console.error);
     }
 
-    loadNewsList(currentPage);
+    loadNewsList(1);
+    addCustomCaptionClass();
     disableContentEditable();
 });
