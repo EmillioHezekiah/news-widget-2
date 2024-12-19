@@ -284,3 +284,28 @@
     font-family: 'Poppins', sans-serif;
     color: black;
 }
+/* Centering the container using flexbox */
+div[style*="display: inline-block"] {
+    display: flex; /* Enables flexbox */
+    justify-content: center; /* Centers horizontally */
+    align-items: center; /* Centers vertically */
+    flex-direction: column; /* Ensures the image and caption stack */
+    margin: 0 auto; /* Center within parent container */
+    text-align: center; /* Ensures text is centered */
+}
+
+/* Ensure image responsiveness */
+div[style*="display: inline-block"] img {
+    max-width: 100%; /* Responsive scaling */
+    height: auto; /* Maintain aspect ratio */
+    display: block; /* Removes inline spacing issues */
+    margin: 0 auto; /* Centers the image */
+}
+
+/* Caption styling */
+div[style*="display: inline-block"] .fr-inner {
+    margin-top: 10px; /* Spacing between image and caption */
+    font-size: 14px;
+    color: #555; /* Neutral caption color */
+    text-align: center; /* Center-align the caption */
+}
