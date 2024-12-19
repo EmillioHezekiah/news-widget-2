@@ -222,13 +222,11 @@
 
 
 .fr-img-wrap {
-    display: flex; /* Use flexbox for centering */
-    flex-direction: column; /* Stack the image and caption vertically */
-    align-items: center; /* Center the image and caption horizontally */
-    justify-content: center; /* Optional: Center vertically if needed */
-    text-align: center; /* Center the caption text */
-    margin: 0 auto; /* Center the entire block in its parent container */
-    width: 100%; /* Ensure the container spans the full width */
+    width: 100%;
+    max-width: auto;
+    height: auto;
+    margin: 0 auto; /* Centers image */
+    display: block;
 }
 
 .fr-img-wrap img {
