@@ -59,7 +59,9 @@ document.addEventListener('DOMContentLoaded', function () {
     function addCustomCaptionClass() {
         const captionContainers = document.querySelectorAll('div[style*="box-sizing: border-box;"][style*="color: rgba(0, 0, 0, 0);"]');
         captionContainers.forEach(container => {
-            container.classList.add('custom-news-caption');
+            if (!container.classList.contains('custom-news-caption')) {
+                container.classList.add('custom-news-caption');
+            }
         });
     }
 
@@ -84,7 +86,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 const widget = document.getElementById('news-widget');
 
                 // Clear previous content
-                widget.innerHTML = '<h1 class="news-title" style="font-size: 21pt; margin-bottom: 24px; font-family: \'Roboto Condensed\'; color: #840d0d">News Distribution by Trade PR</h1><div id="news-content"></div>';
+                widget.innerHTML = `
+                    <h1 class="news-title">News Distribution by Trade PR</h1>
+                    <div id="news-content"></div>
+                `;
 
                 const newsContent = widget.querySelector('#news-content');
 
@@ -95,10 +100,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 articles.forEach(article => {
                     const titleElement = article.querySelector('.h3.bold.bmargin.center-block');
-                    const title = titleElement && titleElement.textContent.trim() ? titleElement.textContent.trim() : 'Untitled';
+                    const title = titleElement?.textContent.trim() || 'Untitled';
                     const link = titleElement ? titleElement.closest('a').href : '#';
                     const descriptionElement = article.querySelector('.xs-nomargin');
-                    let description = descriptionElement ? cleanDescription(descriptionElement.textContent.trim()) : 'No description available';
+                    const description = descriptionElement ? cleanDescription(descriptionElement.textContent.trim()) : 'No description available';
                     const imgElement = article.querySelector('.img_section img');
 
                     let imgSrc = imgElement ? correctImageUrl(imgElement.src) : '';
@@ -122,7 +127,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 const paginationElement = doc.querySelector('.pagination');
-                totalPages = paginationElement ? Math.max(...[...paginationElement.querySelectorAll('a')].map(a => parseInt(a.textContent.trim(), 10)).filter(Number)) : 1;
+                totalPages = paginationElement
+                    ? Math.max(...[...paginationElement.querySelectorAll('a')].map(a => parseInt(a.textContent.trim(), 10)).filter(Number))
+                    : 1;
 
                 addPagination(currentPage);
                 togglePagination();
@@ -131,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Error loading news:', error));
     }
 
-    // Handle pagination dynamically
+    // Add pagination dynamically
     function addPagination(currentPage) {
         const paginationContainer = document.getElementById('pagination') || document.createElement('div');
         paginationContainer.id = 'pagination';
