@@ -292,7 +292,7 @@ box-sizing: border-box;
     font-size: 0px;
     max-width: 100%;
 }
-.full-news-content-paragraf img{
+.custom-news-caption {
 box-sizing: border-box;
     color: rgba(0, 0, 0, 0);
     font-size: 0px;
