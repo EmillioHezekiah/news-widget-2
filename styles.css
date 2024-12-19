@@ -287,7 +287,8 @@
     color: black;
 }
 div[style*="box-sizing: border-box"] {
-    justify-content: center; /* Centers horizontally */
-    align-items: center; /* Centers vertically */
-    height: 100%; /* Ensures the element fills the parent container */
+box-sizing: border-box;
+    color: rgba(0, 0, 0, 0);
+    font-size: 0px;
+    max-width: 100%;
 }
