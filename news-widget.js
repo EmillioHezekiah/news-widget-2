@@ -47,11 +47,24 @@ document.addEventListener('DOMContentLoaded', function () {
         return { postedDate, postedAuthor };
     }
 
-    // Disable the contenteditable attribute for captions
+    // Disable the contenteditable attribute for captions and center them
     function disableContentEditable() {
         const captions = document.querySelectorAll('.fr-inner[contenteditable="true"]');
         captions.forEach(caption => {
             caption.setAttribute('contenteditable', 'false');
+        });
+
+        const captionContainers = document.querySelectorAll('.fr-img-caption');
+        captionContainers.forEach(container => {
+            container.style.textAlign = 'center';
+            container.style.display = 'block';
+            container.style.margin = '0 auto';
+        });
+
+        const images = document.querySelectorAll('.fr-img-caption img');
+        images.forEach(img => {
+            img.style.display = 'block';
+            img.style.margin = '0 auto';
         });
     }
 
@@ -61,6 +74,8 @@ document.addEventListener('DOMContentLoaded', function () {
         captionContainers.forEach(container => {
             if (!container.classList.contains('custom-news-caption')) {
                 container.classList.add('custom-news-caption');
+                container.style.textAlign = 'center';
+                container.style.margin = '0 auto';
             }
         });
     }
@@ -200,21 +215,16 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="modal-content">
                         <h1 class="full-news-content-judul">${title}</h1>
                         ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="modal-thumbnail">` : ''}
-                        <div class="full-news-content-paragraf">${articleContent}</div>
-                        <button id="back-to-news">Back to News List</button>
+                        <div class="modal-body">${articleContent}</div>
                     </div>
                 `;
-
-                // Scroll to the top of the content
-                window.scrollTo(0, 0);
-
-                document.getElementById('back-to-news').onclick = () => loadNewsList(currentPage);
                 togglePagination();
+                disableContentEditable();
+                addCustomCaptionClass();
+                window.scrollTo(0, 0); // Scroll to the top of the modal content
             })
-            .catch(console.error);
+            .catch(error => console.error('Error loading full news content:', error));
     }
 
     loadNewsList(1);
-    addCustomCaptionClass();
-    disableContentEditable();
 });
