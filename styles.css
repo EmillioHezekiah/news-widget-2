@@ -298,3 +298,29 @@ box-sizing: border-box;
     font-size: 0px;
     max-width: 100%;
 }
+.custom-news-caption {
+    box-sizing: border-box;
+    color: rgba(0, 0, 0, 0);
+    font-size: 0px;
+    max-width: 100%;
+    text-align: center;
+    margin: 0px auto;
+}
+
+.custom-news-caption .fr-img-caption {
+    width: 729px;
+    text-align: center;
+    display: block;
+    margin: 0px auto;
+}
+
+.custom-news-caption .fr-img-wrap img {
+    width: 739px;
+    display: block;
+    margin: 0px auto;
+}
+
+.custom-news-caption .fr-inner {
+    color: rgb(0, 0, 0); /* Visible text color */
+    text-align: center;
+}
