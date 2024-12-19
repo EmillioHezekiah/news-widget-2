@@ -287,7 +287,6 @@
     color: black;
 }
 div[style*="box-sizing: border-box"] {
-    display: block;
     justify-content: center; /* Centers horizontally */
     align-items: center; /* Centers vertically */
     height: 100%; /* Ensures the element fills the parent container */
