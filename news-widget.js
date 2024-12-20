@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const baseUrl = 'https://www.tradepr.work/articles/';
     let currentPage = 1;
-    let totalPages = 1;
+    let totalPages = 1; // Default to 1, will be updated dynamically
     let isViewingContent = false;
 
     // Helper function to correct image URLs
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return src.replace(/https:\/\/emilliohezekiah.github.io/, 'https://www.tradepr.work');
     }
 
-    // Exclude certain images (e.g., profile pictures)
+    // Helper function to exclude certain images (e.g., profile pictures)
     function shouldExcludeImage(src) {
         return src.includes('/pictures/profile/');
     }
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return description.replace(/View More/gi, '').trim();
     }
 
-    // Format metadata
+    // Format the posted metadata for each article
     function formatPostedMetaData(date, author) {
         return `
             <div class="posted-meta-data">
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
         `;
     }
 
-    // Extract metadata from the element
+    // Extract posted metadata from the document
     function extractPostedMetaData(element) {
         const postedMetaData = element ? element.textContent.trim() : '';
         const dateMatch = postedMetaData.match(/Posted\s+(\d{2}\/\d{2}\/\d{4})/);
@@ -47,34 +47,40 @@ document.addEventListener('DOMContentLoaded', function () {
         return { postedDate, postedAuthor };
     }
 
-    // Disable contenteditable for captions and center images
+    // Disable the contenteditable attribute for captions and center them
     function disableContentEditable() {
         const captions = document.querySelectorAll('.fr-inner[contenteditable="true"]');
         captions.forEach(caption => {
             caption.setAttribute('contenteditable', 'false');
         });
 
-        const images = document.querySelectorAll('img');
+        const captionContainers = document.querySelectorAll('.fr-img-caption');
+        captionContainers.forEach(container => {
+            container.style.textAlign = 'center';
+            container.style.display = 'block';
+            container.style.margin = '0 auto';
+        });
+
+        const images = document.querySelectorAll('.fr-img-caption img');
         images.forEach(img => {
             img.style.display = 'block';
             img.style.margin = '0 auto';
         });
     }
 
-    // Center unclassified caption containers
-    function centerUnclassifiedCaptions() {
+    // Add a custom class for caption containers
+    function addCustomCaptionClass() {
         const captionContainers = document.querySelectorAll('div[style*="box-sizing: border-box;"][style*="color: rgba(0, 0, 0, 0);"]');
         captionContainers.forEach(container => {
             if (!container.classList.contains('custom-news-caption')) {
                 container.classList.add('custom-news-caption');
                 container.style.textAlign = 'center';
                 container.style.margin = '0 auto';
-                container.style.display = 'flex';
             }
         });
     }
 
-    // Toggle pagination visibility
+    // Show or hide the pagination based on the isViewingContent state
     function togglePagination() {
         const paginationContainer = document.getElementById('pagination');
         if (paginationContainer) {
@@ -82,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Load the news list
+    // Load the news list with pagination
     function loadNewsList(page) {
         currentPage = page;
         isViewingContent = false;
@@ -94,6 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const articles = doc.querySelectorAll('.row-fluid.search_result');
                 const widget = document.getElementById('news-widget');
 
+                // Clear previous content
                 widget.innerHTML = `
                     <h1 class="news-title">News Distribution by Trade PR</h1>
                     <div id="news-content"></div>
@@ -141,12 +148,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 addPagination(currentPage);
                 togglePagination();
-                window.scrollTo(0, 0);
+                window.scrollTo(0, 0); // Scroll to the top of the page
             })
             .catch(error => console.error('Error loading news:', error));
     }
 
-    // Add pagination
+    // Add pagination dynamically
     function addPagination(currentPage) {
         const paginationContainer = document.getElementById('pagination') || document.createElement('div');
         paginationContainer.id = 'pagination';
@@ -213,12 +220,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 `;
                 togglePagination();
                 disableContentEditable();
-                centerUnclassifiedCaptions();
-                window.scrollTo(0, 0);
+                addCustomCaptionClass();
+                window.scrollTo(0, 0); // Scroll to the top of the modal content
             })
-            .catch(error => console.error('Error loading news content:', error));
+            .catch(error => console.error('Error loading full news content:', error));
     }
 
-    // Initial load
     loadNewsList(1);
 });
