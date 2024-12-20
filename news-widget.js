@@ -69,6 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 container.classList.add('custom-news-caption');
                 container.style.textAlign = 'center';
                 container.style.margin = '0 auto';
+                container.style.display = 'flex';
             }
         });
     }
