@@ -46,27 +46,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return { postedDate, postedAuthor };
     }
 
-    // Disable the contenteditable attribute for captions and center them
-    function disableContentEditable() {
-        const captions = document.querySelectorAll('.fr-inner[contenteditable="true"]');
-        captions.forEach(caption => {
-            caption.setAttribute('contenteditable', 'false');
-        });
-
-        const captionContainers = document.querySelectorAll('.fr-img-caption');
-        captionContainers.forEach(container => {
-            container.style.textAlign = 'center';
-            container.style.display = 'block';
-            container.style.margin = '0 auto';
-        });
-
-        const images = document.querySelectorAll('.fr-img-caption img');
-        images.forEach(img => {
-            img.style.display = 'block';
-            img.style.margin = '0 auto';
-        });
-    }
-
     // Add pagination dynamically
     function addPagination(currentPage) {
         const paginationContainer = document.getElementById('pagination') || document.createElement('div');
@@ -149,6 +128,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <div class="news-content">
                             <a href="news-content.html?url=${encodeURIComponent(correctedLink)}" class="news-link">${title}</a>
                             ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-thumbnail">` : ''}
+                            ${formatPostedMetaData(postedDate, postedAuthor)}
                             <p>${description}</p>
                         </div>
                     `;
