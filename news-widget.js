@@ -161,9 +161,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     newsItem.innerHTML = `
                         ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-image">` : ''}
                         <div class="news-content">
-                            ${formatPostedMetaData(postedDate, postedAuthor)}
-                            <a href="news-content.html?url=${encodeURIComponent(correctedLink)}" class="news-link">${title}</a>
-                            <p>${description}</p>
+                           <h1 class="full-news-content-judul">${title}</h1>
+                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="modal-thumbnail">` : ''}
+                        <div class="full-news-content-paragraf">${articleContent}</div>
                         </div>
                     `;
                     newsContent.appendChild(newsItem);
