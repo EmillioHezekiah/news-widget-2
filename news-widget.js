@@ -67,19 +67,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Add a custom class for caption containers
-    function addCustomCaptionClass() {
-        const captionContainers = document.querySelectorAll('div[style*="box-sizing: border-box;"][style*="color: rgba(0, 0, 0, 0);"]');
-        captionContainers.forEach(container => {
-            if (!container.classList.contains('custom-news-caption')) {
-                container.classList.add('custom-news-caption');
-                container.style.textAlign = 'center';
-                container.style.margin = '0 auto';
-                container.style.display = 'flex';
-            }
-        });
-    }
-
     // Add pagination dynamically
     function addPagination(currentPage) {
         const paginationContainer = document.getElementById('pagination') || document.createElement('div');
@@ -159,10 +146,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     const newsItem = document.createElement('div');
                     newsItem.classList.add('news-item');
                     newsItem.innerHTML = `
-                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-image">` : ''}
                         <div class="news-content">
-                            ${formatPostedMetaData(postedDate, postedAuthor)}
                             <a href="news-content.html?url=${encodeURIComponent(correctedLink)}" class="news-link">${title}</a>
+                            ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-thumbnail">` : ''}
                             <p>${description}</p>
                         </div>
                     `;
