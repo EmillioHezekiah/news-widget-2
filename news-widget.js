@@ -13,6 +13,110 @@ document.addEventListener('DOMContentLoaded', function () {
         return src.replace(/https:\/\/emilliohezekiah.github.io/, 'https://www.tradepr.work');
     }
 
+    // Helper function to exclude certain images (e.g., profile pictures)
+    function shouldExcludeImage(src) {
+        return src.includes('/pictures/profile/');
+    }
+
+    // Clean up article descriptions
+    function cleanDescription(description) {
+        return description.replace(/View More/gi, '').trim();
+    }
+
+    // Format the posted metadata for each article
+    function formatPostedMetaData(date, author) {
+        return `
+            <div class="posted-meta-data">
+                <span class="posted-by-snippet-posted">Posted</span>
+                <span class="posted-by-snippet-date">${date}</span>
+                <span class="posted-by-snippet-author">by ${author}</span>
+            </div>
+        `;
+    }
+
+    // Extract posted metadata from the document
+    function extractPostedMetaData(element) {
+        const postedMetaData = element ? element.textContent.trim() : '';
+        const dateMatch = postedMetaData.match(/Posted\s+(\d{2}\/\d{2}\/\d{4})/);
+        const authorMatch = postedMetaData.match(/by\s+(.+?)(\s+in\s+[\w\s]+)?$/);
+
+        const postedDate = dateMatch ? dateMatch[1] : 'No Date';
+        const postedAuthor = authorMatch ? authorMatch[1].replace(/<\/?a[^>]*>/g, '').trim() : 'No Author';
+
+        return { postedDate, postedAuthor };
+    }
+
+    // Disable the contenteditable attribute for captions and center them
+    function disableContentEditable() {
+        const captions = document.querySelectorAll('.fr-inner[contenteditable="true"]');
+        captions.forEach(caption => {
+            caption.setAttribute('contenteditable', 'false');
+        });
+
+        const captionContainers = document.querySelectorAll('.fr-img-caption');
+        captionContainers.forEach(container => {
+            container.style.textAlign = 'center';
+            container.style.display = 'block';
+            container.style.margin = '0 auto';
+        });
+
+        const images = document.querySelectorAll('.fr-img-caption img');
+        images.forEach(img => {
+            img.style.display = 'block';
+            img.style.margin = '0 auto';
+        });
+    }
+
+    // Add a custom class for caption containers
+    function addCustomCaptionClass() {
+        const captionContainers = document.querySelectorAll('div[style*="box-sizing: border-box;"][style*="color: rgba(0, 0, 0, 0);"]');
+        captionContainers.forEach(container => {
+            if (!container.classList.contains('custom-news-caption')) {
+                container.classList.add('custom-news-caption');
+                container.style.textAlign = 'center';
+                container.style.margin = '0 auto';
+                container.style.display = 'flex';
+            }
+        });
+    }
+
+    // Add pagination dynamically
+    function addPagination(currentPage) {
+        const paginationContainer = document.getElementById('pagination') || document.createElement('div');
+        paginationContainer.id = 'pagination';
+        paginationContainer.innerHTML = '';
+
+        if (totalPages > 1) {
+            if (currentPage > 1) {
+                const prevButton = document.createElement('span');
+                prevButton.textContent = '<';
+                prevButton.classList.add('page-number');
+                prevButton.onclick = () => loadNewsList(currentPage - 1);
+                paginationContainer.appendChild(prevButton);
+            }
+
+            for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+                const pageNumber = document.createElement('span');
+                pageNumber.textContent = i;
+                pageNumber.classList.add('page-number');
+                if (i === currentPage) pageNumber.classList.add('current-page');
+                pageNumber.onclick = () => loadNewsList(i);
+                paginationContainer.appendChild(pageNumber);
+            }
+
+            if (currentPage < totalPages) {
+                const nextButton = document.createElement('span');
+                nextButton.textContent = '>';
+                nextButton.classList.add('page-number');
+                nextButton.onclick = () => loadNewsList(currentPage + 1);
+                paginationContainer.appendChild(nextButton);
+            }
+        }
+
+        const widget = document.getElementById('news-widget');
+        if (!widget.contains(paginationContainer)) widget.appendChild(paginationContainer);
+    }
+
     // Load the news list with pagination
     function loadNewsList(page) {
         currentPage = page;
@@ -41,118 +145,41 @@ document.addEventListener('DOMContentLoaded', function () {
                     const titleElement = article.querySelector('.h3.bold.bmargin.center-block');
                     const title = titleElement?.textContent.trim() || 'Untitled';
                     const link = titleElement ? titleElement.closest('a').href : '#';
+                    const descriptionElement = article.querySelector('.xs-nomargin');
+                    const description = descriptionElement ? cleanDescription(descriptionElement.textContent.trim()) : 'No description available';
                     const imgElement = article.querySelector('.img_section img');
-                    const imgSrc = imgElement ? correctImageUrl(imgElement.src) : '';
+
+                    let imgSrc = imgElement ? correctImageUrl(imgElement.src) : '';
+                    if (shouldExcludeImage(imgSrc)) imgSrc = '';
+
+                    const correctedLink = link.replace(/https:\/\/emilliohezekiah.github.io/, 'https://www.tradepr.work');
+                    const postedMetaDataElement = article.querySelector('.posted_meta_data');
+                    const { postedDate, postedAuthor } = extractPostedMetaData(postedMetaDataElement);
 
                     const newsItem = document.createElement('div');
                     newsItem.classList.add('news-item');
                     newsItem.innerHTML = `
                         ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-image">` : ''}
                         <div class="news-content">
-                            <a href="${link}" class="news-link" data-url="${encodeURIComponent(link)}">${title}</a>
+                            ${formatPostedMetaData(postedDate, postedAuthor)}
+                            <a href="news-content.html?url=${encodeURIComponent(correctedLink)}" class="news-link">${title}</a>
+                            <p>${description}</p>
                         </div>
                     `;
                     newsContent.appendChild(newsItem);
                 });
 
-                window.scrollTo(0, 0); // Scroll to the top
+                const paginationElement = doc.querySelector('.pagination');
+                totalPages = paginationElement
+                    ? Math.max(...[...paginationElement.querySelectorAll('a')].map(a => parseInt(a.textContent.trim(), 10)).filter(Number))
+                    : 1;
+
                 addPagination(currentPage);
+                window.scrollTo(0, 0); // Scroll to the top of the page
             })
             .catch(error => console.error('Error loading news:', error));
     }
 
-    // Add pagination dynamically
-    function addPagination(currentPage) {
-        const paginationContainer = document.getElementById('pagination') || document.createElement('div');
-        paginationContainer.id = 'pagination';
-        paginationContainer.innerHTML = '';
-
-        if (totalPages > 1) {
-            if (currentPage > 1) {
-                const prevButton = document.createElement('span');
-                prevButton.textContent = '<';
-                prevButton.classList.add('page-number');
-                prevButton.onclick = () => loadNewsList(currentPage - 1);
-                paginationContainer.appendChild(prevButton);
-            }
-
-            for (let i = 1; i <= totalPages; i++) {
-                const pageNumber = document.createElement('span');
-                pageNumber.textContent = i;
-                pageNumber.classList.add('page-number');
-                if (i === currentPage) pageNumber.classList.add('current-page');
-                pageNumber.onclick = () => loadNewsList(i);
-                paginationContainer.appendChild(pageNumber);
-            }
-
-            if (currentPage < totalPages) {
-                const nextButton = document.createElement('span');
-                nextButton.textContent = '>';
-                nextButton.classList.add('page-number');
-                nextButton.onclick = () => loadNewsList(currentPage + 1);
-                paginationContainer.appendChild(nextButton);
-            }
-        }
-
-        const widget = document.getElementById('news-widget');
-        if (!widget.contains(paginationContainer)) widget.appendChild(paginationContainer);
-    }
-
-    // Load a single news content
-    function loadNewsContent(url) {
-        fetch(url)
-            .then(response => response.text())
-            .then(data => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(data, 'text/html');
-                const title = doc.querySelector('h1.bold.h2.nobmargin')?.textContent.trim() || 'No Title';
-                const articleContent = doc.querySelector('.the-post-description')?.innerHTML || 'No content available';
-                const image = doc.querySelector('.alert-secondary.btn-block.text-center img');
-                const imgSrc = image ? correctImageUrl(image.src) : '';
-
-                const widget = document.getElementById('news-widget');
-                widget.innerHTML = `
-                    <div class="news-content-page">
-                        <h1>${title}</h1>
-                        ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-image">` : ''}
-                        <div>${articleContent}</div>
-                        <button id="back-to-news">Back to News</button>
-                    </div>
-                `;
-
-                document.getElementById('back-to-news').addEventListener('click', () => {
-                    history.back(); // Go back in history
-                });
-
-                window.scrollTo(0, 0);
-            })
-            .catch(error => console.error('Error loading news content:', error));
-    }
-
-    // Handle click on news link
-    document.addEventListener('click', function (event) {
-        if (event.target.matches('.news-link')) {
-            event.preventDefault();
-            const newsUrl = decodeURIComponent(event.target.getAttribute('data-url'));
-            history.pushState({ page: 'news-content', url: newsUrl }, null, `?news=${newsUrl}`);
-            loadNewsContent(newsUrl);
-        }
-    });
-
-    // Handle popstate event
-    window.addEventListener('popstate', function (event) {
-        if (event.state && event.state.page === 'news-content') {
-            loadNewsContent(event.state.url);
-        } else {
-            loadNewsList(currentPage);
-        }
-    });
-
-    // Initial page load
-    if (window.location.search.includes('news=')) {
-        const newsUrl = new URLSearchParams(window.location.search).get('news');
-        loadNewsContent(decodeURIComponent(newsUrl));
-    } else {
-        loadNewsList(currentPage);
-    }
+    // Load the initial news list
+    loadNewsList(currentPage);
 });
