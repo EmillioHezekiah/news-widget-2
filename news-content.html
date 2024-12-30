@@ -42,10 +42,7 @@
                     newsContent.innerHTML = `
                         <h1>${title}</h1>
                         ${image ? `<img src="${image}" alt="${title}" class="main-image">` : ''}
-                        <div class="posted-meta">
-                            <span>Posted on ${postedDate} by ${postedAuthor}</span>
-                        </div>
-                        <div class="content">${content}</div>
+                        <div class="full-news-content-paragraf">${content}</div>
                     `;
                 })
                 .catch(error => console.error('Error loading news content:', error));
