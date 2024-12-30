@@ -40,7 +40,7 @@
                     // Update the content on the page
                     const newsContent = document.getElementById('news-content');
                     newsContent.innerHTML = `
-                        <h1>${title}</h1>
+                        <h1 class="full-news-content-judul">${title}</h1>
                         ${image ? `<img src="${image}" alt="${title}" class="main-image">` : ''}
                         <div class="full-news-content-paragraf">${content}</div>
                     `;
