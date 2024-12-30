@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         ${imgSrc ? `<img src="${imgSrc}" alt="${title}" class="news-image">` : ''}
                         <div class="news-content">
                             ${formatPostedMetaData(postedDate, postedAuthor)}
-                            <a href="news-content.html?url=${encodeURIComponent(correctedLink)}" class="full-news-content-paragraf">${title}</a>
+                            <a href="news-content.html?url=${encodeURIComponent(correctedLink)}" class="news-link">${title}</a>
                             <p>${description}</p>
                         </div>
                     `;
@@ -183,4 +183,3 @@ document.addEventListener('DOMContentLoaded', function () {
     // Load the initial news list
     loadNewsList(currentPage);
 });
-
