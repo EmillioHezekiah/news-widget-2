@@ -41,7 +41,7 @@
                     const newsContent = document.getElementById('news-content');
                     newsContent.innerHTML = `
                         <h1 class="full-news-content-judul">${title}</h1>
-                        ${image ? `<img src="${image}" alt="${title}" class="main-image">` : ''}
+                        ${image ? `<img class="center-block" alt="${title}" title="${title}" src="${image}" width="1138" height="640">` : ''}
                         <div class="full-news-content-paragraf">${content}</div>
                     `;
                 })
