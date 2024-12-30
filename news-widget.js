@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <div class="news-content">
                             ${formatPostedMetaData(postedDate, postedAuthor)}
                             <a href="news-content.html?url=${encodeURIComponent(correctedLink)}" class="news-link">${title}</a>
-                            <p>${description}</p>
+                            <p class="full-news-content-paragraf">${description}</p>
                         </div>
                     `;
                     newsContent.appendChild(newsItem);
