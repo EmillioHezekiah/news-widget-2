@@ -24,10 +24,17 @@
                     const doc = parser.parseFromString(data, 'text/html');
 
                     const title = doc.querySelector('h1.bold.h2.nobmargin') ? doc.querySelector('h1.bold.h2.nobmargin').textContent.trim() : 'No Title';
-                    const imageElement = doc.querySelector('.img_section img');
-                    let image = '';
+
+                    const imageElement = doc.querySelector('.alert-secondary img');
+                    let imageHtml = '';
                     if (imageElement) {
-                        image = imageElement.src.startsWith('http') ? imageElement.src : `https://www.tradepr.work${imageElement.src}`;
+                        const imageSrc = imageElement.src.startsWith('http') ? imageElement.src : `https://www.tradepr.work${imageElement.src}`;
+                        const imageAlt = imageElement.alt || 'News Thumbnail';
+                        imageHtml = `
+                            <div class="news-thumbnail-container">
+                                <img class="news-thumbnail" alt="${imageAlt}" title="${imageAlt}" src="${imageSrc}" width="1138" height="640">
+                            </div>
+                        `;
                     }
 
                     const contentContainer = doc.querySelector('.the-post-description');
@@ -41,13 +48,7 @@
                     const newsContent = document.getElementById('news-content');
                     newsContent.innerHTML = `
                         <h1 class="full-news-content-judul">${title}</h1>
-                        ${
-                            image
-                                ? `<div style="display: flex; justify-content: center; align-items: center;">
-                                       <img alt="${title}" title="${title}" src="${image}" style="max-width: 100%; height: auto;" />
-                                   </div>`
-                                : ''
-                        }
+                        ${imageHtml}
                         <div class="full-news-content-paragraf">${content}</div>
                     `;
                 })
