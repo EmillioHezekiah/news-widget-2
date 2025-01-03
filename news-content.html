@@ -41,15 +41,13 @@
                     const newsContent = document.getElementById('news-content');
                     newsContent.innerHTML = `
                         <h1 class="full-news-content-judul">${title}</h1>
-                        ${image ? `<img class="center-block" alt="${title}" title="${title}" src="${image}" width="1138" height="640">` : ''}
-                        <div class="custom-img-caption-container" style="box-sizing: border-box; color: rgba(0, 0, 0, 0); font-size: 0px; max-width: 100%;">
-                            <span contenteditable="false" class="fr-img-caption fr-fic fr-dii fr-draggable" style="width: 729px;" draggable="false">
-                                <span class="fr-img-wrap">
-                                    <img alt="Representatives" src="https://www.tradepr.work/images/member_uploads/member_6eb7f16bb72e5a6f0e45ffd3b7956868/e970d8eb9a663a5ccb79fdecf88eb1e081633b4f.png" loading="lazy" style="width: 739px;" class="fr-fic fr-dii" width="800" height="449">
-                                    <span class="fr-inner" contenteditable="true" spellcheck="false" style="color: rgb(0, 0, 0);">Representatives from Sierra Nevada Natural Area with the IUCN Green List Diploma</span>
-                                </span>
-                            </span>
-                        </div>
+                        ${
+                            image
+                                ? `<div style="display: flex; align-items: center; justify-content: center; box-sizing: border-box;">
+                                       <img alt="${title}" title="${title}" src="${image}" style="max-width: 100%; height: auto;" />
+                                   </div>`
+                                : ''
+                        }
                         <div class="full-news-content-paragraf">${content}</div>
                     `;
                 })
