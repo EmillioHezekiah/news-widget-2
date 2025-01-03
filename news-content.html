@@ -28,7 +28,10 @@
                     const imageElement = doc.querySelector('.alert-secondary img');
                     let imageHtml = '';
                     if (imageElement) {
-                        const imageSrc = imageElement.src.startsWith('http') ? imageElement.src : `https://www.tradepr.work${imageElement.src}`;
+                        // Ensure the image URL starts with the correct base URL
+                        const imageSrc = imageElement.src.startsWith('http') 
+                            ? imageElement.src 
+                            : `https://www.tradepr.work${imageElement.src}`;
                         const imageAlt = imageElement.alt || 'News Thumbnail';
                         imageHtml = `
                             <div class="news-thumbnail-container">
