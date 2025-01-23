@@ -12,14 +12,32 @@
     <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js#property=675fcceca0922d001f327fed&product=sticky-share-buttons&source=platform" async="async"></script>
 </head>
 <body>
+    <!-- Back button -->
+    <div id="back-button-container" style="margin-bottom: 20px; text-align: left;">
+        <button id="back-button" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">← Back</button>
+    </div>
+
     <div id="news-content" class="full-news-content">
         <!-- Full news content will be dynamically inserted here -->
     </div>
 
     <script>
-        // Get the news URL from the query parameter
+        // Get the news URL and referrer page from the query parameters
         const urlParams = new URLSearchParams(window.location.search);
         const newsUrl = decodeURIComponent(urlParams.get('url'));
+        const referrerPage = urlParams.get('referrer'); // e.g., page=2
+
+        // Back button functionality
+        const backButton = document.getElementById('back-button');
+        backButton.addEventListener('click', () => {
+            if (referrerPage) {
+                // Redirect back to the referrer page
+                window.location.href = `news-list.html?page=${referrerPage}`;
+            } else {
+                // If no referrer info, go back in browser history
+                window.history.back();
+            }
+        });
 
         if (newsUrl) {
             fetch(newsUrl)
