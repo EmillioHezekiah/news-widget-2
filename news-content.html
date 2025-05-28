@@ -21,6 +21,18 @@
         <!-- Full news content will be dynamically inserted here -->
     </div>
 
+    <!-- GTranslate Widget -->
+    <div class="gtranslate_wrapper"></div>
+    <script>
+        window.gtranslateSettings = {
+            "default_language": "en",
+            "languages": ["en", "fr", "it", "es", "ko", "fa", "ru", "zh-CN", "zh-TW", "id", "de", "ar", "lo", "km", "vi", "th", "mn", "my", "ja", "el", "ms", "be"],
+            "wrapper_selector": ".gtranslate_wrapper",
+            "flag_style": "3d"
+        };
+    </script>
+    <script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>
+
     <script>
         // Get the news URL and referrer page from the query parameters
         const urlParams = new URLSearchParams(window.location.search);
@@ -51,7 +63,6 @@
                     const imageElement = doc.querySelector('.alert-secondary img');
                     let imageHtml = '';
                     if (imageElement) {
-                        // Use getAttribute to fetch the raw src value
                         const rawSrc = imageElement.getAttribute('src');
                         const imageSrc = rawSrc.startsWith('http') 
                             ? rawSrc 
